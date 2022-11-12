@@ -22,19 +22,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import com.comixedproject.prestige.Greeting
+import com.comixedproject.prestige.models.OPDSLibrary
 
 @Composable
 fun MyApplicationTheme(
@@ -80,26 +86,57 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting(Greeting().greeting())
-                }
+                OPDSLibraryListView(listOf<OPDSLibrary>(
+                    OPDSLibrary("Library 1","http://www.comixedproject.org:7171/comics/lib1","admin1","password1"),
+                    OPDSLibrary("Library 2","http://www.comixedproject.org:7171/comics/lib2","admin2","password2"),
+                    OPDSLibrary("Library 3","http://www.comixedproject.org:7171/comics/lib3","admin3","password3"),
+                    OPDSLibrary("Library 4","http://www.comixedproject.org:7171/comics/lib4","admin4","password4"),
+                    OPDSLibrary("Library 5","http://www.comixedproject.org:7171/comics/lib5","admin5","password5")
+                ))
             }
         }
     }
 }
 
 @Composable
-fun Greeting(text: String) {
-    Text(text = text)
+fun OPDSLibraryListView(libraries: List<OPDSLibrary>) {
+    Column {
+        Text(text = "Library List",
+            fontSize = 10.em,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+        )
+
+        libraries.forEach { library -> OPDSLibraryEntryView(library) }
+    }
+}
+
+@Composable
+fun OPDSLibraryEntryView(library: OPDSLibrary) {
+    Row(modifier = Modifier.padding(all = 8.dp)) {
+        Column {
+            DisableSelection {
+                Text(text = library.name, fontSize = 5.em, fontWeight = FontWeight.Bold)
+            }
+            Text(text = library.url)
+            Text(text = "${library.username}/${library.password}")
+        }
+    }
 }
 
 @Preview
 @Composable
 fun DefaultPreview() {
     MyApplicationTheme {
-        Greeting("Hello, Android!")
+        OPDSLibraryListView(
+            listOf<OPDSLibrary>(
+                OPDSLibrary("Library 1","http://www.comixedproject.org:7171/comics/lib1","admin1","password1"),
+                OPDSLibrary("Library 2","http://www.comixedproject.org:7171/comics/lib2","admin2","password2"),
+                OPDSLibrary("Library 3","http://www.comixedproject.org:7171/comics/lib3","admin3","password3"),
+                OPDSLibrary("Library 4","http://www.comixedproject.org:7171/comics/lib4","admin4","password4"),
+                OPDSLibrary("Library 5","http://www.comixedproject.org:7171/comics/lib5","admin5","password5")
+            )
+        )
     }
 }

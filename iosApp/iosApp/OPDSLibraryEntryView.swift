@@ -19,17 +19,27 @@
 import SwiftUI
 import shared
 
-@main
-struct iOSApp: App {
-	var body: some Scene {
-		WindowGroup {
-            OPDSLibraryListView(libraries: [
-            OPDSLibrary(name: "Library 1", url: "http://localhost:7171/library1", username: "admin1", password: "password1"),
-            OPDSLibrary(name: "Library 2", url: "http://localhost:7171/library2", username: "admin2", password: "password2"),
-            OPDSLibrary(name: "Library 3", url: "http://localhost:7171/library3", username: "admin3", password: "password3"),
-            OPDSLibrary(name: "Library 4", url: "http://localhost:7171/library4", username: "admin4", password: "password4"),
-            OPDSLibrary(name: "Library 5", url: "http://localhost:7171/library5", username: "admin5", password: "password5"),
-            ])
-		}
-	}
+struct OPDSLibraryEntryView: View {
+    let library: shared.OPDSLibrary
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(library.name)
+                .font(.headline)            
+            Text(library.url)
+            Text("\(library.username)/\(library.password)")
+        }
+    }
+}
+
+struct OPDSLibraryEntryView_Previews: PreviewProvider {
+    static var previews: some View {
+        OPDSLibraryEntryView(
+            library: OPDSLibrary(
+                name: "Library 1",
+                url: "http://www.comixedproject.org:7171/comics/lib1",
+                username: "admin1",
+                password: "password1")
+        )
+    }
 }
