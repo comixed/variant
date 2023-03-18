@@ -17,7 +17,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.0"
+        kotlinCompilerExtensionVersion = "1.4.2"
     }
     packagingOptions {
         resources {
@@ -30,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -39,11 +39,31 @@ android {
 }
 
 dependencies {
+    val composeBom = platform("androidx.compose:compose-bom:2023.01.00")
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
     implementation(project(":shared"))
-    implementation("androidx.compose.ui:ui:1.3.1")
-    implementation("androidx.compose.ui:ui-tooling:1.3.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.3.1")
-    implementation("androidx.compose.foundation:foundation:1.3.1")
-    implementation("androidx.compose.material:material:1.3.1")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.activity:activity-compose")
+
+    implementation("androidx.compose.material:material")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-core:1.3.1")
+    implementation("androidx.compose.material:material-icons-extended:1.3.1")
+
     implementation("androidx.activity:activity-compose:1.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    implementation("androidx.compose.runtime:runtime-livedata")
+
+    implementation("androidx.room:room-ktx:2.5.0")
+    implementation("androidx.room:room-runtime:2.5.0")
+
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }

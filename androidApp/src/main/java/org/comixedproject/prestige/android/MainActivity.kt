@@ -15,42 +15,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
+
 package org.comixedproject.prestige.android
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.*
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import org.comixedproject.prestige.android.ui.LibraryListView
+import org.comixedproject.prestige.android.ui.library.SampleData
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    HomeView()
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    LibraryListView(
+                        SampleData.libraries
+                    )
                 }
             }
         }
     }
 }
 
-@Composable
-fun HomeView() {
-    Text(text = "Welcome To ComiXed Prestige!")
-}
-
-@Preview
+@Preview(showBackground = true, widthDp = 320)
 @Composable
 fun DefaultPreview() {
     MyApplicationTheme {
-
+        Surface {
+            LibraryListView(
+                SampleData.libraries
+            )
+        }
     }
 }

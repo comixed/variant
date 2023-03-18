@@ -16,19 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
-import shared
+package org.comixedproject.prestige.android.ui.library
 
-struct ContentView: View {
-	let greet = Greeting().greet()
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import org.comixedproject.prestige.model.library.Library
 
-	var body: some View {
-		Text(greet)
-	}
+@Composable
+fun LibraryDetailView(library: Library) {
+    Column {
+        Text(text = library.name)
+    }
 }
 
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContentView()
-	}
+@Preview
+@Composable
+fun LibraryDetailViewPreview() {
+    LibraryDetailView(library = SampleData.libraries[0])
 }
