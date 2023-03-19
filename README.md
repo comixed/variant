@@ -2,6 +2,11 @@
 
 Prestige is a digital comic reading application for Android tables and iPads.
 
+# Status
+
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=comixed_prestige)](https://sonarcloud.io/dashboard?id=comixed_prestige)
+
+
 # Project Roadmap And Vision Statement
 
 The goals of this project are to provide a platform where users can read digital comic books
