@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.prestige.data
+package org.comixedproject.prestige.android.state
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -30,7 +30,7 @@ import org.comixedproject.prestige.model.library.Library
  *
  * @author Darryl L. Pierce
  */
-class AppViewModel(application: Application) : AndroidViewModel(application) {
+class PrestigeAppViewModel(application: Application) : AndroidViewModel(application) {
     private var libraries: List<Library> = emptyList()
 
     private val repository: LibraryRepository;

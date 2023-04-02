@@ -18,10 +18,16 @@
 
 package org.comixedproject.prestige.android.ui
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import org.comixedproject.prestige.android.R
 import org.comixedproject.prestige.android.ui.library.LibraryListEntryView
 import org.comixedproject.prestige.android.ui.library.SampleData
 import org.comixedproject.prestige.model.library.Library
@@ -32,9 +38,19 @@ import org.comixedproject.prestige.model.library.Library
  * @author Darryl L. Pierce
  */
 @Composable
-fun LibraryListView(libraries: List<Library>) {
-    LazyColumn {
-        items(libraries) { entry -> LibraryListEntryView(library = entry) }
+fun LibraryListView(
+    libraries: List<Library> = SampleData.libraries,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier) {
+        Text(
+            text = stringResource(R.string.library_list_title),
+            style = MaterialTheme.typography.h2
+        )
+
+        LazyColumn(modifier) {
+            items(libraries) { entry -> LibraryListEntryView(library = entry) }
+        }
     }
 }
 
@@ -42,7 +58,5 @@ fun LibraryListView(libraries: List<Library>) {
 @Preview
 @Composable
 fun LibraryListViewPreview() {
-    LibraryListView(
-        SampleData.libraries
-    )
+    LibraryListView()
 }
