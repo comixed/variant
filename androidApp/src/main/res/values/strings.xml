@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- bottom navigation -->
+    <string name="navigation_label_home">Home</string>
+    <string name="navigation_label_servers">Servers</string>
+
+    <!-- library list view -->
+    <string name="library_list_title">Library Server List</string>
     <string name="library_list_entry_hostname">Hostname: %1$s:%2$d</string>
     <string name="library_list_entry_username">Username: %1$s</string>
     <string name="library_list_entry_password">Password: %1$s</string>

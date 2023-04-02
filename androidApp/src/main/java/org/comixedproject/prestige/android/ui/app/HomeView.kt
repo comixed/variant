@@ -16,18 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.prestige.android
+package org.comixedproject.prestige.android.ui.app
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import org.comixedproject.prestige.android.ui.app.PrestigeAppView
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            PrestigeAppView()
-        }
-    }
+@Composable
+fun HomeView(modifier: Modifier = Modifier) {
+}
+
+@Preview
+@Composable
+fun HomeViewPreview() {
+    HomeView()
 }
