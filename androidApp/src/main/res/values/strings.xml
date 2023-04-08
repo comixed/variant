@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- text -->
+    <string name="description_add_library">Add a new library entry</string>
     <string name="text_app_title">ComiXed Prestige</string>
+
     <!-- bottom navigation -->
     <string name="navigation_label_home">Home</string>
     <string name="navigation_label_servers">Servers</string>
 
     <!-- library list view -->
     <string name="library_list_title">Library Server List</string>
+
+    <!-- library edit view -->
+    <string name="text_library_edit_new">New Library</string>
+    <string name="text_library_edit_title">Edit Library</string>
+    <string name="placeholder_library_name">The library\'s name</string>
+    <string name="placeholder_library_password">Password to login</string>
+    <string name="placeholder_library_url">Server\'s address</string>
+    <string name="placeholder_library_username">Username to login</string>
+
+    <!-- buttons -->
+    <string name="button_cancel">Cancel</string>
+    <string name="button_save">Save</string>
 </resources>

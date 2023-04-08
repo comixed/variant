@@ -18,16 +18,20 @@
 
 package org.comixedproject.prestige.android.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.prestige.android.R
+import org.comixedproject.prestige.android.ui.app.LOGTAG
 import org.comixedproject.prestige.android.ui.library.LibraryListEntryView
 import org.comixedproject.prestige.android.ui.library.SampleData
 import org.comixedproject.prestige.model.library.Library
@@ -40,21 +44,39 @@ import org.comixedproject.prestige.model.library.Library
 @Composable
 fun LibraryListView(
     libraries: List<Library>,
+    onAddLibrary: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier) {
-        Text(
-            text = stringResource(R.string.library_list_title),
-            style = MaterialTheme.typography.h2
-        )
-
-        LazyColumn(modifier) {
-            items(libraries) { entry ->
-                LibraryListEntryView(
-                    name = entry.name,
-                    url = entry.url,
-                    username = entry.username
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    Log.d(LOGTAG, "Add library button clicked")
+                    onAddLibrary()
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Add,
+                    contentDescription = stringResource(R.string.description_add_library)
                 )
+            }
+        }
+    ) { padding ->
+        Column(modifier = modifier.padding(padding)) {
+            Text(
+                text = stringResource(R.string.library_list_title),
+                style = MaterialTheme.typography.h2
+            )
+
+
+            LazyColumn(modifier) {
+                items(libraries) { entry ->
+                    LibraryListEntryView(
+                        name = entry.name,
+                        url = entry.url,
+                        username = entry.username
+                    )
+                }
             }
         }
     }
@@ -64,5 +86,5 @@ fun LibraryListView(
 @Preview
 @Composable
 fun LibraryListPreview() {
-    LibraryListView(SampleData.libraries)
+    LibraryListView(libraries = SampleData.libraries, onAddLibrary = {})
 }
