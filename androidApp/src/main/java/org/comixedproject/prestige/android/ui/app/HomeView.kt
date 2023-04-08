@@ -22,6 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
+const val LOGTAG = "PRESTIGE"
+
 @Composable
 fun HomeView(modifier: Modifier = Modifier) {
 }

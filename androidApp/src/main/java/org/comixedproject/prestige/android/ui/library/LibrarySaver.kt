@@ -16,22 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.prestige.android.state
+package org.comixedproject.prestige.android.ui.library
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.compose.runtime.saveable.listSaver
 import org.comixedproject.prestige.model.library.Library
 
-/**
- * <code>AppViewModel</code> contains the applications runtime state data model.
- *
- * @author Darryl L. Pierce
- */
-class PrestigeAppViewModel(application: Application) : AndroidViewModel(application) {
-    private var _libraryServers: MutableList<Library> = mutableListOf()
-    val libraryServers: List<Library> get() = _libraryServers.toList()
-
-    fun addLibrary(library: Library) {
-        _libraryServers.add(library)
-    }
+val LibrarySaver = run {
+    listSaver(
+        save = { library: Library ->
+            listOf(
+                library.libraryId,
+                library.name,
+                library.url,
+                library.username,
+                library.password
+            )
+        },
+        restore = { restorationList: List<Any?> ->
+            Library(
+                restorationList[0] as Long,
+                restorationList[1] as String,
+                restorationList[2] as String,
+                restorationList[3] as String
+            )
+        }
+    )
 }

@@ -19,25 +19,27 @@
 package org.comixedproject.prestige.android.state
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.ui.graphics.vector.ImageVector
-import org.comixedproject.prestige.android.R
 
 interface PrestigeDestination {
     val icon: ImageVector
     val route: String
-    val label: Int
 }
 
 object HomeRoute : PrestigeDestination {
     override val icon = Icons.Filled.Home
     override val route = "home"
-    override val label = R.string.navigation_label_home
 }
 
 object ServerListRoute : PrestigeDestination {
     override val icon = Icons.Filled.LibraryBooks
     override val route = "servers"
-    override val label = R.string.navigation_label_servers
+}
+
+object AddServerRoute : PrestigeDestination {
+    override val icon = Icons.Filled.Book
+    override val route = "servers.add"
 }
