@@ -20,7 +20,6 @@ package org.comixedproject.prestige.android.ui.library
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -30,18 +29,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.comixedproject.prestige.android.R
-import org.comixedproject.prestige.model.library.Library
+import org.comixedproject.prestige.android.PrestigeTheme
 
 @Composable
-fun LibraryListEntryView(library: Library) {
+fun LibraryListEntryView(
+    name: String,
+    url: String,
+    username: String,
+    modifier: Modifier = Modifier
+) {
     Row(modifier = Modifier.padding(24.dp)) {
         Icon(
             Icons.Outlined.Computer,
-            contentDescription = library.name,
+            contentDescription = url,
             tint = Color.Blue,
             modifier = Modifier
                 .size(40.dp)
@@ -52,7 +54,7 @@ fun LibraryListEntryView(library: Library) {
 
         Column {
             Text(
-                text = library.name,
+                text = name,
                 color = MaterialTheme.colors.secondaryVariant,
                 style = MaterialTheme.typography.subtitle1
             )
@@ -61,38 +63,15 @@ fun LibraryListEntryView(library: Library) {
 
             Column {
                 Text(
-                    text = stringResource(
-                        R.string.library_list_entry_hostname,
-                        library.hostname,
-                        library.port
-                    ),
+                    url,
                     modifier = Modifier.padding(all = 4.dp),
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.subtitle2
                 )
                 Text(
-                    text = stringResource(R.string.library_list_entry_username, library.username),
+                    username,
                     modifier = Modifier.padding(all = 4.dp),
                     style = MaterialTheme.typography.body1
                 )
-                Text(
-                    text = stringResource(R.string.library_list_entry_password, library.password),
-                    modifier = Modifier.padding(all = 4.dp),
-                    style = MaterialTheme.typography.body1
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Column {
-            Button(onClick = { /*TODO*/ }) {
-                Text("Open")
-            }
-            Button(onClick = { /*TODO*/ }) {
-                Text("Edit")
-            }
-            Button(onClick = { /*TODO*/ }) {
-                Text("Delete")
             }
         }
     }
@@ -101,9 +80,11 @@ fun LibraryListEntryView(library: Library) {
 @Preview
 @Composable
 fun PreviewLibraryView() {
-    LibraryListEntryView(
-        library = Library(
-            0, "My Personal Library", "localhost", 7171, "reader@comixedproject.org", "my!password"
+    PrestigeTheme {
+        LibraryListEntryView(
+            name = "My Home Server",
+            url = "http://server.comixedproject.org:7171/opds",
+            username = "reader@comixedproject.org"
         )
-    )
+    }
 }

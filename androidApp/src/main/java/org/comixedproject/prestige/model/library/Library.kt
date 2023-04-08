@@ -12,8 +12,7 @@ import androidx.room.PrimaryKey
 data class Library(
     @PrimaryKey(autoGenerate = true) var libraryId: Long = 0,
     val name: String,
-    val hostname: String,
-    val port: Int,
+    val url: String,
     val username: String,
     val password: String
 )

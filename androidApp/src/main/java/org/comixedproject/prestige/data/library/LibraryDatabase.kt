@@ -18,7 +18,7 @@ abstract class LibraryDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var instance: LibraryDatabase? = null;
+        private var instance: LibraryDatabase? = null
 
         fun getDatabase(context: Context, scope: CoroutineScope): LibraryDatabase =
             this.instance ?: synchronized(this) {
