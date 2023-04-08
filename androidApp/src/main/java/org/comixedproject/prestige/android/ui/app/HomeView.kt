@@ -28,6 +28,6 @@ fun HomeView(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun HomeViewPreview() {
+fun HomePreview() {
     HomeView()
 }

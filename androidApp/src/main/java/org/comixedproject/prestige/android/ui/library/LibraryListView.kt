@@ -39,7 +39,7 @@ import org.comixedproject.prestige.model.library.Library
  */
 @Composable
 fun LibraryListView(
-    libraries: List<Library> = SampleData.libraries,
+    libraries: List<Library>,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
@@ -49,7 +49,13 @@ fun LibraryListView(
         )
 
         LazyColumn(modifier) {
-            items(libraries) { entry -> LibraryListEntryView(library = entry) }
+            items(libraries) { entry ->
+                LibraryListEntryView(
+                    name = entry.name,
+                    url = entry.url,
+                    username = entry.username
+                )
+            }
         }
     }
 }
@@ -57,6 +63,6 @@ fun LibraryListView(
 
 @Preview
 @Composable
-fun LibraryListViewPreview() {
-    LibraryListView()
+fun LibraryListPreview() {
+    LibraryListView(SampleData.libraries)
 }

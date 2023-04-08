@@ -20,75 +20,68 @@ package org.comixedproject.prestige.android.ui.library
 
 import org.comixedproject.prestige.model.library.Library
 
+/**
+ * This class is only for initial development work and will be deleted.
+ */
 object SampleData {
     val libraries = listOf(
         Library(
             0, "My Personal Library",
-            "localhost",
-            7171,
+            "http://localhost:7171/opds",
             "reader@comixedproject.org",
             "my!password"
         ),
         Library(
             1, "My Personal Library",
-            "localhost",
-            7171,
+            "http://localhost:7171/opds",
             "reader@comixedproject.org",
             "my!password"
         ),
         Library(
             2, "My Personal Library",
-            "localhost",
-            7171,
+            "http://localhost:7171/opds",
             "reader@comixedproject.org",
             "my!password"
         ),
         Library(
             3, "My Personal Library",
-            "localhost",
-            7171,
+            "http://localhost:7171/opds",
             "reader@comixedproject.org",
             "my!password"
         ),
         Library(
             4, "My Personal Library",
-            "localhost",
-            7171,
+            "http://localhost:7171/opds",
             "reader@comixedproject.org",
             "my!password"
         ),
         Library(
             5, "My Personal Library",
-            "localhost",
-            7171,
+            "http://localhost:7171/opds",
             "reader@comixedproject.org",
             "my!password"
         ),
         Library(
             6, "My Personal Library",
-            "localhost",
-            7171,
+            "http://localhost:7171/opds",
             "reader@comixedproject.org",
             "my!password"
         ),
         Library(
             7, "My Personal Library",
-            "localhost",
-            7171,
+            "http://localhost:7171/opds",
             "reader@comixedproject.org",
             "my!password"
         ),
         Library(
             8, "My Personal Library",
-            "localhost",
-            7171,
+            "http://localhost:7171/opds",
             "reader@comixedproject.org",
             "my!password"
         ),
         Library(
             9, "My Personal Library",
-            "localhost",
-            7171,
+            "http://localhost:7171/opds",
             "reader@comixedproject.org",
             "my!password"
         )

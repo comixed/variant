@@ -33,6 +33,6 @@ fun LibraryDetailView(library: Library) {
 
 @Preview
 @Composable
-fun LibraryDetailViewPreview() {
+fun LibraryDetailPreview() {
     LibraryDetailView(library = SampleData.libraries[0])
 }

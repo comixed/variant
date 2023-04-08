@@ -20,17 +20,22 @@ package org.comixedproject.prestige.android.ui.app
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.comixedproject.prestige.android.PrestigeTheme
+import org.comixedproject.prestige.android.R
 import org.comixedproject.prestige.android.state.HomeRoute
 import org.comixedproject.prestige.android.state.ServerListRoute
 import org.comixedproject.prestige.android.ui.LibraryListView
+import org.comixedproject.prestige.android.ui.library.SampleData
 
 fun NavHostController.navigateSingleTopTo(route: String) =
     this.navigate(route) {
@@ -43,6 +48,11 @@ fun PrestigeAppView(modifier: Modifier = Modifier) {
     PrestigeTheme {
         val navController = rememberNavController()
         Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(R.string.text_app_title)) }
+                )
+            },
             bottomBar = {
                 PrestigeBottomNavigation(onScreenSelected = { screen ->
                     navController.navigateSingleTopTo(
@@ -57,7 +67,7 @@ fun PrestigeAppView(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(padding)
             ) {
                 composable(route = HomeRoute.route) { HomeView() }
-                composable(route = ServerListRoute.route) { LibraryListView() }
+                composable(route = ServerListRoute.route) { LibraryListView(SampleData.libraries) }
             }
         }
     }
@@ -65,6 +75,8 @@ fun PrestigeAppView(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun PrestigeAppViewPreview() {
-    PrestigeAppView()
+fun PrestigeAppPreview() {
+    PrestigeTheme {
+        PrestigeAppView()
+    }
 }

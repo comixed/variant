@@ -33,7 +33,7 @@ import org.comixedproject.prestige.model.library.Library
 class PrestigeAppViewModel(application: Application) : AndroidViewModel(application) {
     private var libraries: List<Library> = emptyList()
 
-    private val repository: LibraryRepository;
+    private val repository: LibraryRepository
 
     init {
         this.repository =
