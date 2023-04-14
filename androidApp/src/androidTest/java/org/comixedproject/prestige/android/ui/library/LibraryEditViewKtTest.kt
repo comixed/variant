@@ -18,26 +18,32 @@
 
 package org.comixedproject.prestige.android.ui.library
 
+import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performTextInput
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.compose.ui.test.performClick
+import junit.framework.TestCase.assertTrue
 import org.comixedproject.prestige.android.PrestigeTheme
 import org.comixedproject.prestige.model.library.Library
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
 const val TEST_LIBRARY_NAME = "My Test Library"
 const val TEST_LIBRARY_URL = "http://myserver.lan:7171/opds"
 const val TEST_USERNAME = "comixedreader@localhost"
 const val TEST_PASSWORD = "comixedreader"
 
-@RunWith(AndroidJUnit4::class)
 class LibraryEditViewKtTest {
     @get: Rule
     val composeTestRule = createComposeRule()
+
+    var library = Library()
+    var cancelClicked = false
 
     @Before
     fun setUp() {
@@ -49,21 +55,47 @@ class LibraryEditViewKtTest {
                         url = TEST_LIBRARY_URL,
                         username = TEST_USERNAME,
                         password = TEST_PASSWORD
-                    ), onSave = { name, url, username, password -> {} }, onCancel = { /*TODO*/ })
+                    ),
+                    onSave = { name, url, username, password ->
+                        library = Library(
+                            name = name,
+                            url = url,
+                            username = username,
+                            password = password
+                        )
+                    },
+                    onCancel = { cancelClicked = true })
             }
         }
     }
 
     @Test
-    fun testVerifyScreenComposed() {
-        composeTestRule.onNodeWithTag(TAG_LIBRARY_NAME).assertExists()
-        composeTestRule.onNodeWithTag(TAG_LIBRARY_URL).assertExists()
-        composeTestRule.onNodeWithTag(TAG_USERNAME).assertExists()
-        composeTestRule.onNodeWithTag(TAG_PASSWORD).assertExists()
+    fun testScreenComposed() {
+        composeTestRule.onNodeWithTag(TAG_LIBRARY_NAME).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TAG_LIBRARY_URL).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TAG_USERNAME).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TAG_PASSWORD).assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag(TAG_LIBRARY_NAME).performTextInput(TEST_LIBRARY_NAME)
-        composeTestRule.onNodeWithTag(TAG_LIBRARY_URL).performTextInput(TEST_LIBRARY_URL)
-        composeTestRule.onNodeWithTag(TAG_USERNAME).performTextInput(TEST_USERNAME)
-        composeTestRule.onNodeWithTag(TAG_PASSWORD).performTextInput(TEST_PASSWORD)
+        composeTestRule.onNodeWithTag(TAG_LIBRARY_NAME).assert(hasText(TEST_LIBRARY_NAME))
+        composeTestRule.onNodeWithTag(TAG_LIBRARY_URL).assert(hasText(TEST_LIBRARY_URL))
+        composeTestRule.onNodeWithTag(TAG_USERNAME).assert(hasText(TEST_USERNAME))
+        composeTestRule.onNodeWithTag(TAG_PASSWORD).assert(hasText(TEST_PASSWORD))
+    }
+
+    @Test
+    fun testSaveRecord() {
+        composeTestRule.onNodeWithTag(TAG_SAVE).performClick()
+
+        Assert.assertEquals(TEST_LIBRARY_NAME, library.name)
+        Assert.assertEquals(TEST_LIBRARY_URL, library.url)
+        Assert.assertEquals(TEST_USERNAME, library.username)
+        Assert.assertEquals(TEST_PASSWORD, library.password)
+    }
+
+    @Test
+    fun testCancel() {
+        composeTestRule.onNodeWithTag(TAG_CANCEL).performClick()
+
+        assertTrue(cancelClicked)
     }
 }
