@@ -18,28 +18,27 @@
 
 package org.comixedproject.prestige.android.state
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryBooks
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 interface PrestigeDestination {
-    val icon: ImageVector
     val route: String
 }
 
 object HomeRoute : PrestigeDestination {
-    override val icon = Icons.Filled.Home
     override val route = "home"
 }
 
 object ServerListRoute : PrestigeDestination {
-    override val icon = Icons.Filled.LibraryBooks
     override val route = "servers"
 }
 
 object AddServerRoute : PrestigeDestination {
-    override val icon = Icons.Filled.Book
     override val route = "servers.add"
+}
+
+object EditServerRoute : PrestigeDestination {
+    override val route = "servers.edit"
+    const val libraryIdArg = "library_id_arg"
+    val arguments = listOf(navArgument(libraryIdArg) { type = NavType.LongType })
 }

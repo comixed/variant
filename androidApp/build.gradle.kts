@@ -26,6 +26,9 @@ android {
         }
     }
     buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+        }
         getByName("release") {
             isMinifyEnabled = false
         }

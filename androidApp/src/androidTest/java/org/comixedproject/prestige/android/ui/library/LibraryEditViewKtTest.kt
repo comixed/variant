@@ -41,7 +41,7 @@ class LibraryEditViewKtTest {
     @get: Rule
     val composeTestRule = createComposeRule()
 
-    var library = Library()
+    var savedLibrary = Library()
     var cancelClicked = false
 
     @Before
@@ -55,14 +55,7 @@ class LibraryEditViewKtTest {
                         username = TEST_USERNAME,
                         password = TEST_PASSWORD
                     ),
-                    onSave = { name, url, username, password ->
-                        library = Library(
-                            name = name,
-                            url = url,
-                            username = username,
-                            password = password
-                        )
-                    },
+                    onSave = { library -> savedLibrary = library },
                     onCancel = { cancelClicked = true })
             }
         }
@@ -85,10 +78,10 @@ class LibraryEditViewKtTest {
     fun testSaveRecord() {
         composeTestRule.onNodeWithTag(TAG_SAVE).performClick()
 
-        Assert.assertEquals(TEST_LIBRARY_NAME, library.name)
-        Assert.assertEquals(TEST_LIBRARY_URL, library.url)
-        Assert.assertEquals(TEST_USERNAME, library.username)
-        Assert.assertEquals(TEST_PASSWORD, library.password)
+        Assert.assertEquals(TEST_LIBRARY_NAME, savedLibrary.name)
+        Assert.assertEquals(TEST_LIBRARY_URL, savedLibrary.url)
+        Assert.assertEquals(TEST_USERNAME, savedLibrary.username)
+        Assert.assertEquals(TEST_PASSWORD, savedLibrary.password)
     }
 
     @Test

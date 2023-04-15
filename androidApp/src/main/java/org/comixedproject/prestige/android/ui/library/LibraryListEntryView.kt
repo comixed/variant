@@ -30,18 +30,24 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.comixedproject.prestige.android.PrestigeTheme
 import org.comixedproject.prestige.model.library.Library
 
+const val TAG_EDIT_BUTTON = "library.button.edit"
+const val TAG_REMOVE_BUTTON = "library.button.remove"
+
 @Composable
 fun LibraryListEntryView(
     library: Library,
+    onEditLibrary: (Library) -> Unit,
     onRemoveLibrary: (Library) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -72,12 +78,28 @@ fun LibraryListEntryView(
             )
         }
 
-        Button(
-            onClick = { onRemoveLibrary(library) }, modifier = Modifier
+        Column(
+            modifier = Modifier
                 .weight(0.2f)
-                .align(CenterVertically)
+                .align(
+                    CenterVertically
+                )
         ) {
-            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+            Button(
+                onClick = { onEditLibrary(library) },
+                modifier = Modifier.testTag(TAG_EDIT_BUTTON)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = null
+                )
+            }
+            Button(
+                onClick = { onRemoveLibrary(library) },
+                modifier = Modifier.testTag(TAG_REMOVE_BUTTON)
+            ) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+            }
         }
     }
 }
@@ -92,6 +114,7 @@ fun PreviewLibraryView() {
                 url = "http://server.comixedproject.org:7171/opds",
                 username = "reader@comixedproject.org", password = ""
             ),
+            onEditLibrary = { _ -> {} },
             onRemoveLibrary = {}
         )
     }

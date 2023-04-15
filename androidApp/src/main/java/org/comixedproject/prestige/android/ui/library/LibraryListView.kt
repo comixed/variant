@@ -46,7 +46,9 @@ import org.comixedproject.prestige.android.ui.app.LOGTAG
 import org.comixedproject.prestige.android.ui.library.LibraryListEntryView
 import org.comixedproject.prestige.model.library.Library
 
-const val TAG_REMOVE_BUTTON = "remove.button."
+const val TAG_LIBRARY_LIST = "library.list."
+const val TAG_ADD_LIBRARY = "library.button.add"
+const val TAG_LIBRARY_ENTRY = "library.button.remove."
 
 /**
  * <code>LibraryListView</code> displays the list of libraries.
@@ -57,6 +59,7 @@ const val TAG_REMOVE_BUTTON = "remove.button."
 fun LibraryListView(
     libraries: List<Library>,
     onAddLibrary: () -> Unit,
+    onEditLibrary: (Library) -> Unit,
     onRemoveLibrary: (Library) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -66,7 +69,8 @@ fun LibraryListView(
                 onClick = {
                     Log.d(LOGTAG, "Add library button clicked")
                     onAddLibrary()
-                }
+                },
+                modifier = Modifier.testTag(TAG_ADD_LIBRARY)
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Add,
@@ -91,6 +95,7 @@ fun LibraryListView(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(8.dp)
+                    .testTag(TAG_LIBRARY_LIST)
             ) {
                 items(items = libraries,
                     key = { it.libraryId },
@@ -104,7 +109,8 @@ fun LibraryListView(
                                     color = MaterialTheme.colors.primaryVariant,
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                                .testTag(TAG_REMOVE_BUTTON + library.libraryId),
+                                .testTag(TAG_LIBRARY_ENTRY + library.libraryId),
+                            onEditLibrary = onEditLibrary,
                             onRemoveLibrary = onRemoveLibrary
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -132,5 +138,6 @@ fun LibraryListPreview() {
             Library()
         ),
         onAddLibrary = {},
+        onEditLibrary = { _ -> {} },
         onRemoveLibrary = {})
 }

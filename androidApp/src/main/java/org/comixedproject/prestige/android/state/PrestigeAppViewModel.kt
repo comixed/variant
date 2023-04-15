@@ -35,6 +35,16 @@ class PrestigeAppViewModel(application: Application) : AndroidViewModel(applicat
         _libraryServers.add(library)
     }
 
+    fun getLibrary(libraryId: Long): Library {
+        return _libraryServers.filter { library -> library.libraryId == libraryId }.first()
+    }
+
+    fun updateLibrary(library: Library) {
+        _libraryServers =
+            _libraryServers.filter { entry -> entry.libraryId != library.libraryId }.toMutableList()
+        _libraryServers.add(library)
+    }
+
     fun removeLibrary(library: Library) {
         _libraryServers.remove(library)
     }

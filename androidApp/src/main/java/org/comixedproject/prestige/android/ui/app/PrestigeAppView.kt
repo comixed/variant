@@ -38,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import org.comixedproject.prestige.android.PrestigeTheme
 import org.comixedproject.prestige.android.R
 import org.comixedproject.prestige.android.state.AddServerRoute
+import org.comixedproject.prestige.android.state.EditServerRoute
 import org.comixedproject.prestige.android.state.HomeRoute
 import org.comixedproject.prestige.android.state.PrestigeAppViewModel
 import org.comixedproject.prestige.android.state.ServerListRoute
@@ -87,6 +88,11 @@ fun PrestigeAppView(
                         libraries = appViewModel.libraryServers, onAddLibrary = {
                             navController.navigateSingleTopTo(AddServerRoute.route)
                         },
+                        onEditLibrary = { library ->
+                            navController.navigateSingleTopTo(
+                                "${EditServerRoute.route}/${library.libraryId}"
+                            )
+                        },
                         onRemoveLibrary = { library ->
                             appViewModel.removeLibrary(library)
                             navController.navigateSingleTopTo(ServerListRoute.route)
@@ -95,20 +101,30 @@ fun PrestigeAppView(
                 composable(route = AddServerRoute.route) {
                     LibraryEditView(
                         library = newLibrary,
-                        onSave = { name, url, username, password ->
-                            appViewModel.addLibrary(
-                                Library(
-                                    name = name,
-                                    url = url,
-                                    username = username,
-                                    password = password
-                                )
-                            )
+                        onSave = { library ->
+                            appViewModel.addLibrary(library)
                             navController.navigateSingleTopTo(ServerListRoute.route)
                         },
                         onCancel = {
                             navController.navigateSingleTopTo(ServerListRoute.route)
                         })
+                }
+                composable(
+                    route = "${EditServerRoute.route}/{${EditServerRoute.libraryIdArg}}",
+                    arguments = EditServerRoute.arguments
+                ) { navBackStackEntry ->
+                    val libraryId =
+                        navBackStackEntry.arguments?.getLong(EditServerRoute.libraryIdArg)
+                    val library = appViewModel.getLibrary(libraryId!!)
+                    LibraryEditView(
+                        library = library,
+                        onSave = { library ->
+                            {
+                                appViewModel.updateLibrary(library)
+                                navController.navigateSingleTopTo(ServerListRoute.route)
+                            }
+                        },
+                        onCancel = { navController.navigateSingleTopTo(ServerListRoute.route) })
                 }
             }
         }

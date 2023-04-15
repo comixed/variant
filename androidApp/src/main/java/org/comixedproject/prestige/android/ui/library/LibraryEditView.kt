@@ -62,10 +62,13 @@ const val TAG_CANCEL = "library.cancel"
 @Composable
 fun LibraryEditView(
     library: Library,
-    onSave: (String, String, String, String) -> Unit,
+    onSave: (Library) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var library by rememberSaveable(stateSaver = LibrarySaver) {
+        mutableStateOf(library)
+    }
     var libraryName by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(
             TextFieldValue(library.name)
@@ -145,11 +148,12 @@ fun LibraryEditView(
         Row {
             Button(
                 onClick = {
+                    library.name = libraryName.text
+                    library.url = libraryUrl.text
+                    library.username = username.text
+                    library.password = password.text
                     onSave(
-                        libraryName.text,
-                        libraryUrl.text,
-                        username.text,
-                        password.text
+                        library
                     )
                 },
                 modifier = Modifier.testTag(TAG_SAVE)
@@ -175,7 +179,7 @@ fun NewLibraryEditPreview() {
     PrestigeTheme {
         LibraryEditView(
             library = Library(),
-            onSave = { name, url, username, password -> {} },
+            onSave = { _ -> {} },
             onCancel = {})
     }
 }
@@ -185,7 +189,7 @@ fun NewLibraryEditPreview() {
 fun LibraryEditPreview() {
     PrestigeTheme {
         LibraryEditView(library = Library(),
-            onSave = { name, url, username, password -> {} },
+            onSave = { _ -> {} },
             onCancel = {})
     }
 }

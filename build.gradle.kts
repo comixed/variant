@@ -5,6 +5,8 @@ plugins {
     id("org.sonarqube").version("3.4.0.2513")
     kotlin("android").version("1.8.10").apply(false)
     kotlin("multiplatform").version("1.8.0").apply(false)
+
+    jacoco
 }
 
 tasks.register("clean", Delete::class) {
