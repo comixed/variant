@@ -18,6 +18,7 @@
 
 package org.comixedproject.prestige.android.ui.app
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -72,7 +73,8 @@ fun PrestigeAppView(
                         screen.route
                     )
                 })
-            }
+            },
+            modifier = Modifier.fillMaxWidth()
         ) { padding ->
             NavHost(
                 navController = navController,
@@ -81,9 +83,14 @@ fun PrestigeAppView(
             ) {
                 composable(route = HomeRoute.route) { HomeView() }
                 composable(route = ServerListRoute.route) {
-                    LibraryListView(libraries = appViewModel.libraryServers, onAddLibrary = {
-                        navController.navigateSingleTopTo(AddServerRoute.route)
-                    })
+                    LibraryListView(
+                        libraries = appViewModel.libraryServers, onAddLibrary = {
+                            navController.navigateSingleTopTo(AddServerRoute.route)
+                        },
+                        onRemoveLibrary = { library ->
+                            appViewModel.removeLibrary(library)
+                            navController.navigateSingleTopTo(ServerListRoute.route)
+                        })
                 }
                 composable(route = AddServerRoute.route) {
                     LibraryEditView(

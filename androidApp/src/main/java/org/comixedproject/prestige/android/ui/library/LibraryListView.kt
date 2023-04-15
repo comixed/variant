@@ -19,22 +19,34 @@
 package org.comixedproject.prestige.android.ui
 
 import android.util.Log
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.comixedproject.prestige.android.R
 import org.comixedproject.prestige.android.ui.app.LOGTAG
 import org.comixedproject.prestige.android.ui.library.LibraryListEntryView
-import org.comixedproject.prestige.android.ui.library.SampleData
 import org.comixedproject.prestige.model.library.Library
+
+const val TAG_REMOVE_BUTTON = "remove.button."
 
 /**
  * <code>LibraryListView</code> displays the list of libraries.
@@ -45,6 +57,7 @@ import org.comixedproject.prestige.model.library.Library
 fun LibraryListView(
     libraries: List<Library>,
     onAddLibrary: () -> Unit,
+    onRemoveLibrary: (Library) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -60,23 +73,43 @@ fun LibraryListView(
                     contentDescription = stringResource(R.string.description_add_library)
                 )
             }
-        }
+        },
+        modifier = modifier.fillMaxWidth()
     ) { padding ->
-        Column(modifier = modifier.padding(padding)) {
+        Column(
+            modifier = modifier
+                .padding(padding)
+                .fillMaxWidth()
+        ) {
             Text(
                 text = stringResource(R.string.library_list_title),
                 style = MaterialTheme.typography.h2
             )
 
 
-            LazyColumn(modifier) {
-                items(libraries) { entry ->
-                    LibraryListEntryView(
-                        name = entry.name,
-                        url = entry.url,
-                        username = entry.username
-                    )
-                }
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                items(items = libraries,
+                    key = { it.libraryId },
+                    itemContent = { library ->
+                        LibraryListEntryView(
+                            library = library,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colors.primaryVariant,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .testTag(TAG_REMOVE_BUTTON + library.libraryId),
+                            onRemoveLibrary = onRemoveLibrary
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                )
             }
         }
     }
@@ -86,5 +119,18 @@ fun LibraryListView(
 @Preview
 @Composable
 fun LibraryListPreview() {
-    LibraryListView(libraries = SampleData.libraries, onAddLibrary = {})
+    LibraryListView(
+        libraries = listOf(
+            Library(),
+            Library(),
+            Library(),
+            Library(),
+            Library(),
+            Library(),
+            Library(),
+            Library(),
+            Library()
+        ),
+        onAddLibrary = {},
+        onRemoveLibrary = {})
 }

@@ -18,61 +18,66 @@
 
 package org.comixedproject.prestige.android.ui.library
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Computer
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.comixedproject.prestige.android.PrestigeTheme
+import org.comixedproject.prestige.model.library.Library
 
 @Composable
 fun LibraryListEntryView(
-    name: String,
-    url: String,
-    username: String,
+    library: Library,
+    onRemoveLibrary: (Library) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = Modifier.padding(24.dp)) {
-        Icon(
-            Icons.Outlined.Computer,
-            contentDescription = url,
-            tint = Color.Blue,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(Dp(160f))
+            .padding(24.dp)
+    ) {
         Column {
             Text(
-                text = name,
+                text = library.name,
                 color = MaterialTheme.colors.secondaryVariant,
                 style = MaterialTheme.typography.subtitle1
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            Column {
-                Text(
-                    url,
-                    modifier = Modifier.padding(all = 4.dp),
-                    style = MaterialTheme.typography.subtitle2
-                )
-                Text(
-                    username,
-                    modifier = Modifier.padding(all = 4.dp),
-                    style = MaterialTheme.typography.body1
-                )
-            }
+            Text(
+                library.url,
+                modifier = Modifier.padding(all = 4.dp),
+                style = MaterialTheme.typography.subtitle2
+            )
+            Text(
+                library.username,
+                modifier = Modifier.padding(all = 4.dp),
+                style = MaterialTheme.typography.body1
+            )
+        }
+
+        Button(
+            onClick = { onRemoveLibrary(library) }, modifier = Modifier
+                .weight(0.2f)
+                .align(CenterVertically)
+        ) {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
         }
     }
 }
@@ -82,9 +87,12 @@ fun LibraryListEntryView(
 fun PreviewLibraryView() {
     PrestigeTheme {
         LibraryListEntryView(
-            name = "My Home Server",
-            url = "http://server.comixedproject.org:7171/opds",
-            username = "reader@comixedproject.org"
+            library = Library(
+                name = "My Home Server",
+                url = "http://server.comixedproject.org:7171/opds",
+                username = "reader@comixedproject.org", password = ""
+            ),
+            onRemoveLibrary = {}
         )
     }
 }

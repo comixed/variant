@@ -34,4 +34,8 @@ class PrestigeAppViewModel(application: Application) : AndroidViewModel(applicat
     fun addLibrary(library: Library) {
         _libraryServers.add(library)
     }
+
+    fun removeLibrary(library: Library) {
+        _libraryServers.remove(library)
+    }
 }
