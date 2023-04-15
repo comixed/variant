@@ -9,7 +9,7 @@
     <string name="navigation_label_servers">Servers</string>
 
     <!-- library list view -->
-    <string name="library_list_title">Library Server List</string>
+    <string name="library_list_title">Library Servers</string>
 
     <!-- library edit view -->
     <string name="text_library_edit_new">New Library</string>

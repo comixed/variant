@@ -34,5 +34,12 @@ fun LibraryDetailView(library: Library) {
 @Preview
 @Composable
 fun LibraryDetailPreview() {
-    LibraryDetailView(library = SampleData.libraries[0])
+    LibraryDetailView(
+        library = Library(
+            name = "My Library",
+            url = "http://server:7171/opds",
+            username = "reader@comixedproject.org",
+            password = "password"
+        )
+    )
 }
