@@ -1,6 +1,13 @@
+
 # Prestige
 
 Prestige is a digital comic reading application for Android tables and iPads.
+
+# Status
+
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=comixed_prestige)](https://sonarcloud.io/dashboard?id=comixed_prestige)\
+[![Latest Release](https://github.com/comixed/comixed/actions/workflows/publish-release.yml/badge.svg)](https://actions-badge.atrox.dev/comixed/prestige/goto?ref=master)\
+[![Docker Release](https://github.com/comixed/comixed/actions/workflows/publish-to-docker-hub.yml/badge.svg)](https://actions-badge.atrox.dev/comixed/prestige/goto?ref=master)
 
 # Project Roadmap And Vision Statement
 
