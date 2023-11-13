@@ -1,0 +1,43 @@
+[versions]
+android-gradle-plugin = "8.2.2"
+sonarqube-plugin = "4.4.1.3373"
+kotlin = "1.9.22"
+activity-compose = "1.8.0"
+activity-compose-compiler = "1.5.9"
+androidx-compose-bom = "2023.10.01"
+core-ktx = "1.12.0"
+lifecycle-runtime-ktx = "2.6.2"
+androidx-junit = "1.1.5"
+espresso-core = "3.5.1"
+junit = "4.13.2"
+
+[libraries]
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-compose-ui-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-ui-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
+junit = { module = "junit:junit", version.ref = "junit" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube-plugin" }
+
+[bundles]
+androidx = ["androidx-activity-compose", "androidx-core-ktx", "androidx-lifecycle-runtime-ktx"]
+compose = ["androidx-compose-material3", "androidx-compose-ui-ui-graphics", "androidx-compose-ui-ui", "androidx-compose-ui-ui-tooling-preview"]
+compose-debug = ["androidx-compose-ui-ui-tooling", "androidx-compose-ui-ui-test-manifest"]
+instrumented-tests = ["androidx-junit", "androidx-espresso-core", "androidx-compose-ui-ui-test-junit4"]
+unit-tests = ["junit"]
