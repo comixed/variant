@@ -2,6 +2,12 @@
 
 Variant is a digital comic reading application for Android tables and iPads.
 
+# Status
+
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=comixed_variant)](https://sonarcloud.io/dashboard?id=comixed_variant)\
+[![Latest Release](https://github.com/comixed/comixed/actions/workflows/publish-release.yml/badge.svg)](https://actions-badge.atrox.dev/comixed/variant/goto?ref=master)\
+[![Docker Release](https://github.com/comixed/comixed/actions/workflows/publish-to-docker-hub.yml/badge.svg)](https://actions-badge.atrox.dev/comixed/variant/goto?ref=master)
+
 # Project Roadmap And Vision Statement
 
 The goals of this project are to provide a platform where users can read digital comic books

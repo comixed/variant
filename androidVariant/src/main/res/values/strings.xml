@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="comicsButtonLabel">Comics</string>
+    <string name="serverButtonLabel">Servers</string>
+    <string name="aboutButtonLabel">About Variant</string>
+    <string name="appNameAndVersion">Variant v0.1-SNAPSHOT</string>
+</resources>
