@@ -16,12 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import androidx.compose.runtime.Composable
-import org.comixedproject.variant.ui.MainView
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+package org.comixedproject.variant.model;
 
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun App() {
-    MainView()
+import kotlinx.datetime.LocalDateTime
+
+/**
+ * <code>OPDSServerEntry</code> represents a single OPDS server.
+ *
+ * @author Darryl L. Pierce
+ */
+data class OPDSServerEntry(
+    val name: String,
+    val url: String,
+    val username: String,
+    val password: String,
+    val lastAccessedOn: LocalDateTime
+) {
 }

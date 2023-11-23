@@ -16,12 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import androidx.compose.runtime.Composable
-import org.comixedproject.variant.ui.MainView
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+package org.comixedproject.variant.ui
 
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun App() {
-    MainView()
+/**
+ * <code>Screen</code> lists the destination screens in the application.
+ *
+ * @author Darryl L. Pierce
+ */
+sealed class Screen(val title: String) {
+    object ServerList : Screen("server.list.label")
 }

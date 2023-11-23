@@ -16,12 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import androidx.compose.runtime.Composable
-import org.comixedproject.variant.ui.MainView
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+package org.comixedproject.variant.repository;
 
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun App() {
-    MainView()
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+
+class OPDSServerRepositoryTest {
+
+    @Test fun testGetAllEntries() {
+        val result = OPDSServerRepository().getAllEntries()
+
+        assertNotNull(result)
+        assertFalse(result.isEmpty())
+    }
 }

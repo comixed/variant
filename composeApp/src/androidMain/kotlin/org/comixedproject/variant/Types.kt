@@ -16,12 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import androidx.compose.runtime.Composable
-import org.comixedproject.variant.ui.MainView
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+package org.comixedproject.variant
 
-@OptIn(ExperimentalResourceApi::class)
+import androidx.compose.runtime.Composable
+
+typealias composeFun = @Composable () -> Unit
+typealias topBarFun = @Composable (Int) -> Unit
+
 @Composable
-fun App() {
-    MainView()
+fun EmptyComposable() {
 }

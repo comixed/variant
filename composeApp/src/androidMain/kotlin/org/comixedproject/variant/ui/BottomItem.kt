@@ -16,12 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import androidx.compose.runtime.Composable
-import org.comixedproject.variant.ui.MainView
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+package org.comixedproject.variant.ui
 
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun App() {
-    MainView()
-}
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.List
+import androidx.compose.ui.graphics.vector.ImageVector
+
+data class BottomItem(
+    val route: String,
+    val icon: ImageVector,
+    val iconContentDescription: String
+)
+
+val bottomNavigationItems = listOf(
+    BottomItem(Screen.ServerList.title, Icons.Filled.List, "ServerList")
+)
