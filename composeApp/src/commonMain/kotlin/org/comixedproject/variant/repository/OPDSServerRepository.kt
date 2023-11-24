@@ -44,64 +44,55 @@ class OPDSServerRepository {
                 "Second Entry",
                 "http://localhost:7171/opds",
                 "comixedreader@localhost",
-                "comixedreader",
-                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                "comixedreader"
             ),
             OPDSServerEntry(
                 "Third Entry",
                 "http://localhost:7171/opds",
                 "comixedreader@localhost",
-                "comixedreader",
-                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                "comixedreader"
             ),
             OPDSServerEntry(
                 "Fourth Entry",
                 "http://localhost:7171/opds",
                 "comixedreader@localhost",
-                "comixedreader",
-                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                "comixedreader"
             ),
             OPDSServerEntry(
                 "Fifth Entry",
                 "http://localhost:7171/opds",
                 "comixedreader@localhost",
-                "comixedreader",
-                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                "comixedreader"
             ),
             OPDSServerEntry(
                 "Sixth Entry",
                 "http://localhost:7171/opds",
                 "comixedreader@localhost",
-                "comixedreader",
-                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                "comixedreader"
             ),
             OPDSServerEntry(
                 "Seventh Entry",
                 "http://localhost:7171/opds",
                 "comixedreader@localhost",
-                "comixedreader",
-                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                "comixedreader"
             ),
             OPDSServerEntry(
                 "Eighth Entry",
                 "http://localhost:7171/opds",
                 "comixedreader@localhost",
-                "comixedreader",
-                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                "comixedreader"
             ),
             OPDSServerEntry(
                 "Ninth Entry",
                 "http://localhost:7171/opds",
                 "comixedreader@localhost",
-                "comixedreader",
-                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                "comixedreader"
             ),
             OPDSServerEntry(
                 "Tenth Entry",
                 "http://localhost:7171/opds",
                 "comixedreader@localhost",
-                "comixedreader",
-                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                "comixedreader"
             )
         );
     }

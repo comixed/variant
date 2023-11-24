@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.ui
+package org.comixedproject.variant.ui.server
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

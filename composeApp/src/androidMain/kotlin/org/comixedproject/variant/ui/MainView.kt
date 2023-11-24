@@ -38,15 +38,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.comixedproject.variant.EmptyComposable
+import org.comixedproject.variant.R
 import org.comixedproject.variant.VariantTheme
 import org.comixedproject.variant.model.OPDSServerEntry
+import org.comixedproject.variant.model.opdsServerEntryTemplate
 import org.comixedproject.variant.topBarFun
+import org.comixedproject.variant.ui.server.EditServerDialog
+import org.comixedproject.variant.ui.server.OPDSServerListScreen
 
 @Composable
 fun MainView(actionBarFun: topBarFun = { EmptyComposable() }) {
@@ -76,7 +81,10 @@ fun MainView(actionBarFun: topBarFun = { EmptyComposable() }) {
                         containerColor = MaterialTheme.colorScheme.secondary,
                         onClick = { showAddDialog.value = true }
                     ) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = "Add Server")
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = stringResource(R.string.add_server_label)
+                        )
                     }
                 }
             },
@@ -110,6 +118,20 @@ fun MainView(actionBarFun: topBarFun = { EmptyComposable() }) {
             }
         ) { padding ->
             Box(Modifier.padding(padding)) {
+                if (showAddDialog.value) {
+                    EditServerDialog(
+                        opdsServerEntryTemplate,
+                        onAdd = { entry ->
+                            showAddDialog.value = false
+                            if (!opdsServerList.contains(entry)) {
+                                opdsServerList.add(entry)
+                            }
+                        },
+                        onDismiss = {
+                            showAddDialog.value = false
+                        },
+                    )
+                }
                 when (selectedIndex.intValue) {
                     0 -> OPDSServerListScreen(opdsServerList)
                     else -> throw Exception("No valid screen to display: selectedIndex={selectedIndex.intValue}")
