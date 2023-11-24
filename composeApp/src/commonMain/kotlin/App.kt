@@ -17,11 +17,10 @@
  */
 
 import androidx.compose.runtime.Composable
-import org.comixedproject.variant.ui.MainView
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
-    MainView()
+//    MainView()
 }

@@ -2,4 +2,11 @@
 <resources>
     <string name="server_list">Servers</string>
     <string name="delete_label">Delete</string>
+    <string name="add_server_label">Add Server</string>
+    <string name="server_name_label">Server Name</string>
+    <string name="server_url_label">Address</string>
+    <string name="username_label">Username</string>
+    <string name="password_label">Password</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="save_button">Save</string>
 </resources>

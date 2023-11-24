@@ -30,6 +30,8 @@ data class OPDSServerEntry(
     val url: String,
     val username: String,
     val password: String,
-    val lastAccessedOn: LocalDateTime
+    val lastAccessedOn: LocalDateTime? = null
 ) {
 }
+
+val opdsServerEntryTemplate = OPDSServerEntry("", "", "", "");

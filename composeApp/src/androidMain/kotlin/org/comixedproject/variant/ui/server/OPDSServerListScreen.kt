@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.ui
+package org.comixedproject.variant.ui.server
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -42,6 +42,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.comixedproject.variant.R
 import org.comixedproject.variant.model.OPDSServerEntry
+import org.comixedproject.variant.ui.AnimatedSwipeDismiss
 
 @Composable
 fun OPDSServerListScreen(opdsServerList: SnapshotStateList<OPDSServerEntry>) {
@@ -103,8 +104,7 @@ fun OPDSServerListScreenAndroidPreview() {
             "Preview Server 2",
             "http://www.comixedproject.org:7171/opds",
             "comixedreader@localhost",
-            "comixedreader",
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            "comixedreader"
         )
     )
     list.add(
@@ -112,8 +112,7 @@ fun OPDSServerListScreenAndroidPreview() {
             "Preview Server 3",
             "http://www.comixedproject.org:7171/opds",
             "comixedreader@localhost",
-            "comixedreader",
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            "comixedreader"
         )
     )
     OPDSServerListScreen(list)
