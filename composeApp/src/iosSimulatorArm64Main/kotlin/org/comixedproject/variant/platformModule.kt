@@ -16,18 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.ui
+package org.comixedproject.variant
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.ui.graphics.vector.ImageVector
+import org.koin.core.module.Module
 
-data class BottomItem(
-    val route: String,
-    val icon: ImageVector,
-    val iconContentDescription: String
-)
-
-val bottomNavigationItems = listOf(
-    BottomItem(Screen.ServerList.title, Icons.Filled.List, "ServerList")
-)
+actual val platformModule: Module
+    get() = TODO("Not yet implemented")

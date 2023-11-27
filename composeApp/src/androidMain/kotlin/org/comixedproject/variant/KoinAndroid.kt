@@ -16,18 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.ui
+package org.comixedproject.variant
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.ui.graphics.vector.ImageVector
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import org.koin.dsl.module
 
-data class BottomItem(
-    val route: String,
-    val icon: ImageVector,
-    val iconContentDescription: String
-)
-
-val bottomNavigationItems = listOf(
-    BottomItem(Screen.ServerList.title, Icons.Filled.List, "ServerList")
-)
+actual val platformModule = module {
+    single<SqlDriver> {
+        AndroidSqliteDriver(VariantDb.Schema, get(), "VariantDb")
+    }
+}

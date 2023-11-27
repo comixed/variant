@@ -16,18 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.ui
+package org.comixedproject.variant
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.ui.graphics.vector.ImageVector
+import android.app.Application
+import android.content.Context
+import org.comixedproject.variant.data.ServerViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
-data class BottomItem(
-    val route: String,
-    val icon: ImageVector,
-    val iconContentDescription: String
-)
+class VariantApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
 
-val bottomNavigationItems = listOf(
-    BottomItem(Screen.ServerList.title, Icons.Filled.List, "ServerList")
-)
+        initKoin(
+            appModule = module {
+                single<Context> { this@VariantApp }
+            },
+            viewModelsModule = module {
+                viewModel {
+                    ServerViewModel(get())
+                }
+            }
+        )
+    }
+}

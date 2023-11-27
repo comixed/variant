@@ -32,42 +32,40 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.comixedproject.variant.EmptyComposable
 import org.comixedproject.variant.R
 import org.comixedproject.variant.VariantTheme
-import org.comixedproject.variant.model.OPDSServerEntry
-import org.comixedproject.variant.model.opdsServerEntryTemplate
+import org.comixedproject.variant.data.ServerViewModel
+import org.comixedproject.variant.model.Server
+import org.comixedproject.variant.model.serverTemplate
 import org.comixedproject.variant.topBarFun
 import org.comixedproject.variant.ui.server.EditServerDialog
-import org.comixedproject.variant.ui.server.OPDSServerListScreen
+import org.comixedproject.variant.ui.server.ServerListScreen
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MainView(actionBarFun: topBarFun = { EmptyComposable() }) {
+fun MainView(
+    serverViewModel: ServerViewModel = getViewModel(),
+    actionBarFun: topBarFun = { EmptyComposable() }
+) {
     val showAddDialog = remember { mutableStateOf(false) }
-    val opdsServerList = remember { SnapshotStateList<OPDSServerEntry>() }
     val selectedIndex = remember { mutableIntStateOf(0) }
+    var serverList by remember { mutableStateOf(listOf<Server>(), policy = neverEqualPolicy()) }
 
-    opdsServerList.add(
-        OPDSServerEntry(
-            "Server 1",
-            "http://www.comixedproject.org:7171/opds",
-            "admin@comixedproject.org",
-            "c0m1x3d!4dm1n",
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        )
-    )
+    serverViewModel.onServerListUpdated = {
+        serverList = it
+    }
 
     VariantTheme {
         Scaffold(
@@ -120,12 +118,12 @@ fun MainView(actionBarFun: topBarFun = { EmptyComposable() }) {
             Box(Modifier.padding(padding)) {
                 if (showAddDialog.value) {
                     EditServerDialog(
-                        opdsServerEntryTemplate,
-                        onAdd = { entry ->
+                        serverTemplate,
+                        onAdd = { name, url, username, password ->
                             showAddDialog.value = false
-                            if (!opdsServerList.contains(entry)) {
-                                opdsServerList.add(entry)
-                            }
+                            serverViewModel.createServer(
+                                name, url, username, password
+                            )
                         },
                         onDismiss = {
                             showAddDialog.value = false
@@ -133,7 +131,10 @@ fun MainView(actionBarFun: topBarFun = { EmptyComposable() }) {
                     )
                 }
                 when (selectedIndex.intValue) {
-                    0 -> OPDSServerListScreen(opdsServerList)
+                    0 -> ServerListScreen(
+                        serverList,
+                        onRemove = { server -> serverViewModel.removeServer(server) })
+
                     else -> throw Exception("No valid screen to display: selectedIndex={selectedIndex.intValue}")
                 }
             }

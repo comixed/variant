@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    id("app.cash.sqldelight")
 }
 
 kotlin {
@@ -43,9 +44,14 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
+            implementation(libs.sqldelight.driver.android)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation(libs.koin.core)
+            implementation(libs.sqldelight.driver.sqlite)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -57,9 +63,11 @@ kotlin {
             implementation(compose.components.resources)
             implementation(libs.napier)
             implementation(libs.datetime)
+            implementation(libs.koin.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.koin.test)
         }
     }
 }
@@ -112,6 +120,17 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "org.comixedproject.variant"
             packageVersion = "1.0.0"
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("VariantDb") {
+            packageName.set("org.comixedproject.variant")
+            schemaOutputDirectory.set(
+                file("src/commonMain/sqldelight/org/comixedproject/variant/db")
+            )
         }
     }
 }

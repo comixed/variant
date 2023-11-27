@@ -25,13 +25,39 @@ import kotlinx.datetime.LocalDateTime
  *
  * @author Darryl L. Pierce
  */
-data class OPDSServerEntry(
+data class Server(
+    val id: String,
     val name: String,
     val url: String,
     val username: String,
-    val password: String,
-    val lastAccessedOn: LocalDateTime? = null
+    val password: String
 ) {
+    private var _lastAccessedOn: LocalDateTime? = null
+    val lastAccessedOn: LocalDateTime?
+        get() = _lastAccessedOn
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as Server
+
+        if (name != other.name) return false
+        if (url != other.url) return false
+        if (username != other.username) return false
+        if (password != other.password) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + url.hashCode()
+        result = 31 * result + username.hashCode()
+        result = 31 * result + password.hashCode()
+        return result
+    }
+
 }
 
-val opdsServerEntryTemplate = OPDSServerEntry("", "", "", "");
+val serverTemplate = Server("", "", "", "", "");

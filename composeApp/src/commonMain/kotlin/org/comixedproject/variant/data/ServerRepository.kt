@@ -16,18 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.ui
+package org.comixedproject.variant.data
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.ui.graphics.vector.ImageVector
+import org.comixedproject.variant.db.ServerDb
+import org.comixedproject.variant.model.Server
 
-data class BottomItem(
-    val route: String,
-    val icon: ImageVector,
-    val iconContentDescription: String
-)
+class ServerRepository(private val databaseHelper: DatabaseHelper) {
+    val serverList: List<Server>
+        get() = databaseHelper.loadAll().map(ServerDb::map)
 
-val bottomNavigationItems = listOf(
-    BottomItem(Screen.ServerList.title, Icons.Filled.List, "ServerList")
+    fun createServer(name: String, url: String, username: String, password: String) {
+        databaseHelper.save(IdGenerator().toString(), name, url, username, password)
+    }
+
+    fun removeServer(server: Server) {
+        databaseHelper.delete(server.id)
+    }
+}
+
+/**
+ * Convert from a ServerDb to a Server.
+ */
+fun ServerDb.map() = Server(
+    id = this.id,
+    name = this.name,
+    url = this.url,
+    username = this.username,
+    password = this.password
 )

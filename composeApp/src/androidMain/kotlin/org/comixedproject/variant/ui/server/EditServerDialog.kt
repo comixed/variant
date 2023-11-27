@@ -54,7 +54,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import org.comixedproject.variant.R
 import org.comixedproject.variant.VariantTheme
-import org.comixedproject.variant.model.OPDSServerEntry
+import org.comixedproject.variant.data.IdGenerator
+import org.comixedproject.variant.model.Server
 
 /**
  * <code>EditServerDialog</code> manages a dialog for editing an OPDS server.
@@ -63,8 +64,8 @@ import org.comixedproject.variant.model.OPDSServerEntry
  */
 @Composable
 fun EditServerDialog(
-    entry: OPDSServerEntry,
-    onAdd: (OPDSServerEntry) -> Unit,
+    entry: Server,
+    onAdd: (String, String, String, String) -> Unit,
     onDismiss: () -> Unit
 ) = Dialog(onDismissRequest = onDismiss) {
     Surface(
@@ -123,7 +124,7 @@ fun EditServerDialog(
                 }
                 Spacer(modifier = Modifier.size(16.dp))
                 Button(onClick = {
-                    onAdd(OPDSServerEntry(name, url, username, password, entry.lastAccessedOn))
+                    onAdd(name, url, username, password)
                 }) {
                     Text(text = stringResource(id = R.string.save_button))
                 }
@@ -137,12 +138,13 @@ fun EditServerDialog(
 @Composable
 fun EditServerDialogAndroidPreview() {
     VariantTheme {
-        EditServerDialog(OPDSServerEntry(
+        EditServerDialog(Server(
+            IdGenerator().toString(),
             "Server Name",
             "http://www.comixedproject.org:7171/opds",
             "admin@comixedproject.org",
             "password"
         ),
-            onAdd = {}, onDismiss = {})
+            onAdd = { _, _, _, _ -> {} }, onDismiss = {})
     }
 }

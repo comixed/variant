@@ -41,13 +41,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import org.comixedproject.variant.model.OPDSServerEntry
+import org.comixedproject.variant.data.IdGenerator
+import org.comixedproject.variant.model.Server
 
 @Composable
-fun OPDSServerCard(entry: OPDSServerEntry) {
+fun ServerDetailCard(entry: Server) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -111,14 +109,14 @@ fun OPDSServerCard(entry: OPDSServerEntry) {
 
 @Preview
 @Composable
-fun OPDSServerCardAndroidPreview() {
-    OPDSServerCard(
-        entry = OPDSServerEntry(
+fun ServerDetailCardAndroidPreview() {
+    ServerDetailCard(
+        entry = Server(
+            IdGenerator().toString(),
             "Preview Server",
             "http://www.comixedproject.org:7171/opds",
             "comixedreader@localhost",
-            "comixedreader",
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            "comixedreader"
         )
     )
 }

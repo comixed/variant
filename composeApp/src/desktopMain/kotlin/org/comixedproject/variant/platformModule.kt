@@ -16,18 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.repository;
+package org.comixedproject.variant
 
-import kotlin.test.Test
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
+import org.koin.core.module.Module
 
-class OPDSServerRepositoryTest {
-
-    @Test fun testGetAllEntries() {
-        val result = OPDSServerRepository().getAllEntries()
-
-        assertNotNull(result)
-        assertFalse(result.isEmpty())
-    }
-}
+actual val platformModule: Module
+    get() = TODO("Not yet implemented")

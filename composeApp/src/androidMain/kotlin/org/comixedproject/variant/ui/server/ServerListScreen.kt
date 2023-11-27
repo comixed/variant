@@ -30,28 +30,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.comixedproject.variant.R
-import org.comixedproject.variant.model.OPDSServerEntry
+import org.comixedproject.variant.model.Server
 import org.comixedproject.variant.ui.AnimatedSwipeDismiss
 
 @Composable
-fun OPDSServerListScreen(opdsServerList: SnapshotStateList<OPDSServerEntry>) {
+fun ServerListScreen(serverList: List<Server>, onRemove: (Server) -> Unit) {
     val state = rememberLazyListState()
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = state) {
-            items(opdsServerList.size, key = { entry -> entry }) { index ->
-                val entry = opdsServerList[index]
+            items(serverList.size, key = { entry -> entry }) { index ->
+                val entry = serverList[index]
                 AnimatedSwipeDismiss(
                     item = entry,
                     background = { _ ->
@@ -73,13 +69,9 @@ fun OPDSServerListScreen(opdsServerList: SnapshotStateList<OPDSServerEntry>) {
                         }
                     },
                     content = {
-                        OPDSServerCard(entry = entry)
+                        ServerDetailCard(entry = entry)
                     },
-                    onDismiss = { entry ->
-                        if (opdsServerList.contains(entry)) {
-                            opdsServerList.remove(entry)
-                        }
-                    }
+                    onDismiss = onRemove
                 )
             }
         }
@@ -88,32 +80,7 @@ fun OPDSServerListScreen(opdsServerList: SnapshotStateList<OPDSServerEntry>) {
 
 @Preview
 @Composable
-fun OPDSServerListScreenAndroidPreview() {
-    val list = SnapshotStateList<OPDSServerEntry>()
-    list.add(
-        OPDSServerEntry(
-            "Preview Server 1",
-            "http://www.comixedproject.org:7171/opds",
-            "comixedreader@localhost",
-            "comixedreader",
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        )
-    )
-    list.add(
-        OPDSServerEntry(
-            "Preview Server 2",
-            "http://www.comixedproject.org:7171/opds",
-            "comixedreader@localhost",
-            "comixedreader"
-        )
-    )
-    list.add(
-        OPDSServerEntry(
-            "Preview Server 3",
-            "http://www.comixedproject.org:7171/opds",
-            "comixedreader@localhost",
-            "comixedreader"
-        )
-    )
-    OPDSServerListScreen(list)
+fun ServerListScreenAndroidPreview() {
+    val serverList: List<Server> = listOf()
+    ServerListScreen(serverList, onRemove = {})
 }
