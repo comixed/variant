@@ -16,22 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.model;
+package org.comixedproject.variant
 
-import kotlinx.datetime.LocalDateTime
+import org.koin.core.module.Module
 
-/**
- * <code>OPDSServerEntry</code> represents a single OPDS server.
- *
- * @author Darryl L. Pierce
- */
-data class OPDSServerEntry(
-    val name: String,
-    val url: String,
-    val username: String,
-    val password: String,
-    val lastAccessedOn: LocalDateTime? = null
-) {
-}
-
-val opdsServerEntryTemplate = OPDSServerEntry("", "", "", "");
+actual val platformModule: Module
+    get() = TODO("Not yet implemented")

@@ -16,11 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import androidx.compose.runtime.Composable
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+package org.comixedproject.variant
 
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun App() {
-//    MainView()
-}
+import org.koin.core.module.Module
+
+actual val platformModule: Module
+    get() = TODO("Not yet implemented")

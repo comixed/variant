@@ -1,8 +1,11 @@
 plugins {
+    val sqlDelightVersion = "2.0.0"
+
     alias(libs.plugins.jetbrainsCompose) apply false
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
+    id("app.cash.sqldelight").version(sqlDelightVersion).apply(false)
     id("org.sonarqube") version "4.4.1.3373"
 }
 

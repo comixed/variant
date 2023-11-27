@@ -18,19 +18,25 @@
 
 package org.comixedproject.variant
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
-import org.comixedproject.variant.ui.MainView
+import kotlinx.coroutines.launch
+import org.comixedproject.variant.ui.Screen
+import org.comixedproject.variant.ui.main.AppDrawer
+import org.comixedproject.variant.viewmodel.MainViewModel
 
 /**
  * <code>MainActivity</code> is the main entry point into the application on Android.
@@ -38,34 +44,50 @@ import org.comixedproject.variant.ui.MainView
  * @author Darryl L. Pierce
  */
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Napier.base(DebugAntilog())
         setContent {
-            MainView {
-                TopAppBar(colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
-                    title = {
-                        when (it) {
-                            else -> Text(text = stringResource(R.string.server_list))
-                        }
-                    })
-            }
-        }
-    }
-}
+            VariantTheme {
+                val coroutineScope = rememberCoroutineScope()
+                val scaffoldState: ScaffoldState = rememberScaffoldState()
+                val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    VariantTheme {
-        MainView {
-            TopAppBar(colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
-                title = {
-                    when (it) {
-                        else -> Text(text = stringResource(R.string.server_list))
+                Scaffold(
+                    scaffoldState = scaffoldState,
+                    drawerContent = {
+                        AppDrawer(
+                            currentScreen = Screen.fromRoute(
+                                navBackStackEntry?.destination?.route
+                            ),
+                            onScreenSelected = { screen ->
+                                navController.navigate(screen.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                                coroutineScope.launch {
+                                    scaffoldState.drawerState.close()
+                                }
+                            }
+                        )
+                    },
+                    content = {
+                        MainActivityScreen(
+                            navController = navController,
+                            openNavigatorDrawer = {
+                                coroutineScope.launch {
+                                    scaffoldState.drawerState.open()
+                                }
+                            })
                     }
-                })
+                )
+            }
         }
     }
 }

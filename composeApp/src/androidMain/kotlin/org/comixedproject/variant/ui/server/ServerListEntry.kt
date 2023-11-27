@@ -44,10 +44,16 @@ import androidx.compose.ui.unit.sp
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.comixedproject.variant.model.OPDSServerEntry
+import org.comixedproject.variant.data.IdGenerator
+import org.comixedproject.variant.model.Server
 
+/**
+ * <code>ServerListEntry</code> displays a single server in the list of servers.
+ *
+ * @author Darryl L. Pierce
+ */
 @Composable
-fun OPDSServerCard(entry: OPDSServerEntry) {
+fun ServerListEntry(entry: Server, onClick: (Server) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,17 +91,19 @@ fun OPDSServerCard(entry: OPDSServerEntry) {
                                     fontSize = 20.sp
                                 )
                             )
+                            if (entry.lastAccessedOn != null) {
+                                Text(
+                                    entry.lastAccessedOn!!.toString(),
+                                    style = TextStyle(
+                                        color = Color.Black,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 14.sp
+                                    )
+                                )
+                            }
                             Spacer(modifier = Modifier.weight(1.0f))
                             Text(
                                 entry.username, style = TextStyle(
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp
-                                )
-                            )
-                            Text(
-                                entry.lastAccessedOn.toString(),
-                                style = TextStyle(
                                     color = Color.Black,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp
@@ -111,14 +119,32 @@ fun OPDSServerCard(entry: OPDSServerEntry) {
 
 @Preview
 @Composable
-fun OPDSServerCardAndroidPreview() {
-    OPDSServerCard(
-        entry = OPDSServerEntry(
+fun ServerDetailCardAndroidPreview() {
+    val entry = Server(
+        IdGenerator().toString(),
+        "Preview Server",
+        "http://www.comixedproject.org:7171/opds",
+        "comixedreader@localhost",
+        "comixedreader",
+    )
+    entry.lastAccessedOn = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+
+    ServerListEntry(
+        entry = entry, onClick = {}
+    )
+}
+
+@Preview
+@Composable
+fun ServerDetailCardNeverAccessedAndroidPreview() {
+    ServerListEntry(
+        entry = Server(
+            IdGenerator().toString(),
             "Preview Server",
             "http://www.comixedproject.org:7171/opds",
             "comixedreader@localhost",
-            "comixedreader",
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        )
+            "comixedreader"
+        ),
+        onClick = {}
     )
 }

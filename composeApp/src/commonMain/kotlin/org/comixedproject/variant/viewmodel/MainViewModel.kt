@@ -16,24 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.ui
+package org.comixedproject.variant.viewmodel
+
+import org.comixedproject.variant.data.ServerRepository
+import org.comixedproject.variant.model.Server
 
 /**
- * <code>Screen</code> lists the destination screens in the application.
+ * <code>MainViewModel</code> represents the state of the application.
  *
  * @author Darryl L. Pierce
  */
-sealed class Screen(val title: String, val route: String) {
-    companion object {
-        fun fromRoute(route: String?): Screen {
-            return when (route) {
-                ServerList.route -> ServerList
-                ServerEdit.route -> ServerEdit
-                else -> ServerList
-            }
-        }
+class MainViewModel(private val serverRepository: ServerRepository) : BaseViewModel() {
+    internal val serverList: List<Server>
+        get() = serverRepository.serverList
+
+    fun createServer(name: String, url: String, username: String, password: String) {
+        serverRepository.createServer(name, url, username, password)
     }
 
-    object ServerList : Screen("label.server.list", "server.list")
-    object ServerEdit : Screen("label.server.edit", "server.edit")
+    fun removeServer(server: Server) {
+        serverRepository.removeServer(server)
+    }
 }
