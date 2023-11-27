@@ -16,24 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.ui
+package org.comixedproject.variant
 
-/**
- * <code>Screen</code> lists the destination screens in the application.
- *
- * @author Darryl L. Pierce
- */
-sealed class Screen(val title: String, val route: String) {
-    companion object {
-        fun fromRoute(route: String?): Screen {
-            return when (route) {
-                ServerList.route -> ServerList
-                ServerEdit.route -> ServerEdit
-                else -> ServerList
-            }
-        }
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import org.koin.dsl.module
+
+actual val platformModule = module {
+    single<SqlDriver> {
+        AndroidSqliteDriver(VariantDb.Schema, get(), "VariantDb")
     }
-
-    object ServerList : Screen("label.server.list", "server.list")
-    object ServerEdit : Screen("label.server.edit", "server.edit")
 }

@@ -16,24 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.ui
+package org.comixedproject.variant.data
 
-/**
- * <code>Screen</code> lists the destination screens in the application.
- *
- * @author Darryl L. Pierce
- */
-sealed class Screen(val title: String, val route: String) {
-    companion object {
-        fun fromRoute(route: String?): Screen {
-            return when (route) {
-                ServerList.route -> ServerList
-                ServerEdit.route -> ServerEdit
-                else -> ServerList
-            }
-        }
+import org.comixedproject.variant.db.ServerDb
+import org.comixedproject.variant.model.Server
+
+class ServerRepository(private val databaseHelper: DatabaseHelper) {
+    val serverList: List<Server>
+        get() = databaseHelper.loadAll().map(ServerDb::map)
+
+    fun createServer(name: String, url: String, username: String, password: String) {
+        databaseHelper.save(IdGenerator().toString(), name, url, username, password)
     }
 
-    object ServerList : Screen("label.server.list", "server.list")
-    object ServerEdit : Screen("label.server.edit", "server.edit")
+    fun removeServer(server: Server) {
+        databaseHelper.delete(server.id)
+    }
 }
+
+/**
+ * Convert from a ServerDb to a Server.
+ */
+fun ServerDb.map() = Server(
+    id = this.id,
+    name = this.name,
+    url = this.url,
+    username = this.username,
+    password = this.password
+)

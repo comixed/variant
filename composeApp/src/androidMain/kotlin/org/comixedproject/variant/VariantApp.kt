@@ -16,24 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.ui
+package org.comixedproject.variant
 
-/**
- * <code>Screen</code> lists the destination screens in the application.
- *
- * @author Darryl L. Pierce
- */
-sealed class Screen(val title: String, val route: String) {
-    companion object {
-        fun fromRoute(route: String?): Screen {
-            return when (route) {
-                ServerList.route -> ServerList
-                ServerEdit.route -> ServerEdit
-                else -> ServerList
+import android.app.Application
+import android.content.Context
+import org.comixedproject.variant.viewmodel.MainViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
+
+class VariantApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+
+        initKoin(
+            appModule = module {
+                single<Context> { this@VariantApp }
+                viewModel { MainViewModel(get()) }
             }
-        }
+        )
     }
-
-    object ServerList : Screen("label.server.list", "server.list")
-    object ServerEdit : Screen("label.server.edit", "server.edit")
 }
