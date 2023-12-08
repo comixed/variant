@@ -77,12 +77,8 @@ class MainActivity : ComponentActivity() {
                     },
                     content = {
                         MainActivityScreen(
-                            navController = navController,
-                            openNavigatorDrawer = {
-                                coroutineScope.launch {
-                                    scaffoldState.drawerState.open()
-                                }
-                            })
+                            navController = navController
+                        )
                     }
                 )
             }

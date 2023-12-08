@@ -33,8 +33,7 @@ import org.koin.androidx.compose.getViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainActivityScreen(
-    navController: NavHostController,
-    openNavigatorDrawer: () -> Unit
+    navController: NavHostController
 ) {
     val mainViewModel: MainViewModel = getViewModel()
 
