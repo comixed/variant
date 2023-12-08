@@ -20,9 +20,11 @@ package org.comixedproject.variant
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import org.comixedproject.variant.model.serverTemplate
 import org.comixedproject.variant.ui.Screen
 import org.comixedproject.variant.ui.server.EditServer
@@ -30,6 +32,11 @@ import org.comixedproject.variant.ui.server.ServerList
 import org.comixedproject.variant.viewmodel.MainViewModel
 import org.koin.androidx.compose.getViewModel
 
+/**
+ * The main activity screen for the application.
+ *
+ * @author Darryl L. Pierce
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainActivityScreen(
@@ -71,5 +78,13 @@ fun MainActivityScreen(
                     navController.navigate(Screen.ServerList.route)
                 }, onCancel = { navController.navigate(Screen.ServerList.route) })
         }
+    }
+}
+
+@Preview
+@Composable
+fun MainActivityScreenPreview() {
+    VariantTheme {
+        MainActivityScreen(rememberNavController())
     }
 }

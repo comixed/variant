@@ -16,9 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant
+package org.comixedproject.variant.data
 
-import org.koin.core.module.Module
+import platform.Foundation.NSUUID
 
-actual val platformModule: Module
-    get() = TODO("Not yet implemented")
+actual class IdGenerator actual constructor() {
+    private val value = NSUUID()
+    actual override fun toString() = value.UUIDString
+}

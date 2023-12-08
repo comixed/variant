@@ -49,7 +49,7 @@ import org.comixedproject.variant.data.IdGenerator
 import org.comixedproject.variant.model.Server
 
 /**
- * <code>ServerListEntry</code> displays a single server in the list of servers.
+ * Displays a single server in the list of servers.
  *
  * @author Darryl L. Pierce
  */
