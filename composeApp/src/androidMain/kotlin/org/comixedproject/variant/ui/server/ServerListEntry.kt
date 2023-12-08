@@ -20,6 +20,7 @@ package org.comixedproject.variant.ui.server
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,6 +57,7 @@ import org.comixedproject.variant.model.Server
 fun ServerListEntry(entry: Server, onClick: (Server) -> Unit) {
     Box(
         modifier = Modifier
+            .clickable { onClick(entry) }
             .fillMaxWidth()
             .height(140.dp)
             .background(MaterialTheme.colorScheme.background)

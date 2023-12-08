@@ -30,8 +30,14 @@ class MainViewModel(private val serverRepository: ServerRepository) : BaseViewMo
     internal val serverList: List<Server>
         get() = serverRepository.serverList
 
+    var currentServer: Server? = null
+
     fun createServer(name: String, url: String, username: String, password: String) {
         serverRepository.createServer(name, url, username, password)
+    }
+
+    fun updateServer(server: Server) {
+        serverRepository.updateServer(server)
     }
 
     fun removeServer(server: Server) {
