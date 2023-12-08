@@ -28,6 +28,7 @@ sealed class Screen(val title: String, val route: String) {
         fun fromRoute(route: String?): Screen {
             return when (route) {
                 ServerList.route -> ServerList
+                ServerAdd.route -> ServerAdd
                 ServerEdit.route -> ServerEdit
                 else -> ServerList
             }
@@ -35,5 +36,6 @@ sealed class Screen(val title: String, val route: String) {
     }
 
     object ServerList : Screen("label.server.list", "server.list")
+    object ServerAdd : Screen("label.server.add", "server.add")
     object ServerEdit : Screen("label.server.edit", "server.edit")
 }

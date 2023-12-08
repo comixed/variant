@@ -48,7 +48,7 @@ import org.comixedproject.variant.ui.bottomNavigationItems
  */
 @Composable
 fun ServerList(
-    serverList: List<Server>, onAdd: () -> Unit
+    serverList: List<Server>, onAdd: () -> Unit, onEdit: (Server) -> Unit
 ) {
     val selectedIndex = remember { mutableIntStateOf(0) }
 
@@ -95,7 +95,7 @@ fun ServerList(
     ) {
         LazyColumn {
             items(serverList) { entry ->
-                ServerListEntry(entry = entry, onClick = {})
+                ServerListEntry(entry = entry, onClick = { onEdit(entry) })
             }
         }
     }
@@ -121,6 +121,6 @@ fun ServerListScreenAndroidPreview() {
         ),
     )
     VariantTheme {
-        ServerList(serverList, onAdd = {})
+        ServerList(serverList, onAdd = {}, onEdit = {})
     }
 }

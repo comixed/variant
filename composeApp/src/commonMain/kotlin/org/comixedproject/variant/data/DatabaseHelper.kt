@@ -37,7 +37,7 @@ class DatabaseHelper(sqlDriver: SqlDriver) {
     }
 
     fun update(id: String, name: String, url: String, username: String, password: String) {
-        database.tableQueries.updateServer(id, name, url, username, password)
+        database.tableQueries.updateServer(name, url, username, password, id)
     }
 
     fun delete(id: String) {

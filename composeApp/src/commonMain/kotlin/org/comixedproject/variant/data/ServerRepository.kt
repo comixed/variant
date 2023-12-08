@@ -29,6 +29,10 @@ class ServerRepository(private val databaseHelper: DatabaseHelper) {
         databaseHelper.save(IdGenerator().toString(), name, url, username, password)
     }
 
+    fun updateServer(server: Server) {
+        databaseHelper.update(server.id, server.name, server.url, server.username, server.password)
+    }
+
     fun removeServer(server: Server) {
         databaseHelper.delete(server.id)
     }
