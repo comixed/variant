@@ -26,9 +26,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
@@ -47,7 +47,7 @@ fun ScreenNavigationButton(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val colors = MaterialTheme.colors
+    val colors = MaterialTheme.colorScheme
 
     val imageAlpha = if (isSelected) {
         1f
@@ -93,7 +93,7 @@ fun ScreenNavigationButton(
 
             Text(
                 text = label,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.bodyMedium,
                 color = textColor,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -103,11 +103,22 @@ fun ScreenNavigationButton(
 
 @Preview
 @Composable
-fun ScreenNavigationButtonPreview() {
+fun ScreenNavigationButtonSelectedPreview() {
     VariantTheme {
         ScreenNavigationButton(icon = Icons.Filled.Home,
             label = "Server List",
             isSelected = true,
+            onClick = { })
+    }
+}
+
+@Preview
+@Composable
+fun ScreenNavigationButtonUnselectedPreview() {
+    VariantTheme {
+        ScreenNavigationButton(icon = Icons.Filled.Home,
+            label = "Server List",
+            isSelected = false,
             onClick = { })
     }
 }

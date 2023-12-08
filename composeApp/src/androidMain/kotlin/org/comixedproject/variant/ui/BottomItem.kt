@@ -20,6 +20,8 @@ package org.comixedproject.variant.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LibraryBooks
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.comixedproject.variant.R
 
@@ -33,5 +35,13 @@ val bottomNavigationItems = listOf(
     BottomItem(
         Screen.ServerList.title, Icons.Filled.Home,
         R.string.server_list_label
+    ),
+    BottomItem(
+        Screen.ComicBookList.title, Icons.Filled.LibraryBooks,
+        R.string.comic_book_list_label
+    ),
+    BottomItem(
+        Screen.Settings.title, Icons.Filled.Settings,
+        R.string.settings_label
     )
 )

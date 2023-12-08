@@ -132,8 +132,13 @@ fun EditServer(
                         Icon(imageVector = image, "")
                     }
                 })
-            Spacer(modifier = Modifier.size(16.dp))
-            Row(modifier = Modifier.align(Alignment.End)) {
+            Spacer(
+                modifier = Modifier.weight(1.0f)
+            )
+            Row(
+                modifier = Modifier
+                    .align(Alignment.End)
+            ) {
                 Button(onClick = onCancel) {
                     Text(text = stringResource(id = R.string.cancel_button))
                 }
