@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -65,6 +66,7 @@ import org.comixedproject.variant.model.Server
 fun EditServer(
     entry: Server,
     onSave: (String, String, String, String) -> Unit,
+    onCancel: () -> Unit
 ) {
     Surface(
         border = BorderStroke(width = 1.dp, color = Color.Black),
@@ -74,6 +76,7 @@ fun EditServer(
     ) {
         Column(
             modifier = Modifier
+                .fillMaxHeight()
                 .padding(16.dp, 16.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -86,20 +89,36 @@ fun EditServer(
             var isValid by remember { mutableStateOf(false) }
 
             OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = name,
-                onValueChange = { input -> name = input },
+                onValueChange = { input ->
+                    name = input
+                    isValid = checkValidity(name, url, username, password)
+                },
                 label = { Text(stringResource(R.string.server_name_label)) })
             OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = url,
-                onValueChange = { input -> url = input },
+                onValueChange = { input ->
+                    url = input
+                    isValid = checkValidity(name, url, username, password)
+                },
                 label = { Text(stringResource(R.string.server_url_label)) })
             OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = username,
-                onValueChange = { input -> username = input },
+                onValueChange = { input ->
+                    username = input
+                    isValid = checkValidity(name, url, username, password)
+                },
                 label = { Text(stringResource(R.string.username_label)) })
             OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = password,
-                onValueChange = { input -> password = input },
+                onValueChange = { input ->
+                    password = input
+                    isValid = checkValidity(name, url, username, password)
+                },
                 label = {
                     Text(stringResource(R.string.password_label))
                 },
@@ -115,6 +134,10 @@ fun EditServer(
                 })
             Spacer(modifier = Modifier.size(16.dp))
             Row(modifier = Modifier.align(Alignment.End)) {
+                Button(onClick = onCancel) {
+                    Text(text = stringResource(id = R.string.cancel_button))
+                }
+                Spacer(modifier = Modifier.size(8.dp))
                 Button(onClick = {
                     onSave(name, url, username, password)
                 }) {
@@ -123,6 +146,10 @@ fun EditServer(
             }
         }
     }
+}
+
+fun checkValidity(name: String, url: String, username: String, password: String): Boolean {
+    return name.length > 0 && url.length > 0
 }
 
 
@@ -138,7 +165,7 @@ fun EditServerAndroidPreview() {
                 "admin@comixedproject.org",
                 "password"
             ),
-            onSave = { _, _, _, _ -> {} },
+            onSave = { _, _, _, _ -> {} }, onCancel = {}
         )
     }
 }

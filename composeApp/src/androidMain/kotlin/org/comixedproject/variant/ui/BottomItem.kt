@@ -19,15 +19,19 @@
 package org.comixedproject.variant.ui
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
+import org.comixedproject.variant.R
 
 data class BottomItem(
     val route: String,
     val icon: ImageVector,
-    val iconContentDescription: String
+    val label: Int
 )
 
 val bottomNavigationItems = listOf(
-    BottomItem(Screen.ServerList.title, Icons.Filled.List, "ServerList")
+    BottomItem(
+        Screen.ServerList.title, Icons.Filled.Home,
+        R.string.server_list_label
+    )
 )

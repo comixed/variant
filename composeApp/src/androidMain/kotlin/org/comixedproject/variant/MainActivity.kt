@@ -22,7 +22,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
@@ -36,7 +35,6 @@ import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.ui.Screen
 import org.comixedproject.variant.ui.main.AppDrawer
-import org.comixedproject.variant.viewmodel.MainViewModel
 
 /**
  * <code>MainActivity</code> is the main entry point into the application on Android.

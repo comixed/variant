@@ -13,4 +13,5 @@
     <string name="app_name">ComiXed Variant</string>
     <string name="main_menu_label">Main menu</string>
     <string name="comic_book_list">Comic Books</string>
+    <string name="server_list_label">Servers</string>
 </resources>

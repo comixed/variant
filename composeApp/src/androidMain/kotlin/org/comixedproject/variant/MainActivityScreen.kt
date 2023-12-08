@@ -54,7 +54,7 @@ fun MainActivityScreen(
                         username,
                         password
                     )
-                })
+                }, onCancel = { navController.navigate(Screen.ServerList.route) })
         }
     }
 }
