@@ -16,19 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+package org.comixedproject.variant
 
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
+import org.koin.dsl.module
+
+actual val platformModule = module {
+    single<SqlDriver> {
+        NativeSqliteDriver(VariantDb.Schema, "VariantDb")
     }
-}
-
-@Preview
-@Composable
-fun AppDesktopPreview() {
-    App()
 }

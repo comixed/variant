@@ -58,7 +58,7 @@ import org.comixedproject.variant.data.IdGenerator
 import org.comixedproject.variant.model.Server
 
 /**
- * <code>EditServerDialog</code> manages a dialog for editing an OPDS server.
+ * Allows the user to edit an OPDS server.
  *
  * @author Darryl L. Pierce
  */
@@ -154,7 +154,7 @@ fun EditServer(
 }
 
 fun checkValidity(name: String, url: String, username: String, password: String): Boolean {
-    return name.length > 0 && url.length > 0
+    return name.isNotBlank() && url.isNotBlank()
 }
 
 

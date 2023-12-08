@@ -25,6 +25,11 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.comixedproject.variant.R
 
+/**
+ * <code>BottomItem</code> represents a single item displayed at the bottom of the application screen.
+ *
+ * @author Darryl L. Pierce
+ */
 data class BottomItem(
     val route: String,
     val icon: ImageVector,

@@ -18,6 +18,7 @@
 
 package org.comixedproject.variant.ui.server
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -34,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +44,7 @@ import org.comixedproject.variant.model.Server
 import org.comixedproject.variant.ui.bottomNavigationItems
 
 /**
- * <code>ServerList</code> displays the list of servers. It displays a button to add a new entry.
+ * Displays the list of serversm, and a button to add a new entry.
  *
  * @author Darryl L. Pierce
  */
@@ -92,8 +94,8 @@ fun ServerList(
                 }
             }
         }
-    ) {
-        LazyColumn {
+    ) { padding ->
+        LazyColumn(modifier = Modifier.padding(padding)) {
             items(serverList) { entry ->
                 ServerListEntry(entry = entry, onClick = { onEdit(entry) })
             }
