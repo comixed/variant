@@ -32,12 +32,26 @@ class DatabaseHelper(sqlDriver: SqlDriver) {
 
     fun loadAll(): List<ServerDb> = database.tableQueries.loadServers().executeAsList()
 
-    fun save(id: String, name: String, url: String, username: String, password: String) {
-        database.tableQueries.saveServer(id, name, url, username, password)
+    fun save(
+        id: String,
+        name: String,
+        url: String,
+        username: String,
+        password: String,
+        serverColor: String
+    ) {
+        database.tableQueries.saveServer(id, name, url, username, password, serverColor)
     }
 
-    fun update(id: String, name: String, url: String, username: String, password: String) {
-        database.tableQueries.updateServer(name, url, username, password, id)
+    fun update(
+        id: String,
+        name: String,
+        url: String,
+        username: String,
+        password: String,
+        serverColor: String
+    ) {
+        database.tableQueries.updateServer(name, url, username, password, serverColor, id)
     }
 
     fun delete(id: String) {

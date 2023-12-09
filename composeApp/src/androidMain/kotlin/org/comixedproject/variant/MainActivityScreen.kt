@@ -57,22 +57,27 @@ fun MainActivityScreen(
         composable(Screen.ServerAdd.route) {
             EditServer(
                 serverTemplate,
-                onSave = { name, url, username, password ->
+                onSave = { name, url, username, password, serverColor ->
                     mainViewModel.createServer(
                         name,
                         url,
                         username,
-                        password
+                        password,
+                        serverColor
                     )
                     navController.navigate(Screen.ServerList.route)
                 }, onCancel = { navController.navigate(Screen.ServerList.route) })
         }
         composable(Screen.ServerEdit.route) {
             EditServer(mainViewModel.currentServer!!,
-                onSave = { name, url, username, password ->
+                onSave = { name, url, username, password, serverColor ->
                     mainViewModel.updateServer(
                         mainViewModel.currentServer!!.copy(
-                            name = name, url = url, username = username, password = password
+                            name = name,
+                            url = url,
+                            username = username,
+                            password = password,
+                            serverColor = serverColor
                         )
                     )
                     navController.navigate(Screen.ServerList.route)
