@@ -25,12 +25,25 @@ class ServerRepository(private val databaseHelper: DatabaseHelper) {
     val serverList: List<Server>
         get() = databaseHelper.loadAll().map(ServerDb::map)
 
-    fun createServer(name: String, url: String, username: String, password: String) {
-        databaseHelper.save(IdGenerator().toString(), name, url, username, password)
+    fun createServer(
+        name: String,
+        url: String,
+        username: String,
+        password: String,
+        serverColor: String
+    ) {
+        databaseHelper.save(IdGenerator().toString(), name, url, username, password, serverColor)
     }
 
     fun updateServer(server: Server) {
-        databaseHelper.update(server.id, server.name, server.url, server.username, server.password)
+        databaseHelper.update(
+            server.id,
+            server.name,
+            server.url,
+            server.username,
+            server.password,
+            server.serverColor
+        )
     }
 
     fun removeServer(server: Server) {
@@ -46,5 +59,6 @@ fun ServerDb.map() = Server(
     name = this.name,
     url = this.url,
     username = this.username,
-    password = this.password
+    password = this.password,
+    serverColor = this.serverColor
 )

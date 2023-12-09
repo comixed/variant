@@ -32,8 +32,14 @@ class MainViewModel(private val serverRepository: ServerRepository) : BaseViewMo
 
     var currentServer: Server? = null
 
-    fun createServer(name: String, url: String, username: String, password: String) {
-        serverRepository.createServer(name, url, username, password)
+    fun createServer(
+        name: String,
+        url: String,
+        username: String,
+        password: String,
+        serverColor: String
+    ) {
+        serverRepository.createServer(name, url, username, password, serverColor)
     }
 
     fun updateServer(server: Server) {

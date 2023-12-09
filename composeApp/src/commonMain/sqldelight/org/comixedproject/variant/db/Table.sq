@@ -2,6 +2,7 @@ CREATE TABLE ServerDb (
 id TEXT NOT NULL PRIMARY KEY,
 name TEXT NOT NULL UNIQUE,
 url TEXT NOT NULL,
+serverColor TEXT NOT NULL,
 username TEXT NOT NULL DEFAULT "",
 password TEXT NOT NULL DEFAULT "",
 lastAccessedOn INTEGER
@@ -11,10 +12,10 @@ loadServers:
 SELECT * FROM ServerDb;
 
 saveServer:
-INSERT OR IGNORE INTO ServerDb (id, name, url, username, password) VALUES(?, ?, ?, ?, ?);
+INSERT OR IGNORE INTO ServerDb (id, name, url, username, password, serverColor) VALUES(?, ?, ?, ?, ?, ?);
 
 updateServer:
-UPDATE ServerDb SET name = ?, url = ?, username = ?, password = ? WHERE id = ?;
+UPDATE ServerDb SET name = ?, url = ?, username = ?, password = ?, serverColor = ? WHERE id = ?;
 
 deleteServer:
 DELETE FROM ServerDb WHERE id = ?;

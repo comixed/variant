@@ -65,7 +65,7 @@ import org.comixedproject.variant.model.Server
 @Composable
 fun EditServer(
     entry: Server,
-    onSave: (String, String, String, String) -> Unit,
+    onSave: (String, String, String, String, String) -> Unit,
     onCancel: () -> Unit
 ) {
     Surface(
@@ -85,6 +85,7 @@ fun EditServer(
             var url by remember { mutableStateOf(entry.url) }
             var username by remember { mutableStateOf(entry.username) }
             var password by remember { mutableStateOf(entry.password) }
+            var serverColor by remember { mutableStateOf(entry.serverColor) }
             var passwordVisible by remember { mutableStateOf(false) }
             var isValid by remember { mutableStateOf(false) }
 
@@ -132,6 +133,11 @@ fun EditServer(
                         Icon(imageVector = image, "")
                     }
                 })
+            ServerColorPicker(
+                currentColor = serverColor,
+                onColorPicked = { input ->
+                    serverColor = input.hex
+                })
             Spacer(
                 modifier = Modifier.weight(1.0f)
             )
@@ -144,7 +150,7 @@ fun EditServer(
                 }
                 Spacer(modifier = Modifier.size(8.dp))
                 Button(onClick = {
-                    onSave(name, url, username, password)
+                    onSave(name, url, username, password, serverColor)
                 }) {
                     Text(text = stringResource(id = R.string.save_button))
                 }
@@ -170,7 +176,7 @@ fun EditServerAndroidPreview() {
                 "admin@comixedproject.org",
                 "password"
             ),
-            onSave = { _, _, _, _ -> {} }, onCancel = {}
+            onSave = { _, _, _, _, _ -> {} }, onCancel = {}
         )
     }
 }

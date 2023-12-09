@@ -24,8 +24,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,6 +45,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.comixedproject.variant.data.IdGenerator
 import org.comixedproject.variant.model.Server
+import org.comixedproject.variant.model.ServerColorOption
 
 /**
  * Displays a single server in the list of servers.
@@ -63,55 +62,57 @@ fun ServerListEntry(entry: Server, onClick: (Server) -> Unit) {
             .background(MaterialTheme.colorScheme.background)
             .padding(8.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .height(120.dp)
-                .background(Color.White)
-                .padding(8.dp)
+        Card(
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, Color.Gray),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Card(
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, Color.Gray),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Box(
-                    modifier =
-                    Modifier
-                        .background(color = Color.White)
-                        .padding(16.dp)
-                )
+            Box(
+                modifier =
+                Modifier
+                    .background(color = Color.White)
+                    .padding(16.dp)
+            )
+            {
+                Row(modifier = Modifier.fillMaxWidth())
                 {
-                    Row(modifier = Modifier.fillMaxWidth())
-                    {
-                        Column(horizontalAlignment = Alignment.Start) {
-                            Text(
-                                text = entry.name,
-                                style = TextStyle(
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 20.sp
-                                )
+                    ServerColor(
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(8.dp),
+                        color = ServerColorOption.fromHex(entry.serverColor),
+                        size = 40.dp,
+                        border = 1.dp
+                    )
+                    Column(
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = entry.name,
+                            style = TextStyle(
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
                             )
-                            if (entry.lastAccessedOn != null) {
-                                Text(
-                                    entry.lastAccessedOn!!.toString(),
-                                    style = TextStyle(
-                                        color = Color.Black,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 14.sp
-                                    )
-                                )
-                            }
-                            Spacer(modifier = Modifier.weight(1.0f))
+                        )
+                        Text(text = entry.url)
+                        if (entry.lastAccessedOn != null) {
                             Text(
-                                entry.username, style = TextStyle(
+                                entry.lastAccessedOn!!.toString(),
+                                style = TextStyle(
                                     color = Color.Black,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp
                                 )
                             )
                         }
+                        Text(
+                            entry.username, style = TextStyle(
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp
+                            )
+                        )
                     }
                 }
             }
