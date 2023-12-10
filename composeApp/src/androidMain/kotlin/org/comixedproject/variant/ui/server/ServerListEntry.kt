@@ -45,7 +45,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.comixedproject.variant.data.IdGenerator
 import org.comixedproject.variant.model.Server
-import org.comixedproject.variant.model.ServerColorOption
+import org.comixedproject.variant.model.ServerColorChoice
 
 /**
  * Displays a single server in the list of servers.
@@ -80,7 +80,7 @@ fun ServerListEntry(entry: Server, onClick: (Server) -> Unit) {
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
                             .padding(8.dp),
-                        color = ServerColorOption.fromHex(entry.serverColor),
+                        color = ServerColorChoice.fromHex(entry.serverColor),
                         size = 40.dp,
                         border = 1.dp
                     )

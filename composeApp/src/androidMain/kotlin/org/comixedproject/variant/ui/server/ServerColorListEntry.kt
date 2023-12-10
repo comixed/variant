@@ -12,13 +12,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.comixedproject.variant.model.ServerColorOption
+import org.comixedproject.variant.model.ServerColorChoice
 
+/**
+ * Presents a color to the user for selection.
+ *
+ * @author Darryl L. Pierce
+ */
 @Composable
-fun ServerColorOption(
-    color: ServerColorOption,
+fun ServerColorListEntry(
+    modifier: Modifier = Modifier,
+    color: ServerColorChoice,
     currentColor: String,
-    onColorPicked: (ServerColorOption) -> Unit
+    onColorPicked: (ServerColorChoice) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -31,8 +37,8 @@ fun ServerColorOption(
     ) {
         val fontWeight = if (currentColor == color.hex) FontWeight.Bold else FontWeight.Normal
         ServerColor(
-            modifier = Modifier.padding(10.dp),
-            color = ServerColorOption.fromHex(color.hex),
+            modifier = modifier.padding(10.dp),
+            color = ServerColorChoice.fromHex(color.hex),
             size = 40.dp,
             border = 2.dp
         )
@@ -50,18 +56,18 @@ fun ServerColorOption(
 
 @Preview
 @Composable
-fun ServerColorItemPreview() {
-    ServerColorOption(
-        color = ServerColorOption.COLORS[0],
-        ServerColorOption.COLORS[1].hex,
+fun ServerColorListEntryPreview() {
+    ServerColorListEntry(
+        color = ServerColorChoice.COLORS[0],
+        currentColor = ServerColorChoice.COLORS[1].hex,
         onColorPicked = {})
 }
 
 @Preview
 @Composable
-fun ServerColorItemCurrentPreview() {
-    ServerColorOption(
-        color = ServerColorOption.COLORS[0],
-        ServerColorOption.COLORS[0].hex,
+fun ServerColorListEntryCurrentPreview() {
+    ServerColorListEntry(
+        color = ServerColorChoice.COLORS[0],
+        currentColor = ServerColorChoice.COLORS[0].hex,
         onColorPicked = {})
 }

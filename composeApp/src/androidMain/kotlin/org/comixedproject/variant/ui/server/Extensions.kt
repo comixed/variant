@@ -19,11 +19,11 @@
 package org.comixedproject.variant.ui.server
 
 import androidx.compose.ui.graphics.Color
-import org.comixedproject.variant.model.ServerColorOption
+import org.comixedproject.variant.model.ServerColorChoice
 
 /**
  * Converts a hex string to a color.
  */
-fun ServerColorOption.Companion.fromHex(hex: String): Color {
+fun ServerColorChoice.Companion.fromHex(hex: String): Color {
     return Color(android.graphics.Color.parseColor(hex))
 }

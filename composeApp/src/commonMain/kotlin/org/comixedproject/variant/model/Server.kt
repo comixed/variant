@@ -31,7 +31,7 @@ data class Server(
     val url: String,
     val username: String,
     val password: String,
-    val serverColor: String = ServerColorOption.DEFAULT.hex
+    val serverColor: String = ServerColorChoice.DEFAULT.hex
 ) {
     private var _lastAccessedOn: LocalDateTime? = null
     var lastAccessedOn: LocalDateTime?
