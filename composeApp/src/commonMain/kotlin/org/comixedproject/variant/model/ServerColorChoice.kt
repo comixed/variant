@@ -23,30 +23,30 @@ package org.comixedproject.variant.model
  *
  * @author Darryl L. Pierce
  */
-data class ServerColorOption(
+data class ServerColorChoice(
     val name: String,
     val hex: String
 ) {
     companion object {
         val COLORS = listOf(
-            ServerColorOption("WHITE", "#FFFFFF"),
-            ServerColorOption("RED", "#E57373"),
-            ServerColorOption("PINK", "#F06292"),
-            ServerColorOption("PURPLE", "#CE93D8"),
-            ServerColorOption("BLUE", "#2196F3"),
-            ServerColorOption("CYAN", "#00ACC1"),
-            ServerColorOption("TEAL", "#26A69A"),
-            ServerColorOption("GREEN", "#4CAF50"),
-            ServerColorOption("LIGHT GREEN", "#8BC34A"),
-            ServerColorOption("LIME", "#CDDC39"),
-            ServerColorOption("YELLOW", "#FFEB3B"),
-            ServerColorOption("ORANGE", "#FF9800"),
-            ServerColorOption("BROWN", "#BCAAA4"),
-            ServerColorOption("GREY", "#9E9E9E"),
+            ServerColorChoice("WHITE", "#FFFFFF"),
+            ServerColorChoice("RED", "#E57373"),
+            ServerColorChoice("PINK", "#F06292"),
+            ServerColorChoice("PURPLE", "#CE93D8"),
+            ServerColorChoice("BLUE", "#2196F3"),
+            ServerColorChoice("CYAN", "#00ACC1"),
+            ServerColorChoice("TEAL", "#26A69A"),
+            ServerColorChoice("GREEN", "#4CAF50"),
+            ServerColorChoice("LIGHT GREEN", "#8BC34A"),
+            ServerColorChoice("LIME", "#CDDC39"),
+            ServerColorChoice("YELLOW", "#FFEB3B"),
+            ServerColorChoice("ORANGE", "#FF9800"),
+            ServerColorChoice("BROWN", "#BCAAA4"),
+            ServerColorChoice("GREY", "#9E9E9E"),
         )
         val DEFAULT = COLORS[0]
 
-        fun forName(name: String): ServerColorOption? {
+        fun forName(name: String): ServerColorChoice? {
             val result = COLORS.find { it.name == name }
             return result ?: DEFAULT
         }

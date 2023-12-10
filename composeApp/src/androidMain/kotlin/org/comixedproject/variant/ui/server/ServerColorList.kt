@@ -19,26 +19,26 @@
 package org.comixedproject.variant.ui.server
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.VariantTheme
-import org.comixedproject.variant.model.ServerColorOption
+import org.comixedproject.variant.model.ServerColorChoice
 
 @Composable
-fun ServerColorPicker(
+fun ServerColorList(
     modifier: Modifier = Modifier,
     currentColor: String,
-    onColorPicked: (ServerColorOption) -> Unit
+    onColorPicked: (ServerColorChoice) -> Unit
 ) {
-    LazyRow(
+    LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        items(ServerColorOption.COLORS.size) { itemIndex ->
-            val color = ServerColorOption.COLORS[itemIndex]
-            ServerColorOption(
+        items(ServerColorChoice.COLORS.size) { itemIndex ->
+            val color = ServerColorChoice.COLORS[itemIndex]
+            ServerColorListEntry(
                 color = color,
                 currentColor = currentColor,
                 onColorPicked = onColorPicked
@@ -49,8 +49,8 @@ fun ServerColorPicker(
 
 @Preview
 @Composable
-fun ServerColorPickerPreview() {
+fun ServerColorListPreview() {
     VariantTheme {
-        ServerColorPicker(currentColor = ServerColorOption.COLORS[0].hex, onColorPicked = {})
+        ServerColorList(currentColor = ServerColorChoice.COLORS[0].hex, onColorPicked = {})
     }
 }

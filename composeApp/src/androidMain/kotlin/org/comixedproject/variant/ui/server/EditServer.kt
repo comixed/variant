@@ -18,7 +18,7 @@
 
 package org.comixedproject.variant.ui.server
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,27 +27,25 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,6 +54,7 @@ import org.comixedproject.variant.R
 import org.comixedproject.variant.VariantTheme
 import org.comixedproject.variant.data.IdGenerator
 import org.comixedproject.variant.model.Server
+import org.comixedproject.variant.model.ServerColorChoice
 
 /**
  * Allows the user to edit an OPDS server.
@@ -68,95 +67,108 @@ fun EditServer(
     onSave: (String, String, String, String, String) -> Unit,
     onCancel: () -> Unit
 ) {
-    Surface(
-        border = BorderStroke(width = 1.dp, color = Color.Black),
-        shape = RoundedCornerShape(8.dp),
-        shadowElevation = 8.dp,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(16.dp, 16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            var name by remember { mutableStateOf(entry.name) }
-            var url by remember { mutableStateOf(entry.url) }
-            var username by remember { mutableStateOf(entry.username) }
-            var password by remember { mutableStateOf(entry.password) }
-            var serverColor by remember { mutableStateOf(entry.serverColor) }
-            var passwordVisible by remember { mutableStateOf(false) }
-            var isValid by remember { mutableStateOf(false) }
+    var name by remember { mutableStateOf(entry.name) }
+    var url by remember { mutableStateOf(entry.url) }
+    var username by remember { mutableStateOf(entry.username) }
+    var password by remember { mutableStateOf(entry.password) }
+    var serverColor by remember { mutableStateOf(entry.serverColor) }
+    var passwordVisible by remember { mutableStateOf(false) }
+    var isValid by remember { mutableStateOf(false) }
 
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = name,
-                onValueChange = { input ->
-                    name = input
-                    isValid = checkValidity(name, url, username, password)
-                },
-                label = { Text(stringResource(R.string.server_name_label)) })
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = url,
-                onValueChange = { input ->
-                    url = input
-                    isValid = checkValidity(name, url, username, password)
-                },
-                label = { Text(stringResource(R.string.server_url_label)) })
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = username,
-                onValueChange = { input ->
-                    username = input
-                    isValid = checkValidity(name, url, username, password)
-                },
-                label = { Text(stringResource(R.string.username_label)) })
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = password,
-                onValueChange = { input ->
-                    password = input
-                    isValid = checkValidity(name, url, username, password)
-                },
-                label = {
-                    Text(stringResource(R.string.password_label))
-                },
-                visualTransformation =
-                if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    val image = if (passwordVisible) Icons.Filled.Visibility
-                    else Icons.Filled.VisibilityOff
+    Scaffold(
+        content = { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(padding),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = name,
+                    onValueChange = { input ->
+                        name = input
+                        isValid = checkValidity(name, url, username, password)
+                    },
+                    label = { Text(stringResource(R.string.server_name_label)) })
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = url,
+                    onValueChange = { input ->
+                        url = input
+                        isValid = checkValidity(name, url, username, password)
+                    },
+                    label = { Text(stringResource(R.string.server_url_label)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
+                )
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = username,
+                    onValueChange = { input ->
+                        username = input
+                        isValid = checkValidity(name, url, username, password)
+                    },
+                    label = { Text(stringResource(R.string.username_label)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                )
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = password,
+                    onValueChange = { input ->
+                        password = input
+                        isValid = checkValidity(name, url, username, password)
+                    },
+                    label = {
+                        Text(stringResource(R.string.password_label))
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    visualTransformation =
+                    if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image = if (passwordVisible) Icons.Filled.Visibility
+                        else Icons.Filled.VisibilityOff
 
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Icon(imageVector = image, "")
-                    }
-                })
-            ServerColorPicker(
-                currentColor = serverColor,
-                onColorPicked = { input ->
-                    serverColor = input.hex
-                })
-            Spacer(
-                modifier = Modifier.weight(1.0f)
-            )
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(imageVector = image, "")
+                        }
+                    })
+                ServerColorList(
+                    currentColor = serverColor,
+                    onColorPicked = { serverColor = it.hex })
+                ServerColorChoice.COLORS.forEach { color ->
+                    ServerColorListEntry(
+                        color = color,
+                        currentColor = entry.serverColor,
+                        onColorPicked = { selected ->
+                            serverColor = selected.hex
+                        })
+                }
+            }
+        },
+        bottomBar = {
             Row(
                 modifier = Modifier
-                    .align(Alignment.End)
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colors.primary)
             ) {
-                Button(onClick = onCancel) {
+                Spacer(modifier = Modifier.weight(1.0f))
+                Button(
+                    modifier = Modifier.background(MaterialTheme.colors.primaryVariant),
+                    onClick = onCancel
+                ) {
                     Text(text = stringResource(id = R.string.cancel_button))
                 }
                 Spacer(modifier = Modifier.size(8.dp))
-                Button(onClick = {
-                    onSave(name, url, username, password, serverColor)
-                }) {
+                Button(
+                    modifier = Modifier.background(MaterialTheme.colors.primaryVariant),
+                    onClick = {
+                        onSave(name, url, username, password, serverColor)
+                    }) {
                     Text(text = stringResource(id = R.string.save_button))
                 }
+                Spacer(modifier = Modifier.size(8.dp))
             }
-        }
-    }
+        })
 }
 
 fun checkValidity(name: String, url: String, username: String, password: String): Boolean {
