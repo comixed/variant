@@ -16,6 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import androidx.compose.ui.window.ComposeUIViewController
+package org.comixedproject.variant.viewmodel
 
-fun MainViewController() = ComposeUIViewController { App() }
+expect abstract class BaseViewModel()

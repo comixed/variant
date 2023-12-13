@@ -1,12 +1,16 @@
 rootProject.name = "variant"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+include(":shared")
 
 pluginManagement {
     repositories {
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         google()
         gradlePluginPortal()
         mavenCentral()
+    }
+    plugins {
+        kotlin("multiplatform").version("1.8.10")
+        id("com.android.library").version("7.4.2")
+        id("app.cash.sqldelight").version("2.0.0")
     }
 }
 
@@ -14,8 +18,5 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
-
-include(":composeApp")
