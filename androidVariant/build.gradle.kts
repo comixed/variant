@@ -8,6 +8,7 @@ android {
     compileSdk = 34
     defaultConfig {
         applicationId = "org.comixedproject.variant.android"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
