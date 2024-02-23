@@ -18,12 +18,15 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "shared"
+            baseName = "Variant"
             isStatic = true
         }
     }
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.androidx.lifecycle.viewmodel)
+        }
         commonMain.dependencies {
             //put your multiplatform dependencies here
         }

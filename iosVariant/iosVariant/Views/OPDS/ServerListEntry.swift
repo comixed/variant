@@ -16,12 +16,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant
+import SwiftUI
+import Variant
 
-import platform.UIKit.UIDevice
+struct ServerListEntry: View {
+  var server: OPDSServer
 
-class IOSPlatform: Platform {
-    override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
+  var body: some View {
+    VStack(alignment: .leading) {
+      Text("\(server.name)")
+        .font(.headline)
+
+      Text("\(server.url)")
+        .font(.body)
+
+      Text("\(server.username)")
+        .font(.body)
+    }
+  }
 }
 
-actual fun getPlatform(): Platform = IOSPlatform()
+#Preview {
+  ServerListEntry(
+    server: OPDSServer(
+      id: "1",
+      name: "Home Server",
+      url: "http://comixedproject.org:7171/opds",
+      username: "admin@comixedproject.org",
+      password: "my!password"))
+}

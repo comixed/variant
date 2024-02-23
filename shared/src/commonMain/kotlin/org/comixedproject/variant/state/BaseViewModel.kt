@@ -16,19 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
-import shared
+package org.comixedproject.variant.state
 
-struct ContentView: View {
-	let greet = Greeting().greet()
-
-	var body: some View {
-		Text(greet)
-	}
-}
-
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContentView()
-	}
-}
+/**
+ * <code>BaseViewModel</code> provides a platform independent base class for the
+ * application's state.
+ *
+ * @author Darryl L. Pierce
+ */
+expect abstract class BaseViewModel()
