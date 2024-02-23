@@ -16,15 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant
+package org.comixedproject.variant.state
 
-import org.junit.Assert.assertTrue
-import org.junit.Test
-
-class AndroidGreetingTest {
-
-    @Test
-    fun testExample() {
-        assertTrue("Check Android is mentioned", Greeting().greet().contains("Android"))
-    }
-}
+/**
+ * <code>BaseViewModel</code> provides a platform independent base class for the
+ * application's state.
+ *
+ * @author Darryl L. Pierce
+ */
+actual abstract class BaseViewModel actual constructor()

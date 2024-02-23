@@ -16,12 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant
+package org.comixedproject.variant.state
 
-class Greeting {
-    private val platform: Platform = getPlatform()
+import androidx.lifecycle.ViewModel
 
-    fun greet(): String {
-        return "ComiXed Variant ${platform.name}!"
-    }
-}
+/**
+ * <code>BaseViewModel</code> provides a platform independent base class for the
+ * application's state.
+ *
+ * @author Darryl L. Pierce
+ */
+actual abstract class BaseViewModel : ViewModel()
