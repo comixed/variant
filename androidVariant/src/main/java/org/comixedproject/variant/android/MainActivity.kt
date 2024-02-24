@@ -22,52 +22,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import org.comixedproject.variant.android.view.main.HomeView
-import org.comixedproject.variant.model.OPDSServer
 
 class MainActivity : ComponentActivity() {
-    val serverList = listOf(
-        OPDSServer(
-            "1",
-            "Server 1",
-            "http://comixedproject.org:7171/opds",
-            "admin@comixedproject.org",
-            "my!password"
-        ),
-        OPDSServer(
-            "2",
-            "Server 2",
-            "http://comixedproject.org:7171/opds",
-            "admin@comixedproject.org",
-            "my!password"
-        ),
-        OPDSServer(
-            "3",
-            "Server 3",
-            "http://comixedproject.org:7171/opds",
-            "admin@comixedproject.org",
-            "my!password"
-        ),
-        OPDSServer(
-            "4",
-            "Server 4",
-            "http://comixedproject.org:7171/opds",
-            "admin@comixedproject.org",
-            "my!password"
-        ),
-        OPDSServer(
-            "5",
-            "Server 5",
-            "http://comixedproject.org:7171/opds",
-            "admin@comixedproject.org",
-            "my!password"
-        ),
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             VariantTheme {
-                HomeView(serverList)
+                HomeView()
             }
         }
     }

@@ -16,32 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
-import Variant
+package org.comixedproject.variant.model
 
-struct ServerListEntry: View {
-  var server: Server
+/**
+ * <code>Server</code> represents the connection details for a remote server.
+ *
+ * @author Darryl L. Pierce
+ */
+data class Server(
+    var id: String,
+    var name: String,
+    var url: String,
+    var username: String,
+    var password: String
+)
 
-  var body: some View {
-    VStack(alignment: .leading) {
-      Text("\(server.name)")
-        .font(.headline)
-
-      Text("\(server.url)")
-        .font(.body)
-
-      Text("\(server.username)")
-        .font(.body)
-    }
-  }
-}
-
-#Preview {
-  ServerListEntry(
-    server: Server(
-      id: "1",
-      name: "Home Server",
-      url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org",
-      password: "my!password"))
-}
+val BLANK_SERVER = Server("", "", "", "", "")

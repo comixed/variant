@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="add_server_button">Add new server</string>
     <string name="app_title_text">ComiXed Variant</string>
+    <string name="editServerDescription">Edit this server.</string>
+    <string name="deleteServerDescription">Delete this server.</string>
+    <string name="serverUsernameDescription">Username: %1$s</string>
+    <string name="serverPasswordDescription">Password: %1$s</string>
+    <string name="serverUrlDescription">URL: %1$s</string>
+    <string name="createServerButton">Create server</string>
+    <string name="editServerNamePlaceholder">The new server\'s name (must be unique)</string>
+    <string name="editServerUrlPlaceholder">The server\'s OPDS address</string>
+    <string name="editServerUsernamePlaceholder">The username to use (can be blank)</string>
+    <string name="editServerPasswordPlaceholder">The password to use (can be blank)</string>
+    <string name="serverEditSaveChanges">Save changes to server</string>
 </resources>

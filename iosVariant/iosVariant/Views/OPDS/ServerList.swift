@@ -20,7 +20,7 @@ import SwiftUI
 import Variant
 
 struct ServerList: View {
-  var serverList: [OPDSServer]
+  var serverList: [Server]
 
   var body: some View {
     List(serverList, id: \.id) { server in
@@ -31,27 +31,27 @@ struct ServerList: View {
 
 #Preview {
   ServerList(serverList: [
-    OPDSServer(
+    Server(
       id: "1", name: "Home Server 1", url: "http://comixedproject.org:7171/opds",
       username: "admin@comixedproject.org", password: "my!password"),
-    OPDSServer(
+    Server(
       id: "2", name: "Home Server 2", url: "http://comixedproject.org:7171/opds",
       username: "admin@comixedproject.org", password: "my!password"),
-    OPDSServer(
+    Server(
       id: "3",
       name: "Home Server 3",
       url: "http://comixedproject.org:7171/opds",
       username: "admin@comixedproject.org",
       password: "my!password"
     ),
-    OPDSServer(
+    Server(
       id: "4",
       name: "Home Server 4",
       url: "http://comixedproject.org:7171/opds",
       username: "admin@comixedproject.org",
       password: "my!password"
     ),
-    OPDSServer(
+    Server(
       id: "5",
       name: "Home Server 5",
       url: "http://comixedproject.org:7171/opds",

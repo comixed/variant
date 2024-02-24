@@ -16,32 +16,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
 import Variant
 
-struct ServerListEntry: View {
-  var server: Server
+final class Koin {
+  private var core: Koin_coreKoin?
 
-  var body: some View {
-    VStack(alignment: .leading) {
-      Text("\(server.name)")
-        .font(.headline)
+  static let instance = Koin()
 
-      Text("\(server.url)")
-        .font(.body)
-
-      Text("\(server.username)")
-        .font(.body)
+  static func start() {
+    if instance.core == nil {
+      let app = KoinIOS.shared.initialize()
+      instance.core = app.koin
+    }
+    if instance.core == nil {
+      fatalError("Can't initial Koin.")
     }
   }
-}
 
-#Preview {
-  ServerListEntry(
-    server: Server(
-      id: "1",
-      name: "Home Server",
-      url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org",
-      password: "my!password"))
+  private init() {
+
+  }
+
+  func get<T: AnyObject>() -> T {
+    guard let core else {
+      fatalError("You should call `start()` before using \(#function)")
+    }
+
+    guard let result = core.get(objCClass: T.self) as? T else {
+      fatalError("Koin can't provide an instance of type: \(T.self)")
+    }
+
+    return result
+  }
 }

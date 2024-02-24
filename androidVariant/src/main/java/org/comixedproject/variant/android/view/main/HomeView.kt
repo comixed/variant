@@ -21,12 +21,8 @@ package org.comixedproject.variant.android.view.main
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,17 +36,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.view.opds.ServerList
-import org.comixedproject.variant.model.OPDSServer
+import org.comixedproject.variant.android.view.opds.ServerNavigator
+import org.comixedproject.variant.state.ServerListViewModel
+import org.koin.androidx.compose.getViewModel
 
 val TAG_TITLE_TEXT = "tag.title-text"
 val TAG_BOTTOM_BAR = "tag.bottom-bar"
-val TAG_ADD_SERVER_BUTTON = "tag.add-server-button"
-val TAG_SERVER_LIST = "tag.server-list"
+val TAG_SERVER_NAVIGATOR = "tag.server-navigator"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView(serverList: List<OPDSServer>) {
+fun HomeView() {
+    val serverListViewModel: ServerListViewModel = getViewModel()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -74,23 +72,13 @@ fun HomeView(serverList: List<OPDSServer>) {
             ) {
                 Text("Bottom Bar Stuff")
             }
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                modifier = Modifier.testTag(TAG_ADD_SERVER_BUTTON),
-                onClick = { /*create a new entry*/ }) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.add_server_button)
-                )
-            }
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ServerList(serverList, modifier = Modifier.testTag(TAG_SERVER_LIST))
+            ServerNavigator(modifier = Modifier.testTag(TAG_SERVER_NAVIGATOR))
         }
     }
 }
@@ -99,44 +87,6 @@ fun HomeView(serverList: List<OPDSServer>) {
 @Composable
 fun HomeViewPreview() {
     VariantTheme {
-        HomeView(
-            listOf(
-                OPDSServer(
-                    "1",
-                    "Server 1",
-                    "http://comixedproject.org:7171/opds",
-                    "admin@comixedproject.org",
-                    "my!password"
-                ),
-                OPDSServer(
-                    "2",
-                    "Server 2",
-                    "http://comixedproject.org:7171/opds",
-                    "admin@comixedproject.org",
-                    "my!password"
-                ),
-                OPDSServer(
-                    "3",
-                    "Server 3",
-                    "http://comixedproject.org:7171/opds",
-                    "admin@comixedproject.org",
-                    "my!password"
-                ),
-                OPDSServer(
-                    "4",
-                    "Server 4",
-                    "http://comixedproject.org:7171/opds",
-                    "admin@comixedproject.org",
-                    "my!password"
-                ),
-                OPDSServer(
-                    "5",
-                    "Server 5",
-                    "http://comixedproject.org:7171/opds",
-                    "admin@comixedproject.org",
-                    "my!password"
-                ),
-            )
-        )
+        HomeView()
     }
 }
