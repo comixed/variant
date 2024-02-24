@@ -16,32 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
-import Variant
+package org.comixedproject.variant
 
-struct ServerListEntry: View {
-  var server: Server
+import kotlinx.cinterop.ObjCClass
+import kotlinx.cinterop.getOriginalKotlinClass
+import org.comixedproject.variant.Modules.initKoin
+import org.koin.core.Koin
+import org.koin.core.KoinApplication
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.Qualifier
 
-  var body: some View {
-    VStack(alignment: .leading) {
-      Text("\(server.name)")
-        .font(.headline)
-
-      Text("\(server.url)")
-        .font(.body)
-
-      Text("\(server.username)")
-        .font(.body)
-    }
-  }
+object KoinIOS {
+    fun initialize(): KoinApplication = initKoin()
 }
 
-#Preview {
-  ServerListEntry(
-    server: Server(
-      id: "1",
-      name: "Home Server",
-      url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org",
-      password: "my!password"))
+@kotlinx.cinterop.BetaInteropApi
+fun Koin.get(objCClass: ObjCClass): Any {
+    val kClazz = getOriginalKotlinClass(objCClass)!!
+    return get(kClazz, null, null)
+}
+
+@kotlinx.cinterop.BetaInteropApi
+fun Koin.get(objCClass: ObjCClass, qualifier: Qualifier?, parameter: Any): Any {
+    val kClazz = getOriginalKotlinClass(objCClass)!!
+    return get(kClazz, qualifier) { parametersOf(parameter) }
 }

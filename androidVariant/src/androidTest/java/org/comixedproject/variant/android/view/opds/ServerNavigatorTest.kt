@@ -21,32 +21,21 @@ package org.comixedproject.variant.android.view.opds
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.model.Server
 import org.junit.Rule
 import org.junit.Test
 
-class ServerListKtTest {
-    val SERVER_LIST = listOf<Server>(
-        Server(
-            "1",
-            "Home Server",
-            "http://comixedproject.org:7171/opds",
-            "admin@comixedproject.org",
-            "my!password"
-        )
-    )
-
+class ServerNavigatorTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
     @Test
-    fun testServerList() {
+    fun testServerNavigatorHasServerList() {
         composeTestRule.setContent {
             VariantTheme {
-                ServerList(serverList = SERVER_LIST, onSelect = {}, onCreate = {}, onDelete = {})
+                ServerNavigator()
             }
         }
 
-        composeTestRule.onNodeWithTag(TAG_SERVER_LIST_COLUMN).assertExists()
+        composeTestRule.onNodeWithTag(TAG_SERVER_NAVIGATOR_SERVER_LIST).assertExists()
     }
 }

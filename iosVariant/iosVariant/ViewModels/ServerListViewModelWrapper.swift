@@ -16,32 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+import Observation
 import Variant
 
-struct ServerListEntry: View {
-  var server: Server
-
-  var body: some View {
-    VStack(alignment: .leading) {
-      Text("\(server.name)")
-        .font(.headline)
-
-      Text("\(server.url)")
-        .font(.body)
-
-      Text("\(server.username)")
-        .font(.body)
-    }
-  }
-}
-
-#Preview {
-  ServerListEntry(
-    server: Server(
-      id: "1",
-      name: "Home Server",
-      url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org",
-      password: "my!password"))
+@available(iOS 17.0, *)
+@Observable
+final class ServerListViewModelWrapper {
+    let viewModel : ServerListViewModel = Koin.instance.get()
+    
+    private(set) var servers: [Server] = []
+    
+    init() {    }
 }

@@ -18,16 +18,17 @@
 
 package org.comixedproject.variant.android.view.opds
 
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import junit.framework.TestCase.assertTrue
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.model.OPDSServer
+import org.comixedproject.variant.model.Server
 import org.junit.Rule
 import org.junit.Test
 
 class ServerEntryKtTest {
-    val SERVER = OPDSServer(
+    val SERVER = Server(
         "1",
         "Home Server",
         "http://comixedproject.org:7171/opds",
@@ -39,35 +40,40 @@ class ServerEntryKtTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun testServerEntryServerName() {
+    fun testServerEntryServerBodyExists() {
         composeTestRule.setContent {
             VariantTheme {
-                ServerEntry(server = SERVER)
+                ServerEntry(server = SERVER, onSelect = {}, onDelete = {})
             }
         }
 
-        composeTestRule.onNodeWithTag(TAG_SERVER_NAME).assertTextContains(SERVER.name)
+        composeTestRule.onNodeWithTag(TAG_SERVER_ENTRY_BODY).assertExists()
     }
 
     @Test
-    fun testServerEntryServerUrl() {
+    fun testServerEntryDeleteButtonExists() {
         composeTestRule.setContent {
             VariantTheme {
-                ServerEntry(server = SERVER)
+                ServerEntry(server = SERVER, onSelect = {}, onDelete = {})
             }
         }
 
-        composeTestRule.onNodeWithTag(TAG_SERVER_URL).assertTextContains(SERVER.url)
+        composeTestRule.onNodeWithTag(TAG_SERVER_ENTRY_DELETE_BUTTON).assertExists()
     }
 
     @Test
-    fun testServerEntryUsername() {
+    fun testServerEntryDeleteButtonClicked() {
+        var deleteClicked = false
+
         composeTestRule.setContent {
             VariantTheme {
-                ServerEntry(server = SERVER)
+                ServerEntry(server = SERVER, onSelect = {}, onDelete = { deleteClicked = true })
             }
         }
 
-        composeTestRule.onNodeWithTag(TAG_USERNAME).assertTextContains(SERVER.username)
+        composeTestRule.onNodeWithTag(TAG_SERVER_ENTRY_DELETE_BUTTON)
+            .performClick()
+
+        assertTrue(deleteClicked)
     }
 }

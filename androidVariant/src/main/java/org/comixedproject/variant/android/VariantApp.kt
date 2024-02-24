@@ -16,17 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.model
+package org.comixedproject.variant.android
 
-/**
- * <code>OPDSServer</code> represents the connection details for a remote server.
- *
- * @author Darryl L. Pierce
- */
-data class OPDSServer(
-    var id: String,
-    var name: String,
-    var url: String,
-    var username: String,
-    var password: String
-)
+import android.app.Application
+import org.comixedproject.variant.Modules.initKoin
+import org.comixedproject.variant.state.ServerListViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
+
+class VariantApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+
+        initKoin(viewModelsModule = module {
+            viewModel {
+                ServerListViewModel(get())
+            }
+        })
+    }
+}

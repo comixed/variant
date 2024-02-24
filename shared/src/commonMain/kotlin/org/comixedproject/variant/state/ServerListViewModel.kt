@@ -16,32 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
-import Variant
+package org.comixedproject.variant.state
 
-struct ServerListEntry: View {
-  var server: Server
+import org.comixedproject.variant.data.ServerRepository
+import org.comixedproject.variant.model.Server
 
-  var body: some View {
-    VStack(alignment: .leading) {
-      Text("\(server.name)")
-        .font(.headline)
+/**
+ * <code>ServerListViewModel</code> provides the application state.
+ *
+ * @author Darryl L. Pierce
+ */
+class ServerListViewModel(
+    private val serverRepository: ServerRepository
+) : BaseViewModel() {
+    val serverList: List<Server>
+        get() = serverRepository.serverList
 
-      Text("\(server.url)")
-        .font(.body)
-
-      Text("\(server.username)")
-        .font(.body)
+    fun createServer(server: Server) {
+        serverRepository.createServer(
+            server.id,
+            server.name,
+            server.url,
+            server.username,
+            server.password
+        )
     }
-  }
-}
 
-#Preview {
-  ServerListEntry(
-    server: Server(
-      id: "1",
-      name: "Home Server",
-      url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org",
-      password: "my!password"))
+    fun deleteServer(server: Server) {
+        serverRepository.deleteServer(server.id)
+    }
 }

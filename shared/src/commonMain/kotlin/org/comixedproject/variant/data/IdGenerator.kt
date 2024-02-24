@@ -16,32 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
-import Variant
+package org.comixedproject.variant.data
 
-struct ServerListEntry: View {
-  var server: Server
-
-  var body: some View {
-    VStack(alignment: .leading) {
-      Text("\(server.name)")
-        .font(.headline)
-
-      Text("\(server.url)")
-        .font(.body)
-
-      Text("\(server.username)")
-        .font(.body)
-    }
-  }
-}
-
-#Preview {
-  ServerListEntry(
-    server: Server(
-      id: "1",
-      name: "Home Server",
-      url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org",
-      password: "my!password"))
+/**
+ * <code>IdGenerator</code> provides a type that generates unique ids.
+ *
+ * @author Darryl L. Pierce
+ */
+expect class IdGenerator() {
+    override fun toString(): String
 }

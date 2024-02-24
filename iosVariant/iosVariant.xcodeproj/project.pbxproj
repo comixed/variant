@@ -11,6 +11,8 @@
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
+		B603C0D82B8A80C8005110C3 /* Koin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B603C0D72B8A80C8005110C3 /* Koin.swift */; };
+		B603C0DB2B8A82E0005110C3 /* ServerListViewModelWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B603C0DA2B8A82E0005110C3 /* ServerListViewModelWrapper.swift */; };
 		B645E6322B8A08670036B92F /* ServerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B645E6312B8A08670036B92F /* ServerList.swift */; };
 		B645E6352B8A0E290036B92F /* SwiftFormat in Frameworks */ = {isa = PBXBuildFile; productRef = B645E6342B8A0E290036B92F /* SwiftFormat */; };
 		B645E6372B8A0E290036B92F /* SwiftFormatConfiguration in Frameworks */ = {isa = PBXBuildFile; productRef = B645E6362B8A0E290036B92F /* SwiftFormatConfiguration */; };
@@ -38,6 +40,8 @@
 		7555FF7B242A565900829871 /* iosVariant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosVariant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B603C0D72B8A80C8005110C3 /* Koin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Koin.swift; sourceTree = "<group>"; };
+		B603C0DA2B8A82E0005110C3 /* ServerListViewModelWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListViewModelWrapper.swift; sourceTree = "<group>"; };
 		B645E6312B8A08670036B92F /* ServerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerList.swift; sourceTree = "<group>"; };
 		B6A3948A2B89619D00D3A89D /* ServerListEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListEntry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +88,8 @@
 		7555FF7D242A565900829871 /* iosVariant */ = {
 			isa = PBXGroup;
 			children = (
+				B603C0D92B8A82AC005110C3 /* ViewModels */,
+				B603C0D62B8A80B7005110C3 /* Supporting Files */,
 				B6A3947E2B8953C000D3A89D /* Views */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
 				7555FF8C242A565B00829871 /* Info.plist */,
@@ -98,6 +104,22 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B603C0D62B8A80B7005110C3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B603C0D72B8A80C8005110C3 /* Koin.swift */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B603C0D92B8A82AC005110C3 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B603C0DA2B8A82E0005110C3 /* ServerListViewModelWrapper.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		B645E6302B8A08560036B92F /* OPDS */ = {
@@ -219,7 +241,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B603C0DB2B8A82E0005110C3 /* ServerListViewModelWrapper.swift in Sources */,
 				B6A3948B2B89619D00D3A89D /* ServerListEntry.swift in Sources */,
+				B603C0D82B8A80C8005110C3 /* Koin.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				B645E6322B8A08670036B92F /* ServerList.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
@@ -281,7 +305,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -337,7 +361,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
