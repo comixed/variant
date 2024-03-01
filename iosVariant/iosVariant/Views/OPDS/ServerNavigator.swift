@@ -19,8 +19,33 @@
 import SwiftUI
 import Variant
 
-struct ContentView: View {
-  @State var serverList = [
+struct ServerNavigator: View {
+  var serverList: [Server]
+
+    @State private var serverId: String?
+
+    var body: some View {
+    NavigationSplitView {
+      List(
+        serverList,
+        id: \.id,
+        selection: $serverId
+      ) { entry in
+        ServerListEntry(server: entry)
+      }
+    } detail: {
+        if let server = serverList.filter({ $0.id == serverId }).first {
+            Text("downloaded-comics-server-title \(server.name)")
+        } else {
+            Text("downloaded-comics-all-title")
+        }
+    }
+        
+  }
+}
+
+#Preview {
+  ServerNavigator(serverList: [
     Server(
       id: "1", name: "Home Server 1", url: "http://comixedproject.org:7171/opds",
       username: "admin@comixedproject.org", password: "my!password"),
@@ -48,15 +73,5 @@ struct ContentView: View {
       username: "admin@comixedproject.org",
       password: "my!password"
     ),
-  ]
-
-  var body: some View {
-    ServerNavigator(serverList: serverList)
-  }
-}
-
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-    ContentView()
-  }
+  ])
 }

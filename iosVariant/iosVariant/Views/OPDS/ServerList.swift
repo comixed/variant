@@ -21,43 +21,51 @@ import Variant
 
 struct ServerList: View {
   var serverList: [Server]
+  var onSelect: (Server) -> Void
+  var onDelete: (Server) -> Void
 
   var body: some View {
     List(serverList, id: \.id) { server in
       ServerListEntry(server: server)
+        .onTapGesture {
+          onSelect(server)
+        }
     }
   }
 }
 
 #Preview {
-  ServerList(serverList: [
-    Server(
-      id: "1", name: "Home Server 1", url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org", password: "my!password"),
-    Server(
-      id: "2", name: "Home Server 2", url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org", password: "my!password"),
-    Server(
-      id: "3",
-      name: "Home Server 3",
-      url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org",
-      password: "my!password"
-    ),
-    Server(
-      id: "4",
-      name: "Home Server 4",
-      url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org",
-      password: "my!password"
-    ),
-    Server(
-      id: "5",
-      name: "Home Server 5",
-      url: "http://comixedproject.org:7171/opds",
-      username: "admin@comixedproject.org",
-      password: "my!password"
-    ),
-  ]
+  ServerList(
+    serverList: [
+      Server(
+        id: "1", name: "Home Server 1", url: "http://comixedproject.org:7171/opds",
+        username: "admin@comixedproject.org", password: "my!password"),
+      Server(
+        id: "2", name: "Home Server 2", url: "http://comixedproject.org:7171/opds",
+        username: "admin@comixedproject.org", password: "my!password"),
+      Server(
+        id: "3",
+        name: "Home Server 3",
+        url: "http://comixedproject.org:7171/opds",
+        username: "admin@comixedproject.org",
+        password: "my!password"
+      ),
+      Server(
+        id: "4",
+        name: "Home Server 4",
+        url: "http://comixedproject.org:7171/opds",
+        username: "admin@comixedproject.org",
+        password: "my!password"
+      ),
+      Server(
+        id: "5",
+        name: "Home Server 5",
+        url: "http://comixedproject.org:7171/opds",
+        username: "admin@comixedproject.org",
+        password: "my!password"
+      ),
+    ],
+    onSelect: { _ in },
+    onDelete: { _ in }
   )
 }

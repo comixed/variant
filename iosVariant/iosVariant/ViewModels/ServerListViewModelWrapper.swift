@@ -22,9 +22,37 @@ import Variant
 @available(iOS 17.0, *)
 @Observable
 final class ServerListViewModelWrapper {
-    let viewModel : ServerListViewModel = Koin.instance.get()
-    
-    private(set) var servers: [Server] = []
-    
-    init() {    }
+  let viewModel: ServerListViewModel = Koin.instance.get()
+
+  private(set) var servers: [Server] = [
+    Server(
+      id: "1", name: "Home Server 1", url: "http://comixedproject.org:7171/opds",
+      username: "admin@comixedproject.org", password: "my!password"),
+    Server(
+      id: "2", name: "Home Server 2", url: "http://comixedproject.org:7171/opds",
+      username: "admin@comixedproject.org", password: "my!password"),
+    Server(
+      id: "3",
+      name: "Home Server 3",
+      url: "http://comixedproject.org:7171/opds",
+      username: "admin@comixedproject.org",
+      password: "my!password"
+    ),
+    Server(
+      id: "4",
+      name: "Home Server 4",
+      url: "http://comixedproject.org:7171/opds",
+      username: "admin@comixedproject.org",
+      password: "my!password"
+    ),
+    Server(
+      id: "5",
+      name: "Home Server 5",
+      url: "http://comixedproject.org:7171/opds",
+      username: "admin@comixedproject.org",
+      password: "my!password"
+    ),
+  ]
+
+  init() {}
 }
