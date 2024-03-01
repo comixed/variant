@@ -19,8 +19,65 @@
 import SwiftUI
 import Variant
 
-struct ContentView: View {
-  @State var serverList = [
+struct ServerNavigator: View {
+  @State var server: Server?
+  var serverList: [Server]
+
+  var body: some View {
+    NavigationSplitView {
+      ServerList(
+        serverList: [
+          Server(
+            id: "1", name: "Home Server 1", url: "http://comixedproject.org:7171/opds",
+            username: "admin@comixedproject.org", password: "my!password"),
+          Server(
+            id: "2", name: "Home Server 2", url: "http://comixedproject.org:7171/opds",
+            username: "admin@comixedproject.org", password: "my!password"),
+          Server(
+            id: "3",
+            name: "Home Server 3",
+            url: "http://comixedproject.org:7171/opds",
+            username: "admin@comixedproject.org",
+            password: "my!password"
+          ),
+          Server(
+            id: "4",
+            name: "Home Server 4",
+            url: "http://comixedproject.org:7171/opds",
+            username: "admin@comixedproject.org",
+            password: "my!password"
+          ),
+          Server(
+            id: "5",
+            name: "Home Server 5",
+            url: "http://comixedproject.org:7171/opds",
+            username: "admin@comixedproject.org",
+            password: "my!password"
+          ),
+        ],
+        onSelect: onSelectServer,
+        onDelete: onDeleteServer
+      )
+    } detail: {
+      if $server.wrappedValue != nil {
+        ServerDetail(server: $server.wrappedValue!)
+      }
+    }
+  }
+}
+
+extension ServerNavigator {
+  fileprivate func onSelectServer(selectedServer: Server) {
+    server = selectedServer
+  }
+
+  fileprivate func onDeleteServer(server: Server) {
+
+  }
+}
+
+#Preview {
+  ServerNavigator(serverList: [
     Server(
       id: "1", name: "Home Server 1", url: "http://comixedproject.org:7171/opds",
       username: "admin@comixedproject.org", password: "my!password"),
@@ -48,15 +105,5 @@ struct ContentView: View {
       username: "admin@comixedproject.org",
       password: "my!password"
     ),
-  ]
-
-  var body: some View {
-    ServerNavigator(serverList: serverList)
-  }
-}
-
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-    ContentView()
-  }
+  ])
 }
