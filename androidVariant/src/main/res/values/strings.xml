@@ -4,7 +4,6 @@
     <string name="editServerDescription">Edit this server.</string>
     <string name="deleteServerDescription">Delete this server.</string>
     <string name="serverUsernameDescription">Username: %1$s</string>
-    <string name="serverPasswordDescription">Password: %1$s</string>
     <string name="serverUrlDescription">URL: %1$s</string>
     <string name="createServerButton">Create server</string>
     <string name="editServerNamePlaceholder">The new server\'s name (must be unique)</string>
