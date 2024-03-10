@@ -19,15 +19,15 @@
 package org.comixedproject.variant.android.view.opds
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.material3.adaptive.AnimatedPane
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.ListDetailPaneScaffold
-import androidx.compose.material3.adaptive.ListDetailPaneScaffoldRole
-import androidx.compose.material3.adaptive.rememberListDetailPaneScaffoldNavigator
+import androidx.compose.material3.adaptive.layout.AnimatedPane
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -35,19 +35,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.model.BLANK_SERVER
 import org.comixedproject.variant.model.Server
-import org.comixedproject.variant.state.ServerListViewModel
-import org.koin.androidx.compose.getViewModel
 
 val TAG_SERVER_NAVIGATOR_SERVER_LIST = "tag.server-navigator.server-list"
 val TAG_SERVER_NAVIGATOR_SERVER_DETAIL = "tag.server-navigator.server-detail"
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun ServerNavigator(modifier: Modifier = Modifier) {
-    var selectedServer: Server? by remember { mutableStateOf(null) }
+fun ServerNavigator(
+    serverList: List<Server>,
+    onSave: (Server) -> Unit,
+    onDelete: (Server) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var selectedServerId: String? by rememberSaveable { mutableStateOf(null) }
     val navigator = rememberListDetailPaneScaffoldNavigator<Nothing>()
-
-    val serverListViewModel: ServerListViewModel = getViewModel()
 
     BackHandler(navigator.canNavigateBack()) {
         navigator.navigateBack()
@@ -59,27 +60,29 @@ fun ServerNavigator(modifier: Modifier = Modifier) {
         listPane = {
             AnimatedPane(Modifier) {
                 ServerList(
-                    serverList = serverListViewModel.serverList,
+                    serverList = serverList,
                     onSelect = { server ->
-                        selectedServer = server
+                        selectedServerId = server.id
                         navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                     },
                     onCreate = {
+                        selectedServerId = "[CREATE]"
                         navigator.navigateTo(ListDetailPaneScaffoldRole.Extra)
                     },
-                    onDelete = { server ->
-                        serverListViewModel.deleteServer(server)
-                    },
+                    onDelete = { server -> onDelete(server) },
                     modifier = Modifier.testTag(TAG_SERVER_NAVIGATOR_SERVER_LIST)
                 )
             }
         },
         detailPane = {
             AnimatedPane(Modifier) {
-                selectedServer?.let { server ->
+                selectedServerId?.let { server ->
                     ServerDetail(
-                        server = server,
-                        onEdit = { },
+                        server = serverList.first { it.id == selectedServerId },
+                        onEdit = { server ->
+                            selectedServerId = server.id
+                            navigator.navigateTo(ListDetailPaneScaffoldRole.Extra)
+                        },
                         modifier = Modifier.testTag(TAG_SERVER_NAVIGATOR_SERVER_DETAIL)
                     )
                 }
@@ -87,12 +90,15 @@ fun ServerNavigator(modifier: Modifier = Modifier) {
         },
         extraPane = {
             AnimatedPane(Modifier) {
+                val server =
+                    if (selectedServerId != "[CREATE]") serverList.first { it.id == selectedServerId } else BLANK_SERVER
                 ServerEdit(
-                    BLANK_SERVER,
+                    server,
                     onSave = { server ->
-                        serverListViewModel.createServer(server)
+                        onSave(server)
                         navigator.navigateBack()
-                    })
+                    }
+                )
             }
         })
 }
@@ -101,6 +107,44 @@ fun ServerNavigator(modifier: Modifier = Modifier) {
 @Composable
 fun ServerNavigatorPreview() {
     VariantTheme {
-        ServerNavigator()
+        ServerNavigator(listOf(
+            Server(
+                "1",
+                "Server 1",
+                "http://comixedproject.org:7171/opds",
+                "admin@comixedproject.org",
+                "my!password"
+            ),
+            Server(
+                "2",
+                "Server 2",
+                "http://comixedproject.org:7171/opds",
+                "admin@comixedproject.org",
+                "my!password"
+            ),
+            Server(
+                "3",
+                "Server 3",
+                "http://comixedproject.org:7171/opds",
+                "admin@comixedproject.org",
+                "my!password"
+            ),
+            Server(
+                "4",
+                "Server 4",
+                "http://comixedproject.org:7171/opds",
+                "admin@comixedproject.org",
+                "my!password"
+            ),
+            Server(
+                "5",
+                "Server 5",
+                "http://comixedproject.org:7171/opds",
+                "admin@comixedproject.org",
+                "my!password"
+            ),
+        ),
+            onSave = {},
+            onDelete = {})
     }
 }

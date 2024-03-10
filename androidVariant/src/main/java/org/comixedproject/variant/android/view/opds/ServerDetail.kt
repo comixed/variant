@@ -42,7 +42,6 @@ import org.comixedproject.variant.model.Server
 val TAG_SERVER_DETAIL_NAME = "tag.server-detail.name"
 val TAG_SERVER_DETAIL_URL = "tag.server-detail.url"
 val TAG_SERVER_DETAIL_USERNAME = "tag.server-detail.username"
-val TAG_SERVER_DETAIL_PASSWORD = "tag.server-detail.password"
 
 @Composable
 fun ServerDetail(
@@ -90,14 +89,6 @@ fun ServerDetail(
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag(TAG_SERVER_DETAIL_USERNAME)
-            )
-            Text(
-                text = stringResource(id = R.string.serverPasswordDescription, server.password),
-                textAlign = TextAlign.Left,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(TAG_SERVER_DETAIL_PASSWORD)
             )
         }
     }

@@ -21,10 +21,49 @@ package org.comixedproject.variant.android.view.opds
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.model.Server
 import org.junit.Rule
 import org.junit.Test
 
 class ServerNavigatorTest {
+    val serverList = listOf(
+        Server(
+            "1",
+            "Server 1",
+            "http://comixedproject.org:7171/opds",
+            "admin@comixedproject.org",
+            "my!password"
+        ),
+        Server(
+            "2",
+            "Server 2",
+            "http://comixedproject.org:7171/opds",
+            "admin@comixedproject.org",
+            "my!password"
+        ),
+        Server(
+            "3",
+            "Server 3",
+            "http://comixedproject.org:7171/opds",
+            "admin@comixedproject.org",
+            "my!password"
+        ),
+        Server(
+            "4",
+            "Server 4",
+            "http://comixedproject.org:7171/opds",
+            "admin@comixedproject.org",
+            "my!password"
+        ),
+        Server(
+            "5",
+            "Server 5",
+            "http://comixedproject.org:7171/opds",
+            "admin@comixedproject.org",
+            "my!password"
+        ),
+    )
+
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -32,7 +71,7 @@ class ServerNavigatorTest {
     fun testServerNavigatorHasServerList() {
         composeTestRule.setContent {
             VariantTheme {
-                ServerNavigator()
+                ServerNavigator(serverList, onSave = {}, onDelete = {})
             }
         }
 

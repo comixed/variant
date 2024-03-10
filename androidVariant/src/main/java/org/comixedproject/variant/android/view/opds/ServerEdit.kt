@@ -19,74 +19,88 @@
 package org.comixedproject.variant.android.view.opds
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.model.BLANK_SERVER
 import org.comixedproject.variant.model.Server
 
 @Composable
 fun ServerEdit(server: Server, onSave: (Server) -> Unit, modifier: Modifier = Modifier) {
-    var serverId by remember { mutableStateOf(server.id) }
-    var serverName by remember { mutableStateOf(server.name) }
-    var serverUrl by remember { mutableStateOf(server.url) }
-    var serverUsername by remember { mutableStateOf(server.username) }
-    var serverPassword by remember { mutableStateOf(server.password) }
+    var serverId by rememberSaveable { mutableStateOf(server.id) }
+    var serverName by rememberSaveable { mutableStateOf(server.name) }
+    var serverUrl by rememberSaveable { mutableStateOf(server.url) }
+    var serverUsername by rememberSaveable { mutableStateOf(server.username) }
+    var serverPassword by rememberSaveable { mutableStateOf(server.password) }
 
-    Scaffold(topBar = {}, bottomBar = {}, floatingActionButton = {
-        FloatingActionButton(onClick = {
-            onSave(Server(serverId, serverName, serverUrl, serverUsername, serverPassword))
-        }) {
-            Icon(
-                imageVector = Icons.Rounded.Check,
-                contentDescription = stringResource(id = R.string.serverEditSaveChanges)
-            )
-        }
-    }) { padding ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            TextField(
-                value = serverName,
-                onValueChange = { serverName = it },
-//                placeholder = Text(text = stringResource(id = R.string.editServerNamePlaceholder)),
-                modifier = Modifier.fillMaxWidth()
-            )
-            TextField(
-                value = serverUrl,
-                onValueChange = { serverUrl = it },
-//                placeholder = Text(text = stringResource(id = R.string.editServerUrlPlaceholder)),
-                modifier = Modifier.fillMaxWidth()
-            )
-            TextField(
-                value = serverUsername,
-                onValueChange = { serverUsername = it },
-//                placeholder = Text(text = stringResource(id = R.string.editServerUsernamePlaceholder)),
-                modifier = Modifier.fillMaxWidth()
-            )
-            TextField(
-                value = serverPassword,
-                onValueChange = { serverPassword = it },
-//                placeholder = Text(text = stringResource(id = R.string.editServerPasswordPlaceholder)),
-                modifier = Modifier.fillMaxWidth()
-            )
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = serverName,
+            onValueChange = { name -> serverName = name },
+            placeholder = { Text(text = stringResource(id = R.string.editServerNamePlaceholder)) }
+        )
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = serverUrl,
+            onValueChange = { serverUrl = it },
+            placeholder = { Text(text = stringResource(id = R.string.editServerUrlPlaceholder)) }
+        )
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = serverUsername,
+            onValueChange = { serverUsername = it },
+            placeholder = { Text(text = stringResource(id = R.string.editServerUsernamePlaceholder)) }
+        )
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = serverPassword,
+            onValueChange = { serverPassword = it },
+            placeholder = { Text(text = stringResource(id = R.string.editServerPasswordPlaceholder)) }
+        )
+
+        Row {
+            Spacer(Modifier.weight(1f))
+
+            Button(
+                shape = MaterialTheme.shapes.large,
+                onClick = {
+                    onSave(
+                        Server(
+                            serverId,
+                            serverName,
+                            serverUrl,
+                            serverUsername,
+                            serverPassword
+                        )
+                    )
+                }) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = stringResource(id = R.string.serverEditSaveChanges)
+                )
+            }
         }
     }
 }
@@ -96,13 +110,7 @@ fun ServerEdit(server: Server, onSave: (Server) -> Unit, modifier: Modifier = Mo
 fun ServerEditPreviewCreating() {
     VariantTheme {
         ServerEdit(
-            server = Server(
-                "1",
-                "Home Server",
-                "http://comixedproject.org:7171/opds",
-                "admin@comixedproject.org",
-                "my!password"
-            ), onSave = {})
+            server = BLANK_SERVER, onSave = {})
     }
 }
 

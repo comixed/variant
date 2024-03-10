@@ -78,7 +78,12 @@ fun HomeView() {
             modifier = Modifier.padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ServerNavigator(modifier = Modifier.testTag(TAG_SERVER_NAVIGATOR))
+            ServerNavigator(
+                serverListViewModel.serverList,
+                onSave = {},
+                onDelete = {},
+                modifier = Modifier.testTag(TAG_SERVER_NAVIGATOR)
+            )
         }
     }
 }
