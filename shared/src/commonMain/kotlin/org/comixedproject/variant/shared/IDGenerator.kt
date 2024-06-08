@@ -16,27 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+package org.comixedproject.variant.shared
 
-struct HomeView: View {
-    var body: some View {
-        NavigationView {
-            VStack {
-                NavigationLink(destination: ServerManagementView(servers: servers)) {
-                    Text("Servers")
-                }
-                NavigationLink(destination: Text("Comics")) {
-                    Text("Comics!")
-                }
-                NavigationLink(destination: Text("Settings")) {
-                    Text("Settings!")
-                }
-            }
-        }
-        .navigationTitle("Navigation")
-    }
-}
-
-#Preview {
-    HomeView()
+expect class IDGenerator() {
+    override fun toString(): String
 }

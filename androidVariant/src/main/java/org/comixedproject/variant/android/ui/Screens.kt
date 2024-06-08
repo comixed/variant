@@ -16,27 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+package org.comixedproject.variant.android.ui
 
-struct HomeView: View {
-    var body: some View {
-        NavigationView {
-            VStack {
-                NavigationLink(destination: ServerManagementView(servers: servers)) {
-                    Text("Servers")
-                }
-                NavigationLink(destination: Text("Comics")) {
-                    Text("Comics!")
-                }
-                NavigationLink(destination: Text("Settings")) {
-                    Text("Settings!")
-                }
-            }
-        }
-        .navigationTitle("Navigation")
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.ui.graphics.vector.ImageVector
+import org.comixedproject.variant.android.R
+
+enum class Screens(val label: Int, val icon: ImageVector) {
+    ServerManagement(R.string.serverButtonLabel, Icons.Filled.List),
+    ComicManagement(R.string.comicsButtonLabel, Icons.Filled.PlayArrow),
+    Settings(R.string.settingsButtonLabel, Icons.Filled.Settings);
+
+    companion object {
+        val all = values()
     }
-}
-
-#Preview {
-    HomeView()
 }

@@ -18,25 +18,27 @@
 
 import SwiftUI
 
-struct HomeView: View {
+
+struct ServerManagementView: View {
+    var servers: [Server] = []
+    
+    @State private var selectedServer: Server? = nil
+    
     var body: some View {
-        NavigationView {
-            VStack {
-                NavigationLink(destination: ServerManagementView(servers: servers)) {
-                    Text("Servers")
-                }
-                NavigationLink(destination: Text("Comics")) {
-                    Text("Comics!")
-                }
-                NavigationLink(destination: Text("Settings")) {
-                    Text("Settings!")
-                }
+        NavigationSplitView {
+            List(servers, selection: $selectedServer) { server in
+                ServerListItem(server: server)
+            }
+        } detail: {
+            if let server = $selectedServer.wrappedValue {
+                ServerDetail(server: server)
+            } else {
+                Text("No Server Selected")
             }
         }
-        .navigationTitle("Navigation")
     }
 }
 
 #Preview {
-    HomeView()
+    ServerManagementView(servers: servers)
 }
