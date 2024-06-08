@@ -18,25 +18,16 @@
 
 import SwiftUI
 
-struct HomeView: View {
+struct ServerListItem: View {
+    var server: Server
+    
     var body: some View {
-        NavigationView {
-            VStack {
-                NavigationLink(destination: ServerManagementView(servers: servers)) {
-                    Text("Servers")
-                }
-                NavigationLink(destination: Text("Comics")) {
-                    Text("Comics!")
-                }
-                NavigationLink(destination: Text("Settings")) {
-                    Text("Settings!")
-                }
-            }
+        VStack {
+            Text(server.name)
         }
-        .navigationTitle("Navigation")
     }
 }
 
 #Preview {
-    HomeView()
+    ServerListItem(server: servers[0])
 }

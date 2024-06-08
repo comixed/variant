@@ -11,6 +11,8 @@ androidx-junit = "1.1.5"
 espresso-core = "3.5.1"
 junit = "4.13.2"
 adaptive-layout-android = "1.0.0-beta02"
+adaptive-navigation-android = "1.3.0-beta02"
+navigation-compose = "2.7.7"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -23,6 +25,8 @@ androidx-adaptive = { group = "androidx.compose.material3.adaptive", name = "ada
 androidx-adaptive-layout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout", version.ref = "adaptive-layout-android" }
 androidx-adaptive-layout-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout-android", version.ref = "adaptive-layout-android" }
 androidx-adaptive-navigation = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "adaptive-layout-android" }
+androidx-adaptive-navigation-suite-android = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite-android", version.ref = "adaptive-navigation-android" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
 androidx-compose-ui-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-compose-ui-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-ui-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
@@ -42,7 +46,7 @@ sonarqube = { id = "org.sonarqube", version.ref = "sonarqube-plugin" }
 
 [bundles]
 androidx = ["androidx-activity-compose", "androidx-core-ktx", "androidx-lifecycle-runtime-ktx"]
-compose = ["androidx-compose-material3", "androidx-compose-ui-ui-graphics", "androidx-compose-ui-ui", "androidx-compose-ui-ui-tooling-preview", "androidx-adaptive", "androidx-adaptive-layout", "androidx-adaptive-navigation"]
+compose = ["androidx-compose-material3", "androidx-compose-ui-ui-graphics", "androidx-compose-ui-ui", "androidx-compose-ui-ui-tooling-preview", "androidx-adaptive", "androidx-adaptive-layout", "androidx-adaptive-navigation", "androidx-adaptive-navigation-suite-android", "androidx-navigation-compose"]
 compose-debug = ["androidx-compose-ui-ui-tooling", "androidx-compose-ui-ui-test-manifest"]
 instrumented-tests = ["androidx-junit", "androidx-espresso-core", "androidx-compose-ui-ui-test-junit4"]
 unit-tests = ["junit"]
