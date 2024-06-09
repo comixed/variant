@@ -17,18 +17,16 @@
  */
 
 import Foundation
+import Variant
 
-struct Server: Identifiable, Hashable, Codable {
-    let id: Int
-    var name: String
-    var url: String
-    var username: String
+@available(iOS 17.0, *)
+@Observable
+final class VariantViewModelWrapper {
+    let viewModel: VariantViewModel = Koin.instance.get()
+    
+    private(set) var servers: [Server] = []
+    
+    init() {
+        viewModel.onServerUpdate = { [weak self] servers in self?.servers = servers }
+    }
 }
-
-var servers = [
-    Server(id: 1, name: "CX Server 1", url: "http://www.comixedproject.org:7171/opds", username: "reader@comixedproject.org"),
-    Server(id: 2, name: "CX Server 2", url: "http://www.comixedproject.org:7171/opds", username: "reader@comixedproject.org"),
-    Server(id: 3, name: "CX Server 3", url: "http://www.comixedproject.org:7171/opds", username: "reader@comixedproject.org"),
-    Server(id: 4, name: "CX Server 4", url: "http://www.comixedproject.org:7171/opds", username: "reader@comixedproject.org"),
-    Server(id: 5, name: "CX Server 5", url: "http://www.comixedproject.org:7171/opds", username: "reader@comixedproject.org")
-]

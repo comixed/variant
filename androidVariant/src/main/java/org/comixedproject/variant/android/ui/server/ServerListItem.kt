@@ -23,24 +23,47 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.model.server.Server
+import org.comixedproject.variant.android.ui.DismissBackground
+import org.comixedproject.variant.shared.model.server.Server
 
 @Composable
-fun ServerListItem(server: Server, onClick: (Server) -> Unit) {
-    ListItem(
-        leadingContent = { Icon(Icons.Filled.Info, contentDescription = server.name) },
-        overlineContent = { Text(server.url) },
-        headlineContent = { Text(server.name) },
-        supportingContent = { Text(server.username) },
-        modifier = Modifier.clickable {
-            onClick(server)
-        }
+fun ServerListItem(server: Server, onClick: (Server) -> Unit, onDelete: (Server) -> Unit) {
+    val context = LocalContext.current
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = {
+            when (it) {
+                SwipeToDismissBoxValue.StartToEnd -> onDelete(server)
+                else -> return@rememberSwipeToDismissBoxState false
+            }
+
+            return@rememberSwipeToDismissBoxState true
+        },
+        positionalThreshold = { it * .25f }
     )
+
+    SwipeToDismissBox(state = dismissState,
+        modifier = Modifier,
+        backgroundContent = { DismissBackground(dismissState) },
+        content = {
+            ListItem(
+                leadingContent = { Icon(Icons.Filled.Info, contentDescription = server.name) },
+                overlineContent = { Text(server.url) },
+                headlineContent = { Text(server.name) },
+                supportingContent = { Text(server.username) },
+                modifier = Modifier.clickable {
+                    onClick(server)
+                }
+            )
+        })
 }
 
 @Preview
@@ -49,12 +72,14 @@ fun ServerListItemPreview() {
     VariantTheme {
         ServerListItem(
             server = Server(
-                id = 1,
-                name = "My Server",
-                url = "http://www.comixedproject.org:7171/opds",
-                username = "reader@comixedproject.org"
+                "1",
+                "Server 1",
+                "http://www.comixedproject.org:7171/opds",
+                "reader@comixedprojecvt.org",
+                "password"
             ),
-            onClick = {}
+            onClick = {},
+            onDelete = {}
         )
     }
 }

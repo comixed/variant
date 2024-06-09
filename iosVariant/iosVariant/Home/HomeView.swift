@@ -17,26 +17,33 @@
  */
 
 import SwiftUI
+import Variant
 
+@available(iOS 17.0, *)
 struct HomeView: View {
+    @State private var viewModelWrapper = VariantViewModelWrapper()
+
     var body: some View {
-        NavigationView {
-            VStack {
-                NavigationLink(destination: ServerManagementView(servers: servers)) {
-                    Text("Servers")
-                }
-                NavigationLink(destination: Text("Comics")) {
-                    Text("Comics!")
-                }
-                NavigationLink(destination: Text("Settings")) {
-                    Text("Settings!")
-                }
+        NavigationStack {
+            NavigationLink(destination: ServerManagementView(
+                servers: viewModelWrapper.servers,
+                onSaveServer: { server in viewModelWrapper.viewModel.saveServer(server: server) },
+                onBrowseServer: { _ in },
+                onDeleteServer: { server in viewModelWrapper.viewModel.deleteServer(server: server) }
+            )) {
+                Text("Servers")
+            }
+            NavigationLink(destination: Text("Downloaded comic books")) {
+                Text("Comics")
+            }
+            NavigationLink(destination: Text("Configuration screen")) {
+                Text("Settings")
             }
         }
-        .navigationTitle("Navigation")
     }
 }
 
+@available(iOS 17.0, *)
 #Preview {
     HomeView()
 }

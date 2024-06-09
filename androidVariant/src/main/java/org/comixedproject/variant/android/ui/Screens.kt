@@ -19,15 +19,15 @@
 package org.comixedproject.variant.android.ui
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.comixedproject.variant.android.R
 
 enum class Screens(val label: Int, val icon: ImageVector) {
-    ServerManagement(R.string.serverButtonLabel, Icons.Filled.List),
-    ComicManagement(R.string.comicsButtonLabel, Icons.Filled.PlayArrow),
+    ComicManagement(R.string.comicsButtonLabel, Icons.Filled.List),
+    ServerManagement(R.string.serverButtonLabel, Icons.Filled.AccountBox),
     Settings(R.string.settingsButtonLabel, Icons.Filled.Settings);
 
     companion object {

@@ -1,0 +1,19 @@
+CREATE TABLE ServersDb (
+id TEXT NOT NULL PRIMARY KEY,
+name TEXT NOT NULL UNIQUE,
+url TEXT NOT NULL,
+username TEXT NOT NULL DEFAULT "",
+password TEXT NOT NULL DEFAULT ""
+);
+
+loadAllServers:
+SELECT * FROM ServersDb;
+
+createServer:
+INSERT OR IGNORE INTO ServersDb(id, name, url, username, password) VALUES (?, ?, ?, ?, ?);
+
+updateServer:
+UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE id = ?;
+
+deleteServer:
+DELETE FROM ServersDb WHERE id = ?;
