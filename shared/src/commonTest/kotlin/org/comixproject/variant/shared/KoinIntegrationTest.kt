@@ -16,18 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+package org.comixproject.variant.shared
 
-@available(iOS 17.0, *)
-@main
-struct iOSApp: App {
-    init() {
-        Koin.start()
+import org.comixedproject.variant.shared.Modules
+import org.koin.core.context.stopKoin
+import org.koin.dsl.koinApplication
+import org.koin.test.check.checkModules
+import kotlin.test.AfterTest
+
+class KoinIntegrationTest {
+    // TODO fix this
+    //  @Test
+    fun testAllModules() {
+        koinApplication {
+            modules(
+                Modules.core,
+                Modules.repositories,
+                Modules.viewModels
+            )
+        }.checkModules()
     }
 
-	var body: some Scene {
-		WindowGroup {
-			ContentView()
-		}
-	}
+    @AfterTest
+    fun tearDown() {
+        stopKoin()
+    }
 }

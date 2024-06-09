@@ -18,18 +18,41 @@
 
 package org.comixedproject.variant.android.ui.server
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.model.server.Server
+import org.comixedproject.variant.shared.model.server.Server
 
 @Composable
-fun ServerList(servers: List<Server>, onServerSelect: (Server) -> Unit) {
-    LazyColumn {
-        items(servers) { server ->
-            ServerListItem(server, onClick = onServerSelect)
+fun ServerList(
+    servers: List<Server>,
+    onServerCreate: () -> Unit,
+    onServerSelect: (Server) -> Unit,
+    onServerDelete: (Server) -> Unit
+) {
+    Scaffold(topBar = {}, bottomBar = {}, floatingActionButton = {
+        Button(onClick = onServerCreate) {
+            Icon(
+                imageVector = Icons.Rounded.Add,
+                contentDescription = stringResource(id = R.string.serverAddButton)
+            )
+        }
+    }) { padding ->
+        LazyColumn(modifier = Modifier.padding(padding)) {
+            items(servers) { server ->
+                ServerListItem(server, onClick = onServerSelect, onDelete = onServerDelete)
+            }
         }
     }
 }
@@ -38,35 +61,38 @@ fun ServerList(servers: List<Server>, onServerSelect: (Server) -> Unit) {
 @Composable
 fun ServerListPreview() {
     VariantTheme {
-        ServerList(
-            listOf(
-                Server(
-                    id = 1,
-                    name = "My Server",
-                    url = "http://www.comixedproject.org:7171/opds",
-                    username = "reader@comixedproject.org"
-                ), Server(
-                    id = 2,
-                    name = "My Server",
-                    url = "http://www.comixedproject.org:7171/opds",
-                    username = "reader@comixedproject.org"
-                ), Server(
-                    id = 3,
-                    name = "My Server",
-                    url = "http://www.comixedproject.org:7171/opds",
-                    username = "reader@comixedproject.org"
-                ), Server(
-                    id = 4,
-                    name = "My Server",
-                    url = "http://www.comixedproject.org:7171/opds",
-                    username = "reader@comixedproject.org"
-                ), Server(
-                    id = 5,
-                    name = "My Server",
-                    url = "http://www.comixedproject.org:7171/opds",
-                    username = "reader@comixedproject.org"
-                )
-            ),
-            onServerSelect = {})
+        ServerList(mutableListOf(
+            Server(
+                "1",
+                "Server 1",
+                "http://www.comixedproject.org:7171/opds",
+                "reader@comixedprojecvt.org",
+                "password"
+            ), Server(
+                "2",
+                "Server 2",
+                "http://www.comixedproject.org:7171/opds",
+                "reader@comixedprojecvt.org",
+                "password"
+            ), Server(
+                "3",
+                "Server 3",
+                "http://www.comixedproject.org:7171/opds",
+                "reader@comixedprojecvt.org",
+                "password"
+            ), Server(
+                "4",
+                "Server 4",
+                "http://www.comixedproject.org:7171/opds",
+                "reader@comixedprojecvt.org",
+                "password"
+            ), Server(
+                "5",
+                "Server 5",
+                "http://www.comixedproject.org:7171/opds",
+                "reader@comixedprojecvt.org",
+                "password"
+            )
+        ), onServerCreate = {}, onServerSelect = {}, onServerDelete = {})
     }
 }

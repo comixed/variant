@@ -17,28 +17,74 @@
  */
 
 import SwiftUI
+import Variant
 
-
+@available(iOS 17.0, *)
 struct ServerManagementView: View {
-    var servers: [Server] = []
-    
+    @State var servers: [Server]
     @State private var selectedServer: Server? = nil
-    
+
+    var onSaveServer: (Server) -> ()
+    var onBrowseServer: (Server) -> ()
+    var onDeleteServer: (Server) -> ()
+
     var body: some View {
-        NavigationSplitView {
-            List(servers, selection: $selectedServer) { server in
-                ServerListItem(server: server)
-            }
-        } detail: {
+        ZStack {
             if let server = $selectedServer.wrappedValue {
-                ServerDetail(server: server)
-            } else {
-                Text("No Server Selected")
+                Text(server.name)
+            }
+            VStack {
+                NavigationSplitView {
+                    List(servers, id: \.id, selection: $selectedServer) { server in
+                        NavigationLink(value: server) {
+                            HStack {
+                                Image(systemName: "server.rack")
+                                Text(server.name)
+                                Spacer()
+                            }
+                        }
+                        .navigationTitle("Servers")
+                    }
+                } detail: {
+                    if let server = $selectedServer.wrappedValue {
+                        ServerDetail(
+                            server: server,
+                            onEdit: { selectedServer = server },
+                            onBrowse: { onBrowseServer(server) },
+                            onDelete: {
+                                onDeleteServer(server)
+                            })
+                    }
+                }
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button(action: {}, label: {
+                        Text("+")
+                            .font(.system(.largeTitle))
+                            .frame(width: 77, height: 70)
+                            .foregroundColor(Color.white)
+                            .padding(.bottom, 7)
+                    })
+                    .background(Color.blue)
+                    .cornerRadius(38.5)
+                    .padding()
+                    .shadow(color: Color.black.opacity(0.3),
+                            radius: 3,
+                            x: 3,
+                            y: 3)
+                }
             }
         }
     }
 }
 
+@available(iOS 17.0, *)
 #Preview {
-    ServerManagementView(servers: servers)
+    ServerManagementView(servers: [
+        Server(id: "1", name: "My Server", url: "http://www.comixedproject.org:7171/opds", username: "reader@comixedproject.org", password: "my!password"),
+    ],
+    onSaveServer: { _ in },
+    onBrowseServer: { _ in },
+    onDeleteServer: { _ in })
 }

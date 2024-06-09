@@ -48,6 +48,8 @@ dependencies {
     implementation(composeBom)
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.compose)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
     testImplementation(libs.bundles.unit.tests)
     androidTestImplementation(composeBom)

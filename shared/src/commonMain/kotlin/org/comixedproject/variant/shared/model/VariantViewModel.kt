@@ -16,18 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+package org.comixedproject.variant.shared.model
 
-@available(iOS 17.0, *)
-@main
-struct iOSApp: App {
-    init() {
-        Koin.start()
+import org.comixedproject.variant.shared.data.ServerRepository
+import org.comixedproject.variant.shared.model.server.Server
+
+class VariantViewModel(val serverRepository: ServerRepository) : BaseViewModel() {
+    val servers: List<Server>
+        get() = serverRepository.servers
+
+    var onServerUpdate: ((List<Server>) -> Unit)? = null
+        set(value) {
+            field = value
+            onServerUpdate?.invoke(servers)
+        }
+
+    fun saveServer(server: Server) {
+        serverRepository.saveServer(server)
+        onServerUpdate?.invoke(servers)
     }
 
-	var body: some Scene {
-		WindowGroup {
-			ContentView()
-		}
-	}
+    fun deleteServer(server: Server) {
+        serverRepository.deleteServer(server)
+    }
 }
