@@ -16,10 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.model.server
+package org.comixedproject.variant.shared
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import org.comixedproject.variant.VariantDb
+import org.koin.dsl.module
 
-@Parcelize
-class Server(val id: Int, val name: String, val url: String, val username: String) : Parcelable
+actual val platformModule = module {
+    single<SqlDriver> {
+        AndroidSqliteDriver(VariantDb.Schema, get(), "VariantDb")
+    }
+}

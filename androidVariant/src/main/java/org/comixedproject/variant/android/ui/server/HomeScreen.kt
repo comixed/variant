@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.ui
+package org.comixedproject.variant.android.ui.server
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,11 +35,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.ui.server.ServerManagementScreen
+import org.comixedproject.variant.android.ui.Screens
+import org.comixedproject.variant.shared.model.VariantViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun HomeScreen() {
-    val selectedItem = remember { mutableStateOf(Screens.ServerManagement) }
+fun HomeScreen(viewModel: VariantViewModel = getViewModel()) {
+    val selectedItem = remember { mutableStateOf(Screens.ComicManagement) }
     val navHost = rememberNavController()
     val navBackStackEntry by navHost.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -65,7 +67,16 @@ fun HomeScreen() {
         Box(modifier = Modifier.fillMaxSize()) {
             Surface(modifier = Modifier.align(Alignment.Center)) {
                 when (selectedItem.value) {
-                    Screens.ServerManagement -> ServerManagementScreen()
+                    Screens.ServerManagement -> ServerManagementScreen(
+                        viewModel.servers,
+                        onSaveServer = { server ->
+                            viewModel.saveServer(server)
+                        },
+                        onBrowserServer = {},
+                        onDeleteServer = { server ->
+                            viewModel.deleteServer(server)
+                        })
+
                     Screens.ComicManagement -> Text("Comic Book Management")
                     Screens.Settings -> Text("Settings")
                 }

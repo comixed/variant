@@ -19,7 +19,6 @@
 package org.comixedproject.variant.android.ui.server
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
@@ -27,12 +26,17 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.model.server.Server
+import org.comixedproject.variant.shared.model.server.Server
 
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun ServerManagementScreen() {
+fun ServerManagementScreen(
+    servers: List<Server>,
+    onSaveServer: (Server) -> Unit,
+    onBrowserServer: (Server) -> Unit,
+    onDeleteServer: (Server) -> Unit
+) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Server>()
 
     BackHandler {
@@ -43,45 +47,46 @@ fun ServerManagementScreen() {
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
         listPane = {
-            ServerList(listOf(
-                Server(
-                    id = 1,
-                    name = "My Server",
-                    url = "http://www.comixedproject.org:7171/opds",
-                    username = "reader@comixedproject.org"
-                ), Server(
-                    id = 2,
-                    name = "My Server",
-                    url = "http://www.comixedproject.org:7171/opds",
-                    username = "reader@comixedproject.org"
-                ), Server(
-                    id = 3,
-                    name = "My Server",
-                    url = "http://www.comixedproject.org:7171/opds",
-                    username = "reader@comixedproject.org"
-                ), Server(
-                    id = 4,
-                    name = "My Server",
-                    url = "http://www.comixedproject.org:7171/opds",
-                    username = "reader@comixedproject.org"
-                ), Server(
-                    id = 5,
-                    name = "My Server",
-                    url = "http://www.comixedproject.org:7171/opds",
-                    username = "reader@comixedproject.org"
-                )
-            ),
-                onServerSelect = { server ->
+            ServerList(
+                servers,
+                onServerCreate = {
                     navigator.navigateTo(
-                        ListDetailPaneScaffoldRole.Detail,
+                        ListDetailPaneScaffoldRole.Extra,
+                        Server(null, "", "", "", "")
+                    )
+                },
+                onServerSelect = { server ->
+                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, server)
+                },
+                onServerEdit = { server ->
+                    navigator.navigateTo(
+                        ListDetailPaneScaffoldRole.Extra,
                         server
                     )
-                }
+                },
+                onServerDelete = onDeleteServer
             )
         },
         detailPane = {
             navigator.currentDestination?.content?.let { server ->
-                Text(server.name)
+                ServerDetail(server = server, onEdit = {
+                    navigator.navigateTo(ListDetailPaneScaffoldRole.Extra, server)
+                }, onBrowse = {
+                    onBrowserServer(server)
+                }, onDelete = {
+                    onDeleteServer(server)
+                })
+            }
+        },
+        extraPane = {
+            navigator.currentDestination?.content?.let { server ->
+                ServerEdit(
+                    server = server,
+                    onSave = { server ->
+                        onSaveServer(server)
+                        navigator.navigateTo(ListDetailPaneScaffoldRole.List)
+                    },
+                    onCancel = { navigator.navigateBack() })
             }
         })
 }
@@ -90,6 +95,43 @@ fun ServerManagementScreen() {
 @Composable
 fun ServerManagementScreenPreview() {
     VariantTheme {
-        ServerManagementScreen()
+        ServerManagementScreen(
+            listOf(
+                Server(
+                    "1",
+                    "Server 1",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password"
+                ), Server(
+                    "2",
+                    "Server 2",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password"
+                ), Server(
+                    "3",
+                    "Server 3",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password"
+                ), Server(
+                    "4",
+                    "Server 4",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password"
+                ), Server(
+                    "5",
+                    "Server 5",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password"
+                )
+            ),
+            onSaveServer = {},
+            onBrowserServer = {},
+            onDeleteServer = {}
+        )
     }
 }

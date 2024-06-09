@@ -17,17 +17,23 @@
  */
 
 import SwiftUI
+import Variant
 
-@available(iOS 17.0, *)
-@main
-struct iOSApp: App {
-    init() {
-        Koin.start()
+struct ServerEdit: View {
+    @State var server: Server
+    
+    var body: some View {
+        Text(server.name)
     }
+}
 
-	var body: some Scene {
-		WindowGroup {
-			ContentView()
-		}
-	}
+#Preview {
+    ServerEdit(
+        server: Server(
+            id: "1",
+            name: "Server 1",
+            url:  "http://www.comixedproject.org:7171/opds",
+            username: "reader@comixedproject.org",
+            password: "my!password"
+        ))
 }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -11,24 +12,31 @@ kotlin {
             }
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "shared"
-            isStatic = true
+            baseName = "Variant"
         }
     }
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.lifecycle.viewmodel.android)
+            implementation(libs.sqldelight.driver.android)
+        }
+        iosMain.dependencies {
+            implementation(libs.sqldelight.driver.native)
+        }
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            implementation(libs.koin.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.koin.test)
         }
     }
 
@@ -46,5 +54,16 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+sqldelight {
+    databases {
+        create("VariantDb") {
+            packageName.set("org.comixedproject.variant")
+            schemaOutputDirectory.set(
+                file("src/commonMain/sqldelight/org/comixedproject/variant/db")
+            )
+        }
     }
 }

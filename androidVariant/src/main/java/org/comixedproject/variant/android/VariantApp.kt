@@ -16,18 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+package org.comixedproject.variant.android
 
-@available(iOS 17.0, *)
-@main
-struct iOSApp: App {
-    init() {
-        Koin.start()
+import android.app.Application
+import android.content.Context
+import org.comixedproject.variant.shared.initKoin
+import org.comixedproject.variant.shared.model.VariantViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
+
+
+class VariantApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+
+        initKoin(
+            appModule = module {
+                single<Context> { this@VariantApp }
+
+            },
+            viewModelsModule = module {
+                viewModel {
+                    VariantViewModel(get())
+                }
+            })
     }
-
-	var body: some Scene {
-		WindowGroup {
-			ContentView()
-		}
-	}
 }
