@@ -20,8 +20,10 @@ package org.comixedproject.variant.shared.data
 
 import app.cash.sqldelight.db.SqlDriver
 import org.comixedproject.variant.VariantDb
+import org.comixedproject.variant.db.LinksDb
 import org.comixedproject.variant.db.ServersDb
 import org.comixedproject.variant.shared.IDGenerator
+import org.comixedproject.variant.shared.model.server.Link
 
 class DatabaseHelper(sqlDriver: SqlDriver) {
     private val database: VariantDb = VariantDb(sqlDriver)
@@ -29,7 +31,13 @@ class DatabaseHelper(sqlDriver: SqlDriver) {
     fun loadServers(): List<ServersDb> = database.tableQueries.loadAllServers().executeAsList()
 
     fun createServer(name: String, url: String, username: String, password: String) {
-        database.tableQueries.createServer(IDGenerator().toString(), name, url, username, password)
+        database.tableQueries.createServer(
+            IDGenerator().toString(),
+            name,
+            url,
+            username,
+            password
+        )
     }
 
     fun updateServer(id: String, name: String, url: String, username: String, password: String) {
@@ -38,5 +46,31 @@ class DatabaseHelper(sqlDriver: SqlDriver) {
 
     fun deleteServer(id: String) {
         database.tableQueries.deleteServer(id)
+    }
+
+    fun loadAllLinks(): List<LinksDb> = database.tableQueries.loadAllLinks().executeAsList()
+
+    fun loadLinks(serverId: String, directory: String): List<LinksDb> =
+        database.tableQueries.loadLinksForParent(serverId, directory)
+            .executeAsList()
+
+    fun saveLinksForServer(serverId: String, directory: String, links: List<Link>) {
+        val incomingPaths = links.map { it.link }
+        val existingLinks =
+            database.tableQueries.loadLinksForParent(serverId, directory).executeAsList()
+        existingLinks.filter { link -> !incomingPaths.contains(link.link) }
+            .forEach { link -> database.tableQueries.deleteExistingLink(link.id) }
+        val existingPaths = existingLinks.map { it.link }
+        links.filter { !existingPaths.contains(it.link) }.forEach { link ->
+            database.tableQueries.createLink(
+                IDGenerator().toString(),
+                serverId,
+                link.linkId,
+                link.directory,
+                link.link,
+                link.title,
+                link.thumbnailURL.orEmpty()
+            )
+        }
     }
 }

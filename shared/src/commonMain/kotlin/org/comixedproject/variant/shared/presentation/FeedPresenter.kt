@@ -16,31 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.ui.server
+package org.comixedproject.variant.shared.presentation
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import org.comixedproject.variant.android.VariantTheme
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import org.comixedproject.variant.shared.domain.GetFeedData
+import org.comixedproject.variant.shared.domain.LinkFeedData
 import org.comixedproject.variant.shared.model.server.Server
 
-@Composable
-fun ServerDetail(server: Server) {
-    Text(server.name)
-}
+private const val TAG = "FeedPresenter"
 
-@Preview
-@Composable
-fun ServerDetailPreview() {
-    VariantTheme {
-        ServerDetail(
-            server = Server(
-                "1",
-                "Server 1",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedprojecvt.org",
-                "password"
-            )
-        )
+class FeedPresenter(private val feedData: GetFeedData) {
+    public fun loadDirectoryOnServer(
+        server: Server,
+        directory: String,
+        feed: LinkFeedData
+    ) {
+        MainScope().launch {
+            feedData.invokeLoadDirectoryOnServer(server, directory, onSuccess = { links ->
+                feed.onNewLinksReceived(server, directory, links, null)
+            }, onFailure = { error ->
+                feed.onNewLinksReceived(server, directory, emptyList(), error)
+            })
+        }
     }
 }

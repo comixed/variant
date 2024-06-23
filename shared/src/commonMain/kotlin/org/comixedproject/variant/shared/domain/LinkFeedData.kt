@@ -16,21 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.ui
+package org.comixedproject.variant.shared.domain
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.ui.graphics.vector.ImageVector
-import org.comixedproject.variant.android.R
+import org.comixedproject.variant.shared.model.server.Link
+import org.comixedproject.variant.shared.model.server.Server
 
-enum class Screens(val label: Int, val icon: ImageVector) {
-    ComicManagement(R.string.comicsButtonLabel, Icons.Filled.List),
-    ServerManagement(R.string.serverButtonLabel, Icons.Filled.AccountBox),
-    Settings(R.string.settingsButtonLabel, Icons.Filled.Settings);
-
-    companion object {
-        val all = values()
-    }
+public interface LinkFeedData {
+    public fun onNewLinksReceived(
+        server: Server,
+        directory: String,
+        links: List<Link>,
+        exception: Exception?
+    )
 }

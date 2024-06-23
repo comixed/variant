@@ -17,3 +17,28 @@ UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE id = ?;
 
 deleteServer:
 DELETE FROM ServersDb WHERE id = ?;
+
+CREATE TABLE LinksDb (
+id TEXT NOT NULL PRIMARY KEY,
+serverId TEXT NOT NULL,
+linkId TEXT NOT NULL,
+directory TEXT NOT NULL,
+link TEXT NOT NULL,
+title TEXT NOT NULL,
+thumbnailURL TEXT
+);
+
+createLink:
+INSERT OR IGNORE INTO LinksDb(id, serverId, linkId, directory, link, title, thumbnailURL) VALUES(?, ?, ?,?, ?, ?, ?);
+
+getExistingLink:
+SELECT id FROM LinksDb WHERE serverId = ? AND directory = ?;
+
+deleteExistingLink:
+DELETE FROM LinksDb WHERE id = ?;
+
+loadAllLinks:
+SELECT * FROM LinksDb;
+
+loadLinksForParent:
+SELECT * FROM LinksDb WHERE serverId = ? AND directory = ?;

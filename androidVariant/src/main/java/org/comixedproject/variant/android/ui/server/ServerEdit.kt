@@ -63,12 +63,14 @@ fun ServerEdit(server: Server, onSave: (Server) -> Unit, onCancel: () -> Unit) {
                     imageVector = Icons.Filled.Check,
                     contentDescription = stringResource(id = R.string.saveButtonLabel)
                 )
+                Text(text = stringResource(id = R.string.saveButton))
             }
             Button(onClick = onCancel) {
                 Icon(
                     imageVector = Icons.Filled.Close,
                     contentDescription = stringResource(id = R.string.cancelButtonLabel)
                 )
+                Text(text = stringResource(id = R.string.closeButton))
             }
         }
     }) { padding ->

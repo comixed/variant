@@ -16,18 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
-import Variant
+package org.comixedproject.variant.shared
 
-@available(iOS 17.0, *)
-@Observable
-final class VariantViewModelWrapper {
-    let viewModel: VariantViewModel = Koin.instance.get()
-    
-    private(set) var servers: [Server] = []
-    private(set) var links: [Link] = []
-    
-    init() {
-        viewModel.onServerUpdate = { [weak self] servers in self?.servers = servers }
-    }
-}
+public const val X_APP_NAME = "X-App-Name"
+public const val APP_NAME = "Variant"

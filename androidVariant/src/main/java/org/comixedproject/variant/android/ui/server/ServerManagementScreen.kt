@@ -34,7 +34,7 @@ import org.comixedproject.variant.shared.model.server.Server
 fun ServerManagementScreen(
     servers: List<Server>,
     onSaveServer: (Server) -> Unit,
-    onBrowserServer: (Server) -> Unit,
+    onBrowseServer: (Server) -> Unit,
     onDeleteServer: (Server) -> Unit
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Server>()
@@ -55,9 +55,7 @@ fun ServerManagementScreen(
                         Server(null, "", "", "", "")
                     )
                 },
-                onServerSelect = { server ->
-                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, server)
-                },
+                onServerSelect = onBrowseServer,
                 onServerEdit = { server ->
                     navigator.navigateTo(
                         ListDetailPaneScaffoldRole.Extra,
@@ -69,13 +67,7 @@ fun ServerManagementScreen(
         },
         detailPane = {
             navigator.currentDestination?.content?.let { server ->
-                ServerDetail(server = server, onEdit = {
-                    navigator.navigateTo(ListDetailPaneScaffoldRole.Extra, server)
-                }, onBrowse = {
-                    onBrowserServer(server)
-                }, onDelete = {
-                    onDeleteServer(server)
-                })
+                ServerDetail(server = server)
             }
         },
         extraPane = {
@@ -84,7 +76,7 @@ fun ServerManagementScreen(
                     server = server,
                     onSave = { server ->
                         onSaveServer(server)
-                        navigator.navigateTo(ListDetailPaneScaffoldRole.List)
+                        navigator.navigateBack()
                     },
                     onCancel = { navigator.navigateBack() })
             }
@@ -130,7 +122,7 @@ fun ServerManagementScreenPreview() {
                 )
             ),
             onSaveServer = {},
-            onBrowserServer = {},
+            onBrowseServer = {},
             onDeleteServer = {}
         )
     }
