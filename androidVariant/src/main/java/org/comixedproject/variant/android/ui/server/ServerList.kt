@@ -39,6 +39,7 @@ fun ServerList(
     servers: List<Server>,
     onServerCreate: () -> Unit,
     onServerSelect: (Server) -> Unit,
+    onServerEdit: (Server) -> Unit,
     onServerDelete: (Server) -> Unit
 ) {
     Scaffold(topBar = {}, bottomBar = {}, floatingActionButton = {
@@ -51,7 +52,12 @@ fun ServerList(
     }) { padding ->
         LazyColumn(modifier = Modifier.padding(padding)) {
             items(servers) { server ->
-                ServerListItem(server, onClick = onServerSelect, onDelete = onServerDelete)
+                ServerListItem(
+                    server,
+                    onClick = onServerSelect,
+                    onEdit = onServerEdit,
+                    onDelete = onServerDelete
+                )
             }
         }
     }
@@ -93,6 +99,6 @@ fun ServerListPreview() {
                 "reader@comixedprojecvt.org",
                 "password"
             )
-        ), onServerCreate = {}, onServerSelect = {}, onServerDelete = {})
+        ), onServerCreate = {}, onServerSelect = {}, onServerEdit = {}, onServerDelete = {})
     }
 }

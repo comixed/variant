@@ -32,16 +32,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.ui.DismissBackground
+import org.comixedproject.variant.android.ui.ServerListEntryDismissBackground
 import org.comixedproject.variant.shared.model.server.Server
 
 @Composable
-fun ServerListItem(server: Server, onClick: (Server) -> Unit, onDelete: (Server) -> Unit) {
+fun ServerListItem(
+    server: Server,
+    onClick: (Server) -> Unit,
+    onEdit: (Server) -> Unit,
+    onDelete: (Server) -> Unit
+) {
     val context = LocalContext.current
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
             when (it) {
                 SwipeToDismissBoxValue.StartToEnd -> onDelete(server)
+                SwipeToDismissBoxValue.EndToStart -> onEdit(server)
                 else -> return@rememberSwipeToDismissBoxState false
             }
 
@@ -52,7 +58,7 @@ fun ServerListItem(server: Server, onClick: (Server) -> Unit, onDelete: (Server)
 
     SwipeToDismissBox(state = dismissState,
         modifier = Modifier,
-        backgroundContent = { DismissBackground(dismissState) },
+        backgroundContent = { ServerListEntryDismissBackground(dismissState) },
         content = {
             ListItem(
                 leadingContent = { Icon(Icons.Filled.Info, contentDescription = server.name) },
@@ -79,6 +85,7 @@ fun ServerListItemPreview() {
                 "password"
             ),
             onClick = {},
+            onEdit = {},
             onDelete = {}
         )
     }

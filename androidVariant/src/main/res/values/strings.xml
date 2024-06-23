@@ -14,5 +14,6 @@
     <string name="deleteButtonLabel">Delete this entry</string>
     <string name="browseButtonLabel">Browser server contents</string>
     <string name="editButtonLabel">Edit this entry</string>
+    <string name="editServer">Edit this server</string>
     <string name="deleteServer">Delete this server</string>
 </resources>

@@ -58,6 +58,12 @@ fun ServerManagementScreen(
                 onServerSelect = { server ->
                     navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, server)
                 },
+                onServerEdit = { server ->
+                    navigator.navigateTo(
+                        ListDetailPaneScaffoldRole.Extra,
+                        server
+                    )
+                },
                 onServerDelete = onDeleteServer
             )
         },
