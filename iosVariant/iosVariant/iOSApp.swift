@@ -17,6 +17,7 @@
  */
 
 import SwiftUI
+import Variant
 
 @available(iOS 17.0, *)
 @main

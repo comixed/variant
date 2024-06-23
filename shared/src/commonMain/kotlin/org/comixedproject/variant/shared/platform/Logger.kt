@@ -16,18 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
-import Variant
+package org.comixedproject.variant.shared.platform
 
-@available(iOS 17.0, *)
-@Observable
-final class VariantViewModelWrapper {
-    let viewModel: VariantViewModel = Koin.instance.get()
-    
-    private(set) var servers: [Server] = []
-    private(set) var links: [Link] = []
-    
-    init() {
-        viewModel.onServerUpdate = { [weak self] servers in self?.servers = servers }
+internal expect class Log() {
+    fun debug(tag: String, message: String)
+    fun warn(tag: String, message: String)
+    fun error(tag: String, message: String)
+}
+
+public object Logger {
+    private val logger = Log()
+
+    public fun d(tag: String, message: String) {
+        logger.debug(tag, message)
+    }
+
+    public fun w(tag: String, message: String) {
+        logger.warn(tag, message)
+    }
+
+    public fun e(tag: String, message: String) {
+        logger.error(tag, message)
     }
 }

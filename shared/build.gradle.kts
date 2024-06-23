@@ -27,16 +27,26 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.lifecycle.viewmodel.android)
             implementation(libs.sqldelight.driver.android)
+            implementation(libs.ktor.client.android)
         }
         iosMain.dependencies {
             implementation(libs.sqldelight.driver.native)
+            implementation(libs.ktor.client.ios)
         }
         commonMain.dependencies {
             implementation(libs.koin.core)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.serialization)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.auth)
+            implementation(libs.korio)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.koin.test)
+            implementation(libs.ktor.client.mock)
         }
     }
 

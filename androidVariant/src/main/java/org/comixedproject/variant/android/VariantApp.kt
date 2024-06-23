@@ -37,7 +37,7 @@ class VariantApp : Application() {
             },
             viewModelsModule = module {
                 viewModel {
-                    VariantViewModel(get())
+                    VariantViewModel(get(), get())
                 }
             })
     }

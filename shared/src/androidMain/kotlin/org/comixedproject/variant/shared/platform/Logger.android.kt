@@ -16,18 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
-import Variant
+package org.comixedproject.variant.shared.platform
 
-@available(iOS 17.0, *)
-@Observable
-final class VariantViewModelWrapper {
-    let viewModel: VariantViewModel = Koin.instance.get()
-    
-    private(set) var servers: [Server] = []
-    private(set) var links: [Link] = []
-    
-    init() {
-        viewModel.onServerUpdate = { [weak self] servers in self?.servers = servers }
+import android.util.Log
+
+internal actual class Log {
+    actual fun debug(tag: String, message: String) {
+        Log.d(tag, message)
+    }
+
+    actual fun warn(tag: String, message: String) {
+        Log.w(tag, message)
+    }
+
+    actual fun error(tag: String, message: String) {
+        Log.e(tag, message)
     }
 }

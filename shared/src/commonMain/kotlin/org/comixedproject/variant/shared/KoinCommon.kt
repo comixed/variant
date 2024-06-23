@@ -19,6 +19,7 @@
 package org.comixedproject.variant.shared
 
 import org.comixedproject.variant.shared.data.DatabaseHelper
+import org.comixedproject.variant.shared.data.LinkRepository
 import org.comixedproject.variant.shared.data.ServerRepository
 import org.comixedproject.variant.shared.model.VariantViewModel
 import org.koin.core.KoinApplication
@@ -32,11 +33,16 @@ object Modules {
     }
 
     val repositories = module {
-        factory { ServerRepository(get()) }
+        factory {
+            ServerRepository(get())
+        }
+        factory {
+            LinkRepository(get())
+        }
     }
 
     val viewModels = module {
-        factory { VariantViewModel(get()) }
+        factory { VariantViewModel(get(), get()) }
     }
 }
 
