@@ -22,13 +22,13 @@ import Variant
 @available(iOS 17.0, *)
 @main
 struct iOSApp: App {
-    init() {
-        Koin.start()
-    }
+  init() {
+    Koin.start()
+  }
 
-	var body: some Scene {
-		WindowGroup {
-			ContentView()
-		}
-	}
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
+    }
+  }
 }

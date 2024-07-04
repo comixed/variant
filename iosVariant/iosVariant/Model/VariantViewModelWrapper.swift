@@ -22,12 +22,13 @@ import Variant
 @available(iOS 17.0, *)
 @Observable
 final class VariantViewModelWrapper {
-    let viewModel: VariantViewModel = Koin.instance.get()
-    
-    private(set) var servers: [Server] = []
-    private(set) var links: [Link] = []
-    
-    init() {
-        viewModel.onServerUpdate = { [weak self] servers in self?.servers = servers }
-    }
+  let viewModel: VariantViewModel = Koin.instance.get()
+
+  private(set) var servers: [Server] = []
+
+  private(set) var links: [Link] = []
+
+  init() {
+    viewModel.onServerUpdate = { [weak self] servers in self?.servers = servers }
+  }
 }

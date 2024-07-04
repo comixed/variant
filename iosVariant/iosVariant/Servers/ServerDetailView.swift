@@ -19,21 +19,39 @@
 import SwiftUI
 import Variant
 
-struct ServerEdit: View {
-    @State var server: Server
-    
-    var body: some View {
-        Text(server.name)
+struct ServerDetailView: View {
+  var server: Server
+  var onBrowseServer: (Server) -> Void
+  var onEditServer: (Server) -> Void
+  var onDeleteServer: (Server) -> Void
+
+  var body: some View {
+    VStack {
+      Text(server.name).font(.headline)
+      Text(server.url).font(.subheadline)
+      Text(server.username).font(.body)
+      Spacer()
+      Text("Bottom of the screen")
     }
+    .toolbar {
+      Button(action: {}) {
+        Image(systemName: "pencil")
+      }
+      .accessibilityLabel("Edit \(server.name)")
+    }
+  }
 }
 
 #Preview {
-    ServerEdit(
-        server: Server(
-            id: "1",
-            name: "Server 1",
-            url:  "http://www.comixedproject.org:7171/opds",
-            username: "reader@comixedproject.org",
-            password: "my!password"
-        ))
+  ServerDetailView(
+    server: Server(
+      id: "1",
+      name: "Server 1",
+      url: "http://www.comixedproject.org:7171/opds",
+      username: "reader@comixedproject.org",
+      password: "my!password"),
+    onBrowseServer: { _ in },
+    onEditServer: { _ in },
+    onDeleteServer: { _ in }
+  )
 }

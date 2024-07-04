@@ -17,17 +17,17 @@
  */
 
 import SwiftUI
+import Variant
 
 @available(iOS 17.0, *)
 struct ContentView: View {
-	var body: some View {
-		HomeView()
-	}
-}
+  @State private var viewModelWrapper = VariantViewModelWrapper()
 
-@available(iOS 17.0, *)
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-		ContentView()
-	}
+  var body: some View {
+    HomeView(
+      servers: viewModelWrapper.servers,
+      onSaveServer: { server in viewModelWrapper.viewModel.saveServer(server: server) },
+      onDeleteServer: { server in viewModelWrapper.viewModel.deleteServer(server: server) }
+    )
+  }
 }
