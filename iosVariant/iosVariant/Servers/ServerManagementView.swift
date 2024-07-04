@@ -21,70 +21,74 @@ import Variant
 
 @available(iOS 17.0, *)
 struct ServerManagementView: View {
-    @State var servers: [Server]
-    @State private var selectedServer: Server? = nil
+  @State private var newServer = false
+  @State private var editMode = false
 
-    var onSaveServer: (Server) -> ()
-    var onBrowseServer: (Server) -> ()
-    var onDeleteServer: (Server) -> ()
+  var servers: [Server]
 
-    var body: some View {
-        ZStack {
-            if let server = $selectedServer.wrappedValue {
-                Text(server.name)
+  var onBrowseServer: (Server) -> Void
+  var onSaveServer: (Server) -> Void
+  var onDeleteServer: (Server) -> Void
+
+  var body: some View {
+    NavigationStack {
+      if newServer {
+        ServerEditView(
+          server: Server(id: nil, name: "", url: "", username: "", password: ""),
+          onSave: { server in
+            onSaveServer(server)
+            newServer = false
+          },
+          onCancel: { newServer = false }
+        )
+      } else {
+        List(servers, id: \.id) { item in
+          NavigationLink(item.name) {
+            if editMode {
+              ServerEditView(
+                server: item,
+                onSave: { server in
+                  onSaveServer(server)
+                  editMode = false
+                },
+                onCancel: { editMode = false }
+              )
+            } else {
+              ServerListView(
+                server: item,
+                onEdit: { _ in
+                  editMode = true
+                },
+                onDelete: { server in onDeleteServer(server) }
+              )
             }
-            VStack {
-                NavigationSplitView {
-                    List(servers, id: \.id, selection: $selectedServer) { server in
-                        NavigationLink(value: server) {
-                            HStack {
-                                Image(systemName: "server.rack")
-                                Text(server.name)
-                                Spacer()
-                            }
-                        }
-                        .navigationTitle("Servers")
-                    }
-                } detail: {
-                    if let server = $selectedServer.wrappedValue {
-                        ServerDetail(
-                            server: server,
-                            onEdit: { selectedServer = server },
-                            onBrowse: { onBrowseServer(server) },
-                            onDelete: {
-                                onDeleteServer(server)
-                            })
-                    }
-                }
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button(action: {}, label: {
-                        Text("+")
-                            .font(.system(.largeTitle))
-                            .frame(width: 77, height: 70)
-                            .foregroundColor(Color.white)
-                            .padding(.bottom, 7)
-                    })
-                    .background(Color.blue)
-                    .cornerRadius(38.5)
-                    .padding()
-                    .shadow(color: Color.black.opacity(0.3),
-                            radius: 3,
-                            x: 3,
-                            y: 3)
-                }
-            }
+          }
         }
+        .toolbar {
+          Button(action: {
+            newServer = true
+          }) {
+            Image(systemName: "plus")
+          }
+          .accessibilityLabel("New Server")
+        }
+      }
     }
+  }
 }
 
-@available(iOS 17.0, *)
-#Preview {
-    ServerManagementView(servers: [
-        Server(id: "1", name: "My Server", url: "http://www.comixedproject.org:7171/opds", username: "reader@comixedproject.org", password: "my!password"),
+@available(iOS 17.0, *)#Preview{
+  ServerManagementView(
+    servers: [
+      Server(
+        id: "1",
+        name: "My Server",
+        url: "http://www.comixedproject.org:7171/opds",
+        username: "reader@comixedproject.org",
+        password: "my!password"
+      )
     ],
-    onSaveServer: { _ in },
     onBrowseServer: { _ in },
+    onSaveServer: { _ in },
     onDeleteServer: { _ in })
 }

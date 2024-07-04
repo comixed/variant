@@ -19,16 +19,45 @@
 import SwiftUI
 import Variant
 
-struct ServerListItem: View {
-    var server: Server
-    
-    var body: some View {
-        VStack {
-            Text(server.name)
-        }
+struct ServerListView: View {
+  var server: Server
+  var onEdit: (Server) -> Void
+  var onDelete: (Server) -> Void
+
+  var body: some View {
+    NavigationStack {
+      VStack {
+        Text("List View")
+        Text(server.name).font(.title)
+        Text(server.url).font(.body)
+        Text(server.username).font(.body)
+      }
     }
+    .toolbar {
+      ToolbarItem(placement: .topBarLeading) {
+        Button("Edit") {
+          onEdit(server)
+        }
+      }
+      ToolbarItem(placement: .topBarTrailing) {
+        Button("Delete") {
+          onDelete(server)
+        }
+      }
+    }
+  }
 }
 
 #Preview {
-    ServerListItem(server: Server(id: "1", name: "Server 1", url: "http://www.comixedproject.org:7171/opds", username: "reader@comixedproject.org", password: "my!password"))
+  ServerListView(
+    server: Server(
+      id: "1",
+      name: "My Server",
+      url: "http://www.comixedproject.org:7171/opds",
+      username: "reader@comixedproject.org",
+      password: "my!password"
+    ),
+    onEdit: { _ in },
+    onDelete: { _ in }
+  )
 }

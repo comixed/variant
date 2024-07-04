@@ -37,7 +37,9 @@ actual val platformModule: Module = module {
 }
 
 object KoinIOS {
-    fun initialize(): KoinApplication = initKoin()
+    fun initialize(): KoinApplication = initKoin(
+        appModule = module { }
+    )
 }
 
 @kotlinx.cinterop.BetaInteropApi

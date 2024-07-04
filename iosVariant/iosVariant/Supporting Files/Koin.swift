@@ -33,9 +33,7 @@ final class Koin {
     }
   }
 
-  private init() {
-
-  }
+  private init() {}
 
   func get<T: AnyObject>() -> T {
     guard let core else {

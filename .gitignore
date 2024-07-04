@@ -9,3 +9,5 @@ captures
 local.properties
 xcuserdata
 iosVariant/iosVariant.xcodeproj/project.xcworkspace/
+iosVariant/iosVariant.xcodeproj/xcshareddata
+.kotlin

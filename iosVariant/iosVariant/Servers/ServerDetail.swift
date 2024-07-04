@@ -20,42 +20,30 @@ import SwiftUI
 import Variant
 
 struct ServerDetail: View {
-    var server: Server
-    var onEdit: () -> ()
-    var onBrowse: () -> ()
-    var onDelete: () -> ()
+  var server: Server
+  var onEdit: () -> Void
+  var onBrowse: () -> Void
+  var onDelete: () -> Void
 
-    var body: some View {
-        VStack {
-            Text(server.name).font(.title).bold()
-            Text(server.url).font(.subheadline).foregroundStyle(Color.secondary)
-            Text(server.username)
-            Spacer()
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button("Edit") {
-                    onEdit()
-                }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Browser") {
-                    onBrowse()
-                }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Delete") {
-                    onDelete()
-                }
-            }
-        }
+  var body: some View {
+    NavigationStack {
+      VStack {
+        Text(server.name).font(.title).bold()
+        Text(server.url).font(.subheadline).foregroundStyle(Color.secondary)
+        Text(server.username)
+        Spacer()
+        Text("Bottom")
+      }
     }
+  }
 }
 
 #Preview {
-    ServerDetail(
-        server: Server(id: "1", name: "Server 1", url: "http://www.comixedproject.org:7171/opds", username: "reader@comixedproject.org", password: "my!password"),
-        onEdit: {},
-        onBrowse: {},
-        onDelete: {})
+  ServerDetail(
+    server: Server(
+      id: "1", name: "Server 1", url: "http://www.comixedproject.org:7171/opds",
+      username: "reader@comixedproject.org", password: "my!password"),
+    onEdit: {},
+    onBrowse: {},
+    onDelete: {})
 }
