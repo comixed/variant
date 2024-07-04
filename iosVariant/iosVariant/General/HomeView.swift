@@ -22,6 +22,9 @@ import Variant
 @available(iOS 17.0, *)
 struct HomeView: View {
   var servers: [Server]
+  var directory: String
+  var links: [AcquisitionLink]
+
   var onSaveServer: (Server) -> Void
   var onDeleteServer: (Server) -> Void
 
@@ -29,6 +32,8 @@ struct HomeView: View {
     TabView {
       ServerManagementView(
         servers: servers,
+        directory: directory,
+        links: links,
         onBrowseServer: { _ in },
         onSaveServer: { server in onSaveServer(server) },
         onDeleteServer: { server in onDeleteServer(server) }
@@ -61,6 +66,8 @@ struct HomeView: View {
         password: "my!password"
       )
     ],
+    directory: "",
+    links: [],
     onSaveServer: { _ in },
     onDeleteServer: { _ in }
   )

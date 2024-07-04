@@ -22,7 +22,7 @@ import org.comixedproject.variant.shared.data.LinkRepository
 import org.comixedproject.variant.shared.data.ServerRepository
 import org.comixedproject.variant.shared.domain.LinkFeedData
 import org.comixedproject.variant.shared.domain.ServiceLocator
-import org.comixedproject.variant.shared.model.server.Link
+import org.comixedproject.variant.shared.model.server.AcquisitionLink
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Logger
 
@@ -33,44 +33,69 @@ class VariantViewModel(
     val linkRepository: LinkRepository
 ) : BaseViewModel(), LinkFeedData {
 
-    private var _serverId: String? = null
+    private var _server: Server? = null
+    val server: Server?
+        get() = _server
 
-    private var _directory: String? = null
+    private var _directory: String = ""
+    val directory: String
+        get() = _directory
 
     private var _loading = false
 
     val servers: List<Server>
         get() = serverRepository.servers
 
-    val allLinks: List<Link> = linkRepository.loadAllLinks()
+    val allAcquisitionLinks: List<AcquisitionLink> = linkRepository.loadAllLinks()
 
-    val links: List<Link>
+    val acquisitionLinks: List<AcquisitionLink>
         get() = linkRepository.loadAllLinks()
-            .filter { link -> _serverId != null && link.serverId == _serverId!! } // linksForParent(_server?.id, _directory?.orEmpty())
-            .filter { link -> _directory != null && link.directory == _directory!! }.toList()
+            .filter { !_loading }
+            .filter { link -> server != null && link.serverId == server?.id }
+            .filter { link -> link.directory == _directory }
+            .toList()
 
-    var onServerUpdate: ((List<Server>) -> Unit)? = null
+    var onServerListUpdated: ((List<Server>) -> Unit)? = null
         set(value) {
             field = value
-            onServerUpdate?.invoke(servers)
+            onServerListUpdated?.invoke(servers)
+        }
+
+    var onDisplayLinksUpdated: ((List<AcquisitionLink>) -> Unit)? = null
+        set(value) {
+            field = value
+            onDisplayLinksUpdated?.invoke(acquisitionLinks)
+        }
+
+    var onAllLinksUpdated: ((List<AcquisitionLink>) -> Unit)? = null
+        set(value) {
+            field = value
+            onDisplayLinksUpdated?.invoke(allAcquisitionLinks)
         }
 
     private val presenter by lazy { ServiceLocator.getFeedPresenter }
 
     fun saveServer(server: Server) {
         serverRepository.saveServer(server)
-        onServerUpdate?.invoke(servers)
+        onServerListUpdated?.invoke(serverRepository.servers)
     }
 
-    fun loadServerFeed(server: Server, directory: String) {
-        if (_loading == false) {
-            Logger.d(TAG, "Loading server feed: server=${server.name} directory=$directory")
-            presenter.loadDirectoryOnServer(server, directory, this)
-        } else {
-            Logger.d(
-                TAG,
-                "Currently loading feed: ignoring request for server=${server.name} directory=$directory"
-            )
+    fun loadServerFeed(server: Server, directory: String, reload: Boolean) {
+        if (reload || _server != server || _directory != directory) {
+            _server = server
+            _directory = directory
+            val needsReload = reload || acquisitionLinks.isEmpty()
+            if (needsReload) {
+                Logger.d(TAG, "Loading server feed: server=${server.name} directory=$directory")
+                presenter.loadDirectoryOnServer(server, directory, this)
+            } else {
+                Logger.d(
+                    TAG,
+                    "Updating the link feed with ${acquisitionLinks.size} existing links"
+                )
+                onDisplayLinksUpdated?.invoke(acquisitionLinks)
+                onAllLinksUpdated?.invoke(allAcquisitionLinks)
+            }
         }
     }
 
@@ -84,16 +109,19 @@ class VariantViewModel(
     override fun onNewLinksReceived(
         server: Server,
         directory: String,
-        links: List<Link>,
+        acquisitionLinks: List<AcquisitionLink>,
         exception: Exception?
     ) {
         if (exception != null) {
             Logger.e("Error receiving links", exception.toString())
         } else {
-            Logger.d(TAG, "Saving ${links.size} link(s) from ${server.name} in ${directory}")
-            linkRepository.saveLinksForServer(server.id!!, directory, links)
-            _serverId = server.id
-            _directory = directory
+            Logger.d(
+                TAG,
+                "Saving ${acquisitionLinks.size} link(s) from ${server.name} in ${directory}"
+            )
+            linkRepository.saveLinksForServer(server.id!!, directory, acquisitionLinks)
+            onDisplayLinksUpdated?.invoke(acquisitionLinks)
+            onAllLinksUpdated?.invoke(allAcquisitionLinks)
         }
     }
 }

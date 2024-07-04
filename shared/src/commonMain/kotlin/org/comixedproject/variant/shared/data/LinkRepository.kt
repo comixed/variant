@@ -18,21 +18,25 @@
 
 package org.comixedproject.variant.shared.data
 
-import org.comixedproject.variant.db.LinksDb
-import org.comixedproject.variant.shared.model.server.Link
+import org.comixedproject.variant.db.AcquisitionLinksDb
+import org.comixedproject.variant.shared.model.server.AcquisitionLink
 
 class LinkRepository(private val databaseHelper: DatabaseHelper) {
-    fun loadAllLinks() = databaseHelper.loadAllLinks().map(LinksDb::map)
+    fun loadAllLinks() = databaseHelper.loadAllLinks().map(AcquisitionLinksDb::map)
 
     fun linksForParent(serverId: String, directory: String) =
-        databaseHelper.loadLinks(serverId, directory).map(LinksDb::map)
+        databaseHelper.loadLinks(serverId, directory).map(AcquisitionLinksDb::map)
 
-    fun saveLinksForServer(serverId: String, directory: String, links: List<Link>) {
-        databaseHelper.saveLinksForServer(serverId, directory, links);
+    fun saveLinksForServer(
+        serverId: String,
+        directory: String,
+        acquisitionLinks: List<AcquisitionLink>
+    ) {
+        databaseHelper.saveLinksForServer(serverId, directory, acquisitionLinks);
     }
 }
 
-fun LinksDb.map() = Link(
+fun AcquisitionLinksDb.map() = AcquisitionLink(
     id = this.id,
     serverId = this.serverId,
     linkId = this.linkId,

@@ -1,6 +1,6 @@
 package org.comixedproject.variant.shared.model.server
 
-class Link(
+class AcquisitionLink(
     val id: String?,
     val serverId: String,
     val linkId: String,

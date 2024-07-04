@@ -25,10 +25,14 @@ final class VariantViewModelWrapper {
   let viewModel: VariantViewModel = Koin.instance.get()
 
   private(set) var servers: [Server] = []
-
-  private(set) var links: [Link] = []
+  private(set) var server: Server? = nil
+  private(set) var directory: String = ""
+  private(set) var links: [AcquisitionLink] = []
 
   init() {
-    viewModel.onServerUpdate = { [weak self] servers in self?.servers = servers }
+    viewModel.onServerListUpdate = { [weak self] servers in self?.servers = servers }
+    viewModel.onServerUpdate = { [weak self] server in self?.server = server }
+    viewModel.onDirectoryUpdate = { [weak self] directory in self?.directory = directory }
+    viewModel.onLinksUpdate = { [weak self] links in self?.links = links }
   }
 }

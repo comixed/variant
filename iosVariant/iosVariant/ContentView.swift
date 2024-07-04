@@ -26,6 +26,8 @@ struct ContentView: View {
   var body: some View {
     HomeView(
       servers: viewModelWrapper.servers,
+      directory: viewModelWrapper.directory,
+      links: viewModelWrapper.links,
       onSaveServer: { server in viewModelWrapper.viewModel.saveServer(server: server) },
       onDeleteServer: { server in viewModelWrapper.viewModel.deleteServer(server: server) }
     )
