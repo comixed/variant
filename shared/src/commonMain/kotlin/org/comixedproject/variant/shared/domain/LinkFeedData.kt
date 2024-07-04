@@ -18,14 +18,14 @@
 
 package org.comixedproject.variant.shared.domain
 
-import org.comixedproject.variant.shared.model.server.Link
+import org.comixedproject.variant.shared.model.server.AcquisitionLink
 import org.comixedproject.variant.shared.model.server.Server
 
 public interface LinkFeedData {
     public fun onNewLinksReceived(
         server: Server,
         directory: String,
-        links: List<Link>,
+        acquisitionLinks: List<AcquisitionLink>,
         exception: Exception?
     )
 }

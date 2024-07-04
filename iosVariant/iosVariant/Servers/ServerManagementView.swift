@@ -21,10 +21,12 @@ import Variant
 
 @available(iOS 17.0, *)
 struct ServerManagementView: View {
-  @State private var newServer = false
   @State private var editMode = false
+  @State private var server: Server? = nil
 
   var servers: [Server]
+  var directory: String
+  var links: [AcquisitionLink]
 
   var onBrowseServer: (Server) -> Void
   var onSaveServer: (Server) -> Void
@@ -32,18 +34,22 @@ struct ServerManagementView: View {
 
   var body: some View {
     NavigationStack {
-      if newServer {
-        ServerEditView(
-          server: Server(id: nil, name: "", url: "", username: "", password: ""),
-          onSave: { server in
-            onSaveServer(server)
-            newServer = false
-          },
-          onCancel: { newServer = false }
-        )
+      if editMode {
+        if let item = server {
+          ServerEditView(
+            server: item,
+            onSave: { server in
+              onSaveServer(server)
+              editMode = false
+            },
+            onCancel: { editMode = false }
+          )
+        } else {
+          Text("No server")
+        }
       } else {
         List(servers, id: \.id) { item in
-          NavigationLink(item.name) {
+          NavigationLink(destination: {
             if editMode {
               ServerEditView(
                 server: item,
@@ -54,19 +60,37 @@ struct ServerManagementView: View {
                 onCancel: { editMode = false }
               )
             } else {
-              ServerListView(
+              ServerBrowseView(
                 server: item,
-                onEdit: { _ in
-                  editMode = true
-                },
-                onDelete: { server in onDeleteServer(server) }
+                directory: directory,
+                links: links,
+                onLoadDirectory: { server, directory in },
+                onClose: {}
               )
             }
+          }) {
+            Text(item.name)
+              .swipeActions(allowsFullSwipe: false) {
+                Button {
+                  server = item
+                  editMode = true
+                } label: {
+                  Label("Edit", systemImage: "pencil")
+                }
+                .tint(.green)
+
+                Button(role: .destructive) {
+                  onDeleteServer(item)
+                } label: {
+                  Label("Delete", systemImage: "trash.fill")
+                }
+              }
           }
         }
         .toolbar {
           Button(action: {
-            newServer = true
+            server = Server(id: nil, name: "", url: "", username: "", password: "")
+            editMode = true
           }) {
             Image(systemName: "plus")
           }
@@ -88,6 +112,8 @@ struct ServerManagementView: View {
         password: "my!password"
       )
     ],
+    directory: "",
+    links: [],
     onBrowseServer: { _ in },
     onSaveServer: { _ in },
     onDeleteServer: { _ in })

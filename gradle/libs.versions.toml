@@ -1,5 +1,5 @@
 [versions]
-android-gradle-plugin = "8.4.1"
+android-gradle-plugin = "8.5.0"
 sonarqube-plugin = "4.4.1.3373"
 kotlin = "1.9.24"
 activity-compose = "1.8.0"

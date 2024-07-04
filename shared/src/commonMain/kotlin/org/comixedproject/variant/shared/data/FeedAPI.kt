@@ -50,10 +50,6 @@ public object FeedAPI {
             else -> URL.resolve(server.url, directory)
         }
         val client = HttpClient {
-            install(ContentNegotiation) {
-                json(nonStrictJson)
-            }
-
             install(Logging) {
                 logger = HttpClientLogger
                 level = LogLevel.HEADERS

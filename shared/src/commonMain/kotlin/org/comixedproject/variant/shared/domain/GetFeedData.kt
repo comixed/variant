@@ -22,7 +22,7 @@ import io.ktor.client.statement.bodyAsText
 import korlibs.io.serialization.xml.Xml
 import kotlinx.coroutines.coroutineScope
 import org.comixedproject.variant.shared.data.FeedAPI
-import org.comixedproject.variant.shared.model.server.Link
+import org.comixedproject.variant.shared.model.server.AcquisitionLink
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Logger
 
@@ -32,7 +32,7 @@ public class GetFeedData {
     public suspend fun invokeLoadDirectoryOnServer(
         server: Server,
         directory: String,
-        onSuccess: (List<Link>) -> Unit,
+        onSuccess: (List<AcquisitionLink>) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         try {
@@ -40,7 +40,7 @@ public class GetFeedData {
             val result = FeedAPI.loadDirectoryOnServer(server, directory)
             Logger.d(TAG, "Result received: $result")
             val xml = Xml.parse(result.bodyAsText())
-            val feed = mutableListOf<Link>()
+            val feed = mutableListOf<AcquisitionLink>()
             for (node in xml.allNodeChildren) {
                 val link = parseLink(node, server, directory)
 
@@ -55,7 +55,7 @@ public class GetFeedData {
         }
     }
 
-    fun parseLink(node: Xml, server: Server, directory: String): Link? {
+    fun parseLink(node: Xml, server: Server, directory: String): AcquisitionLink? {
         if (node.name == "entry") {
             val id = node.allNodeChildren.firstOrNull { it.name == "id" }
             val title = node.allNodeChildren.firstOrNull { it.name == "title" }
@@ -63,7 +63,7 @@ public class GetFeedData {
                 it.name == "link"
             }
 
-            return Link(
+            return AcquisitionLink(
                 id = null,
                 serverId = server.id!!,
                 linkId = id?.text ?: "",

@@ -18,69 +18,33 @@
 
 package org.comixedproject.variant.android.ui.server
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.shared.model.server.Link
+import org.comixedproject.variant.shared.model.server.AcquisitionLink
 import org.comixedproject.variant.shared.model.server.Server
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ServerBrowse(
+fun BrowseServerScreen(
     server: Server,
-    links: List<Link>,
+    acquisitionLinks: List<AcquisitionLink>,
     directory: String,
-    onLoadDirectory: (Server, Link) -> Unit
+    onLoadDirectory: (Server, AcquisitionLink) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(text = server.name)
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Go back"
-                        )
-                    }
-                }
-            )
-        }
-    ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
-            Text("${server.url}${directory}")
-            Text("Show ${links.size} entries")
-            links.forEach { link ->
-                Row {
-                    Button(onClick = { onLoadDirectory(server, link) }) {
-                        Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = link.title)
-                    }
-                    Text("[${link.title}]")
-                }
-            }
+    Column {
+        Text("[${acquisitionLinks.size}]${server.name}:${directory}")
+        acquisitionLinks.forEach { link ->
+            Text(link.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onLoadDirectory(server, link) })
         }
     }
 }
@@ -89,7 +53,7 @@ fun ServerBrowse(
 @Composable
 fun ServerBrowsePreviewRoot() {
     VariantTheme {
-        ServerBrowse(
+        BrowseServerScreen(
             server = Server(
                 "1",
                 "My Server",
@@ -106,9 +70,9 @@ fun ServerBrowsePreviewRoot() {
 
 @Preview
 @Composable
-fun ServerBrowsePreviewChild() {
+fun BrowseServerScreenPreview() {
     VariantTheme {
-        ServerBrowse(
+        BrowseServerScreen(
             server = Server(
                 "1",
                 "My Server",
@@ -116,7 +80,25 @@ fun ServerBrowsePreviewChild() {
                 "reader@comixedproject.org",
                 "my!password"
             ),
-            mutableListOf(),
+            listOf(
+                AcquisitionLink(
+                    null,
+                    "1",
+                    "",
+                    "",
+                    "",
+                    "First Link",
+                    null
+                ), AcquisitionLink(
+                    null,
+                    "2",
+                    "",
+                    "",
+                    "",
+                    "Second Link",
+                    null
+                )
+            ),
             "first/second/third",
             onLoadDirectory = { server, directory -> }
         )

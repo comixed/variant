@@ -21,13 +21,13 @@ import Variant
 
 struct ServerListView: View {
   var server: Server
+  var onBrowse: (Server) -> Void
   var onEdit: (Server) -> Void
   var onDelete: (Server) -> Void
 
   var body: some View {
     NavigationStack {
       VStack {
-        Text("List View")
         Text(server.name).font(.title)
         Text(server.url).font(.body)
         Text(server.username).font(.body)
@@ -57,6 +57,7 @@ struct ServerListView: View {
       username: "reader@comixedproject.org",
       password: "my!password"
     ),
+    onBrowse: { _ in },
     onEdit: { _ in },
     onDelete: { _ in }
   )

@@ -16,42 +16,62 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.ui.server
+package org.comixedproject.variant.android.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.ui.NavigationScreen
-import org.comixedproject.variant.shared.model.VariantViewModel
+import org.comixedproject.variant.android.ui.server.BottomBar
+import org.comixedproject.variant.android.ui.server.BrowseServerScreen
+import org.comixedproject.variant.android.ui.server.ServerManagementScreen
+import org.comixedproject.variant.shared.model.server.AcquisitionLink
+import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Logger
-import org.koin.androidx.compose.getViewModel
 
 private const val TAG = "HomeScreen"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: VariantViewModel = getViewModel()) {
-    val showBottomBar = remember { mutableStateOf(true) }
+fun HomeScreen(
+    servers: List<Server>,
+    displayLinks: List<AcquisitionLink>,
+    allLinks: List<AcquisitionLink>,
+    onSaveServer: (Server) -> Unit,
+    onLoadDirectory: (Server, String, Boolean) -> Unit
+) {
     val navController = rememberNavController()
 
     Scaffold(
-        topBar = { Text("Top Bar") },
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                ),
+                title = {
+                    Text(stringResource(id = R.string.appNameAndVersion))
+                }
+            )
+        },
         bottomBar = {
-            if (showBottomBar.value) {
-                BottomBar(currentDestination = navController.currentBackStackEntryAsState().value?.destination,
-                    onScreenChange = { route -> navController.navigate(route) })
-            }
+            BottomBar(currentDestination = navController.currentBackStackEntryAsState().value?.destination,
+                onScreenChange = { route -> navController.navigate(route) })
         },
     ) { padding ->
         Column(
@@ -68,8 +88,8 @@ fun HomeScreen(viewModel: VariantViewModel = getViewModel()) {
                     route = NavigationScreen.Servers.route
                 ) {
                     ServerManagementScreen(
-                        servers = viewModel.servers,
-                        onSaveServer = { server -> viewModel.saveServer(server) },
+                        servers = servers,
+                        onSaveServer = { server -> onSaveServer(server) },
                         onBrowseServer = { server ->
                             navController.navigate("servers?serverId=${server.id}&linkId=")
                         },
@@ -77,27 +97,29 @@ fun HomeScreen(viewModel: VariantViewModel = getViewModel()) {
                     )
                 }
                 composable(
-                    route = NavigationScreen.BrowserServer.route,
-                    arguments = NavigationScreen.BrowserServer.navArguments
+                    route = NavigationScreen.BrowseServer.route,
+                    arguments = NavigationScreen.BrowseServer.navArguments
                 ) { entry ->
                     val serverId = entry.arguments?.getString("serverId")
                     val linkId = entry.arguments?.getString("linkId").orEmpty()
                     Logger.d(TAG, "serverId=${serverId} linkId=${linkId}")
-                    viewModel.servers.find { server -> server.id == serverId }?.let { server ->
+                    servers.find { server -> server.id == serverId }?.let { server ->
                         var directory = ""
-                        if (linkId.length > 0) {
-                            viewModel.allLinks.find { link -> link.id == linkId }?.let { link ->
-                                directory = link.link
-                            }
+                        if (linkId.isNotEmpty()) {
+                            allLinks.find { link -> link.id == linkId }
+                                ?.let { link ->
+                                    directory = link.link
+                                }
                         }
-                        viewModel.loadServerFeed(server, directory)
-                        ServerBrowse(
+
+                        onLoadDirectory(server, directory, false)
+
+                        BrowseServerScreen(
                             server = server,
-                            links = viewModel.links,
+                            acquisitionLinks = displayLinks,
                             directory,
-                            onLoadDirectory = { server, selectedLink ->
-                                viewModel.loadServerFeed(server, selectedLink.link)
-                                navController.navigate("servers?serverId=${server.id}&linkId=${selectedLink.id}")
+                            onLoadDirectory = { target, selectedLink ->
+                                navController.navigate("servers?serverId=${target.id}&linkId=${selectedLink.id}")
                             })
                     }
                 }
@@ -116,6 +138,12 @@ fun HomeScreen(viewModel: VariantViewModel = getViewModel()) {
 @Composable
 fun HomeScreenPreview() {
     VariantTheme {
-        HomeScreen()
+        HomeScreen(
+            emptyList(),
+            emptyList(),
+            emptyList(),
+            onSaveServer = { },
+            onLoadDirectory = { _, _, _ -> }
+        )
     }
 }

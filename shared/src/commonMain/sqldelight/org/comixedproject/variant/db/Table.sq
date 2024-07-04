@@ -18,7 +18,7 @@ UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE id = ?;
 deleteServer:
 DELETE FROM ServersDb WHERE id = ?;
 
-CREATE TABLE LinksDb (
+CREATE TABLE AcquisitionLinksDb (
 id TEXT NOT NULL PRIMARY KEY,
 serverId TEXT NOT NULL,
 linkId TEXT NOT NULL,
@@ -29,16 +29,16 @@ thumbnailURL TEXT
 );
 
 createLink:
-INSERT OR IGNORE INTO LinksDb(id, serverId, linkId, directory, link, title, thumbnailURL) VALUES(?, ?, ?,?, ?, ?, ?);
+INSERT OR IGNORE INTO AcquisitionLinksDb(id, serverId, linkId, directory, link, title, thumbnailURL) VALUES(?, ?, ?,?, ?, ?, ?);
 
 getExistingLink:
-SELECT id FROM LinksDb WHERE serverId = ? AND directory = ?;
+SELECT id FROM AcquisitionLinksDb WHERE serverId = ? AND directory = ?;
 
 deleteExistingLink:
-DELETE FROM LinksDb WHERE id = ?;
+DELETE FROM AcquisitionLinksDb WHERE id = ?;
 
 loadAllLinks:
-SELECT * FROM LinksDb;
+SELECT * FROM AcquisitionLinksDb;
 
 loadLinksForParent:
-SELECT * FROM LinksDb WHERE serverId = ? AND directory = ?;
+SELECT * FROM AcquisitionLinksDb WHERE serverId = ? AND directory = ?;

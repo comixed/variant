@@ -31,7 +31,7 @@ import org.comixedproject.variant.android.R
 enum class NavigationScreen(val route: String, val navArguments: List<NamedNavArgument>) {
     ComicList("comics", emptyList()),
     Servers("servers", emptyList()),
-    BrowserServer(
+    BrowseServer(
         "servers?serverId={serverId}&linkId={linkId}", listOf(
             navArgument("serverId") {
                 type = NavType.StringType
