@@ -54,7 +54,6 @@ class MainActivity : ComponentActivity() {
 
                     HomeView(
                         serverList,
-                        serverLinkViewModel.directory,
                         linkList,
                         onSaveServer = { serverId, name, url, username, password ->
                             serverViewModel.onSaveServer(
@@ -68,6 +67,13 @@ class MainActivity : ComponentActivity() {
                         onServerLoadDirectory = { server, directory, reload ->
                             serverLinkViewModel.directory = directory
                             serverLinkViewModel.loadServerDirectory(server, directory, false)
+                        },
+                        onDownloadLink = { server, link ->
+                            serverLinkViewModel.downloadPublication(
+                                server,
+                                link.downloadLink,
+                                !link.downloaded
+                            )
                         }
                     )
                 }

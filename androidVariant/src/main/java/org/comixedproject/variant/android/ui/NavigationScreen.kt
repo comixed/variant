@@ -31,6 +31,7 @@ enum class NavigationScreen(
     ComicList("comics"),
     Servers("servers"),
     BrowseServer("servers/browse"),
+    ItemDetail("items/details"),
     Settings("settings");
 
     companion object {

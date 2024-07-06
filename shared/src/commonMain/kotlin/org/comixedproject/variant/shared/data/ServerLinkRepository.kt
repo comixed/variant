@@ -19,6 +19,7 @@
 package org.comixedproject.variant.shared.data
 
 import org.comixedproject.variant.db.ServerLinksDb
+import org.comixedproject.variant.shared.manager.FileContentManager
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
@@ -30,9 +31,18 @@ import org.comixedproject.variant.shared.model.server.ServerLinkType
  */
 class ServerLinkRepository(
     private val databaseHelper: DatabaseHelper,
+    private val serverRepository: ServerRepository,
+    private val fileContentManager: FileContentManager
 ) {
     val serverLinks: List<ServerLink>
-        get() = databaseHelper.loadAllLinks().map(ServerLinksDb::map)
+        get() {
+            val result = databaseHelper.loadAllLinks().map(ServerLinksDb::map)
+            result.forEach { entry ->
+                val server = serverRepository.loadServer(entry.serverId)
+                entry.downloaded = fileContentManager.contentFound(server, entry.downloadLink)
+            }
+            return result
+        }
 
     fun saveLinksForServer(
         server: Server,
@@ -50,6 +60,8 @@ fun ServerLinksDb.map() =
         directory = this.directory,
         identifier = this.identifier,
         title = this.title,
-        href = this.href,
+        coverUrl = this.coverUrl,
+        downloadLink = this.downloadLink,
         linkType = ServerLinkType.valueOf(this.linkType),
+        downloaded = false
     )

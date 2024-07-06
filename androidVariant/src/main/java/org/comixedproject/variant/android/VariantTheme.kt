@@ -60,11 +60,11 @@ fun VariantTheme(
     val typography =
         Typography(
             bodyMedium =
-                TextStyle(
-                    fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
-                ),
+            TextStyle(
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+            ),
         )
     val shapes =
         Shapes(

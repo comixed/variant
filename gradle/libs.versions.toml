@@ -20,6 +20,7 @@ korio = "4.0.10"
 readium = "3.0.0"
 kotlinter-plugin = "4.4.1"
 desugar-jdk = "2.0.4"
+coil = "2.7.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -49,7 +50,9 @@ korio = { group = "com.soywiz.korlibs.korio", name = "korio", version.ref = "kor
 readium-shared = { group = "org.readium.kotlin-toolkit", name = "readium-shared", version.ref = "readium" }
 readium-opds = { group = "org.readium.kotlin-toolkit", name = "readium-opds", version.ref = "readium" }
 readium-streamer = { group = "org.readium.kotlin-toolkit", name = "readium-streamer", version.ref = "readium" }
+readium-navigator = { group = "org.readium.kotlin-toolkit", name = "readium-navigator", version.ref = "readium" }
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk" }
+coil-compose-android = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 # koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }

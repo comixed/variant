@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.readium.shared)
     implementation(libs.readium.opds)
     implementation(libs.readium.streamer)
+    implementation(libs.readium.navigator)
+    implementation(libs.coil.compose.android)
 
     testImplementation(libs.bundles.unit.tests)
     androidTestImplementation(composeBom)

@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.android.ui.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 
 /**
@@ -72,9 +73,9 @@ fun ServerEditView(
     ) { padding ->
         Column(
             modifier =
-                Modifier
-                    .padding(32.dp)
-                    .verticalScroll(rememberScrollState()),
+            Modifier
+                .padding(32.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
             TextField(
                 value = name,
@@ -109,14 +110,13 @@ fun ServerEditView(
 fun ServerEditPreview_Create() {
     VariantTheme {
         ServerEditView(
-            server =
-                Server(
-                    null,
-                    "",
-                    "",
-                    "",
-                    "",
-                ),
+            Server(
+                null,
+                "",
+                "",
+                "",
+                "",
+            ),
             onSave = { _, _, _, _, _ -> },
             onCancel = {},
         )
@@ -128,14 +128,7 @@ fun ServerEditPreview_Create() {
 fun ServerEditPreview_Edit() {
     VariantTheme {
         ServerEditView(
-            server =
-                Server(
-                    1L,
-                    "My Server",
-                    "http://www.comixedproject.org:7171/opds",
-                    "reader@comixedproject.org",
-                    "my!password",
-                ),
+            SERVER_LIST.get(0),
             onSave = { _, _, _, _, _ -> },
             onCancel = {},
         )

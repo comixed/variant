@@ -86,9 +86,9 @@ fun SwipeBoxView(
             Box(
                 contentAlignment = alignment,
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(color),
+                Modifier
+                    .fillMaxSize()
+                    .background(color),
             ) {
                 Icon(
                     modifier = Modifier.minimumInteractiveComponentSize(),

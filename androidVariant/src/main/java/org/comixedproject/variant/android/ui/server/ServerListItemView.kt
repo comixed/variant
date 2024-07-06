@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.android.ui.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 
 /**
@@ -52,9 +53,9 @@ fun ServerListItemView(
             )
         },
         modifier =
-            Modifier.clickable {
-                onServerClicked(server)
-            },
+        Modifier.clickable {
+            onServerClicked(server)
+        },
     )
 }
 
@@ -63,14 +64,7 @@ fun ServerListItemView(
 fun ServerListItemPreview() {
     VariantTheme {
         ServerListItemView(
-            server =
-                Server(
-                    1L,
-                    "Server 1",
-                    "http://www.comixedproject.org:7171/opds",
-                    "reader@comixedprojecvt.org",
-                    "password",
-                ),
+            SERVER_LIST.get(0),
             onServerClicked = {},
             onEditServer = {},
             onDeleteServer = {},

@@ -44,6 +44,8 @@ class DatabaseHelper(
         password,
     )
 
+    fun loadServer(serverId: Long) = database.tableQueries.loadServer(serverId).executeAsOne()
+
     fun updateServer(
         serverId: Long,
         name: String,
@@ -73,21 +75,22 @@ class DatabaseHelper(
         directory: String,
         serverLinks: List<ServerLink>,
     ) {
-        val incomingPaths = serverLinks.map { it.href }
+        val incomingPaths = serverLinks.map { it.downloadLink }
         val serverId = server.serverId!!
         val existingLinks =
             database.tableQueries.loadLinksForParent(serverId, directory).executeAsList()
         existingLinks
-            .filter { link -> !incomingPaths.contains(link.href) }
+            .filter { link -> !incomingPaths.contains(link.downloadLink) }
             .forEach { link -> database.tableQueries.deleteExistingLink(link.serverLinkId) }
-        val existingPaths = existingLinks.map { it.href }
-        serverLinks.filter { !existingPaths.contains(it.href) }.forEach { link ->
+        val existingPaths = existingLinks.map { it.downloadLink }
+        serverLinks.filter { !existingPaths.contains(it.downloadLink) }.forEach { link ->
             database.tableQueries.createLink(
                 serverId,
                 link.directory,
                 link.identifier,
                 link.title,
-                link.href,
+                link.coverUrl,
+                link.downloadLink,
                 link.linkType.name,
             )
         }

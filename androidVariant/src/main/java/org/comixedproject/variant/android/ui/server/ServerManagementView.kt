@@ -26,6 +26,7 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.android.ui.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 
 /**
@@ -94,43 +95,7 @@ fun ServerManagementView(
 fun ServerManagementPreview() {
     VariantTheme {
         ServerManagementView(
-            listOf(
-                Server(
-                    1L,
-                    "Server 1",
-                    "http://www.comixedproject.org:7171/opds",
-                    "reader@comixedprojecvt.org",
-                    "password",
-                ),
-                Server(
-                    2L,
-                    "Server 2",
-                    "http://www.comixedproject.org:7171/opds",
-                    "reader@comixedprojecvt.org",
-                    "password",
-                ),
-                Server(
-                    3L,
-                    "Server 3",
-                    "http://www.comixedproject.org:7171/opds",
-                    "reader@comixedprojecvt.org",
-                    "password",
-                ),
-                Server(
-                    4L,
-                    "Server 4",
-                    "http://www.comixedproject.org:7171/opds",
-                    "reader@comixedprojecvt.org",
-                    "password",
-                ),
-                Server(
-                    5L,
-                    "Server 5",
-                    "http://www.comixedproject.org:7171/opds",
-                    "reader@comixedprojecvt.org",
-                    "password",
-                ),
-            ),
+            SERVER_LIST,
             onSaveServer = { _, _, _, _, _ -> },
             onBrowseServer = {},
             onDeleteServer = {},
