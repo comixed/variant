@@ -18,30 +18,35 @@
 
 package org.comixedproject.variant.shared.data
 
-import org.comixedproject.variant.db.AcquisitionLinksDb
-import org.comixedproject.variant.shared.model.server.AcquisitionLink
+import org.comixedproject.variant.db.ServerLinksDb
+import org.comixedproject.variant.shared.model.server.Server
+import org.comixedproject.variant.shared.model.server.ServerLink
+import org.comixedproject.variant.shared.model.server.ServerLinkType
 
-class LinkRepository(private val databaseHelper: DatabaseHelper) {
-    fun loadAllLinks() = databaseHelper.loadAllLinks().map(AcquisitionLinksDb::map)
-
-    fun linksForParent(serverId: String, directory: String) =
-        databaseHelper.loadLinks(serverId, directory).map(AcquisitionLinksDb::map)
+/**
+ * <code>ServerLinkRepository</code> provides an API for storing and fetching instances of {@link AcquisitionLink}.
+ *
+ * @author Darryl L. Pierce
+ */
+class ServerLinkRepository(private val databaseHelper: DatabaseHelper) {
+    val serverLinks: List<ServerLink>
+        get() = databaseHelper.loadAllLinks().map(ServerLinksDb::map)
 
     fun saveLinksForServer(
-        serverId: String,
+        server: Server,
         directory: String,
-        acquisitionLinks: List<AcquisitionLink>
+        serverLinks: List<ServerLink>
     ) {
-        databaseHelper.saveLinksForServer(serverId, directory, acquisitionLinks);
+        databaseHelper.saveLinksForServer(server, directory, serverLinks);
     }
 }
 
-fun AcquisitionLinksDb.map() = AcquisitionLink(
-    id = this.id,
+fun ServerLinksDb.map() = ServerLink(
+    serverLinkId = this.serverLinkId,
     serverId = this.serverId,
-    linkId = this.linkId,
     directory = this.directory,
-    link = this.link,
+    identifier = this.identifier,
     title = this.title,
-    thumbnailURL = this.thumbnailURL
+    href = this.href,
+    linkType = ServerLinkType.valueOf(this.linkType)
 )

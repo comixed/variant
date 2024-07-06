@@ -27,12 +27,12 @@ final class VariantViewModelWrapper {
   private(set) var servers: [Server] = []
   private(set) var server: Server? = nil
   private(set) var directory: String = ""
-  private(set) var links: [AcquisitionLink] = []
+  private(set) var displayLinks: [AcquisitionLink] = []
+  private(set) var allLinks: [AcquisitionLink] = []
 
   init() {
-    viewModel.onServerListUpdate = { [weak self] servers in self?.servers = servers }
-    viewModel.onServerUpdate = { [weak self] server in self?.server = server }
-    viewModel.onDirectoryUpdate = { [weak self] directory in self?.directory = directory }
-    viewModel.onLinksUpdate = { [weak self] links in self?.links = links }
+    viewModel.onServerListUpdated = { [weak self] servers in self?.servers = servers }
+    viewModel.onDisplayLinksUpdated = { [weak self] links in self?.displayLinks = links }
+    viewModel.onAllLinksUpdated = { [weak self] links in self?.allLinks = links }
   }
 }

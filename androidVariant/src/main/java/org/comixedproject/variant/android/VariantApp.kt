@@ -21,24 +21,32 @@ package org.comixedproject.variant.android
 import android.app.Application
 import android.content.Context
 import org.comixedproject.variant.shared.initKoin
-import org.comixedproject.variant.shared.model.VariantViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.Koin
 import org.koin.dsl.module
 
+lateinit var koin: Koin
 
+/**
+ * <code>VariantApp</code> provides an application class for Variant.
+ *
+ * @author Darryl L. Pierce
+ */
 class VariantApp : Application() {
+
     override fun onCreate() {
         super.onCreate()
 
-        initKoin(
+        VariantApp.appContext = applicationContext
+
+        koin = initKoin(
             appModule = module {
                 single<Context> { this@VariantApp }
 
             },
-            viewModelsModule = module {
-                viewModel {
-                    VariantViewModel(get(), get())
-                }
-            })
+            viewModelsModule = module { }).koin
+    }
+
+    companion object {
+        lateinit var appContext: Context
     }
 }

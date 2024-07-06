@@ -19,68 +19,60 @@
 package org.comixedproject.variant.android.ui.server
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.ui.ServerListEntryDismissBackground
 import org.comixedproject.variant.shared.model.server.Server
 
+/**
+ * <code>ServerListItemView</code> composes a view that displays a single server in the list.
+ *
+ * @author Darryl L. Pierce
+ */
 @Composable
-fun ServerListItem(
+fun ServerListItemView(
     server: Server,
-    onClick: (Server) -> Unit,
-    onEdit: (Server) -> Unit,
-    onDelete: (Server) -> Unit
+    onServerClicked: (Server) -> Unit,
+    onEditServer: (Server) -> Unit,
+    onDeleteServer: (Server) -> Unit
 ) {
-    val context = LocalContext.current
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = {
-            when (it) {
-                SwipeToDismissBoxValue.StartToEnd -> onDelete(server)
-                SwipeToDismissBoxValue.EndToStart -> onEdit(server)
-                else -> return@rememberSwipeToDismissBoxState false
-            }
-
-            return@rememberSwipeToDismissBoxState true
-        },
-        positionalThreshold = { it * .25f }
-    )
-
-    SwipeToDismissBox(state = dismissState,
-        modifier = Modifier,
-        backgroundContent = { ServerListEntryDismissBackground(dismissState) },
-        content = {
-            ListItem(
-                headlineContent = { Text(server.name) },
-                modifier = Modifier.clickable {
-                    onClick(server)
-                }
+    ListItem(
+        headlineContent = { Text(server.name) },
+        supportingContent = { Text(server.url) },
+        leadingContent = {
+            Icon(
+                imageVector = Icons.Filled.AccountBox,
+                contentDescription = server.name
             )
-        })
+        },
+        modifier = Modifier.clickable {
+            onServerClicked(server)
+        }
+    )
 }
+
 
 @Preview
 @Composable
 fun ServerListItemPreview() {
     VariantTheme {
-        ServerListItem(
+        ServerListItemView(
             server = Server(
-                "1",
+                1L,
                 "Server 1",
                 "http://www.comixedproject.org:7171/opds",
                 "reader@comixedprojecvt.org",
                 "password"
             ),
-            onClick = {},
-            onEdit = {},
-            onDelete = {}
+            onServerClicked = {},
+            onEditServer = {},
+            onDeleteServer = {}
         )
     }
 }

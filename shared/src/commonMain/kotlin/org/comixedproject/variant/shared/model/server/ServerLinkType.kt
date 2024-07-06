@@ -16,16 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared.domain
+package org.comixedproject.variant.shared.model.server
 
-import org.comixedproject.variant.shared.model.server.AcquisitionLink
-import org.comixedproject.variant.shared.model.server.Server
-
-public interface LinkFeedData {
-    public fun onNewLinksReceived(
-        server: Server,
-        directory: String,
-        acquisitionLinks: List<AcquisitionLink>,
-        exception: Exception?
-    )
+/**
+ * <code>ServerLinkType</code> identifies the type of content to which a link points on a server.
+ *
+ * @author Darryl L. Pierce
+ */
+enum class ServerLinkType {
+    NAVIGATION,
+    PUBLICATION
 }

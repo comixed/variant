@@ -2,6 +2,7 @@
 <resources>
     <string name="comicsButtonLabel">Comics</string>
     <string name="serverButtonLabel">Servers</string>
+    <string name="appName">Variant</string>
     <string name="appNameAndVersion">Variant v0.1-SNAPSHOT</string>
     <string name="settingsButtonLabel">Settings</string>
     <string name="serverAddButton">Add a new server</string>

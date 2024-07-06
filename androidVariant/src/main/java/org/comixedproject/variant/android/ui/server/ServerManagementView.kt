@@ -28,12 +28,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.shared.model.server.Server
 
-
+/**
+ * <code>ServerManagementView</code> composes a view for managing the list of servers.
+ *
+ * @author Darryl L. Pierce
+ */
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun ServerManagementScreen(
+fun ServerManagementView(
     servers: List<Server>,
-    onSaveServer: (Server) -> Unit,
+    onSaveServer: (Long?, String, String, String, String) -> Unit,
     onBrowseServer: (Server) -> Unit,
     onDeleteServer: (Server) -> Unit
 ) {
@@ -47,35 +51,35 @@ fun ServerManagementScreen(
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
         listPane = {
-            ServerList(
+            ServerListView(
                 servers,
-                onServerCreate = {
+                onCreateServer = {
                     navigator.navigateTo(
                         ListDetailPaneScaffoldRole.Extra,
                         Server(null, "", "", "", "")
                     )
                 },
-                onServerSelect = onBrowseServer,
-                onServerEdit = { server ->
+                onBrowseServer = onBrowseServer,
+                onEditServer = { server ->
                     navigator.navigateTo(
                         ListDetailPaneScaffoldRole.Extra,
                         server
                     )
                 },
-                onServerDelete = onDeleteServer
+                onDeleteServer = onDeleteServer
             )
         },
         detailPane = {
             navigator.currentDestination?.content?.let { server ->
-                ServerDetail(server = server)
+                ServerDetailView(server = server)
             }
         },
         extraPane = {
             navigator.currentDestination?.content?.let { server ->
-                ServerEdit(
+                ServerEditView(
                     server = server,
-                    onSave = { server ->
-                        onSaveServer(server)
+                    onSave = { serverId, name, url, username, password ->
+                        onSaveServer(serverId, name, url, username, password)
                         navigator.navigateBack()
                     },
                     onCancel = { navigator.navigateBack() })
@@ -85,43 +89,43 @@ fun ServerManagementScreen(
 
 @Preview
 @Composable
-fun ServerManagementScreenPreview() {
+fun ServerManagementPreview() {
     VariantTheme {
-        ServerManagementScreen(
+        ServerManagementView(
             listOf(
                 Server(
-                    "1",
+                    1L,
                     "Server 1",
                     "http://www.comixedproject.org:7171/opds",
                     "reader@comixedprojecvt.org",
                     "password"
                 ), Server(
-                    "2",
+                    2L,
                     "Server 2",
                     "http://www.comixedproject.org:7171/opds",
                     "reader@comixedprojecvt.org",
                     "password"
                 ), Server(
-                    "3",
+                    3L,
                     "Server 3",
                     "http://www.comixedproject.org:7171/opds",
                     "reader@comixedprojecvt.org",
                     "password"
                 ), Server(
-                    "4",
+                    4L,
                     "Server 4",
                     "http://www.comixedproject.org:7171/opds",
                     "reader@comixedprojecvt.org",
                     "password"
                 ), Server(
-                    "5",
+                    5L,
                     "Server 5",
                     "http://www.comixedproject.org:7171/opds",
                     "reader@comixedprojecvt.org",
                     "password"
                 )
             ),
-            onSaveServer = {},
+            onSaveServer = { _, _, _, _, _ -> },
             onBrowseServer = {},
             onDeleteServer = {}
         )

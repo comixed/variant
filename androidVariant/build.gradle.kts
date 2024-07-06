@@ -50,6 +50,9 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.readium.shared)
+    implementation(libs.readium.opds)
+    implementation(libs.readium.streamer)
 
     testImplementation(libs.bundles.unit.tests)
     androidTestImplementation(composeBom)

@@ -18,30 +18,28 @@
 
 package org.comixedproject.variant.android.ui
 
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
-
-const val NAVARG_SERVER_ID = "serverId"
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.ui.graphics.vector.ImageVector
+import org.comixedproject.variant.android.R
 
 /**
- * <code>NavigationScreen</code> define a navigation view used by the application.
+ * <code>BottomBarItem</code> defines an item displayed on the bottom bat of the main application view.
  *
  * @author Darryl L. Pierce
  */
-enum class NavigationScreen(val route: String, val navArguments: List<NamedNavArgument>) {
-    ComicList("comics", emptyList()),
-    Servers("servers", emptyList()),
-    BrowseServer(
-        "servers?serverId={serverId}", listOf(
-            navArgument(NAVARG_SERVER_ID) {
-                type = NavType.LongType
-            }
-        )),
-    Settings("settings", emptyList());
+enum class BottomBarItem(val label: Int, val icon: ImageVector, val screen: NavigationScreen) {
+    ServerList(R.string.serverButtonLabel, Icons.Filled.AccountBox, NavigationScreen.Servers),
+    ComicList(
+        R.string.comicsButtonLabel,
+        Icons.AutoMirrored.Filled.List,
+        NavigationScreen.ComicList
+    ),
+    Settings(R.string.settingsButtonLabel, Icons.Filled.Settings, NavigationScreen.Settings);
 
     companion object {
         val all = values()
     }
 }
-

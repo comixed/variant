@@ -21,13 +21,12 @@ package org.comixedproject.variant.android.ui.server
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -44,37 +43,37 @@ import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.shared.model.server.Server
 
-
+/**
+ * <code>ServerEditView</code> composes a view for editing a server.
+ *
+ * @author Darryl L. Pierce
+ */
 @Composable
-fun ServerEdit(server: Server, onSave: (Server) -> Unit, onCancel: () -> Unit) {
-    val id by remember { mutableStateOf(server.id) }
+fun ServerEditView(
+    server: Server,
+    onSave: (Long?, String, String, String, String) -> Unit,
+    onCancel: () -> Unit
+) {
+    val serverId by remember { mutableStateOf(server.serverId) }
     var name by remember { mutableStateOf(server.name) }
     var url by remember { mutableStateOf(server.url) }
     var username by remember { mutableStateOf(server.username) }
     var password by remember { mutableStateOf(server.password) }
 
-    Scaffold(bottomBar = {
-        BottomAppBar(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.primary
-        ) {
-            Button(onClick = { onSave(Server(id, name, url, username, password)) }) {
+    Scaffold(
+        floatingActionButton = {
+            Button(onClick = { onSave(serverId, name, url, username, password) }) {
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = stringResource(id = R.string.saveButtonLabel)
                 )
-                Text(text = stringResource(id = R.string.saveButton))
             }
-            Button(onClick = onCancel) {
-                Icon(
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = stringResource(id = R.string.cancelButtonLabel)
-                )
-                Text(text = stringResource(id = R.string.closeButton))
-            }
-        }
-    }) { padding ->
-        Column(modifier = Modifier.padding(32.dp)) {
+        }) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(32.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
             TextField(
                 value = name,
                 placeholder = { Text(text = stringResource(id = R.string.serverNamePlaceholder)) },
@@ -105,32 +104,32 @@ fun ServerEdit(server: Server, onSave: (Server) -> Unit, onCancel: () -> Unit) {
 
 @Preview
 @Composable
-fun ServerEditPreviewCreate() {
+fun ServerEditPreview_Create() {
     VariantTheme {
-        ServerEdit(
+        ServerEditView(
             server = Server(
                 null,
                 "",
                 "",
                 "",
                 ""
-            ), onSave = {}, onCancel = {}
+            ), onSave = { _, _, _, _, _ -> }, onCancel = {}
         )
     }
 }
 
 @Preview
 @Composable
-fun ServerEditPreviewEdit() {
+fun ServerEditPreview_Edit() {
     VariantTheme {
-        ServerEdit(
+        ServerEditView(
             server = Server(
-                "1",
+                1L,
                 "My Server",
                 "http://www.comixedproject.org:7171/opds",
                 "reader@comixedproject.org",
                 "my!password"
-            ), onSave = {}, onCancel = {}
+            ), onSave = { _, _, _, _, _ -> }, onCancel = {}
         )
     }
 }

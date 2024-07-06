@@ -19,18 +19,14 @@
 package org.comixedproject.variant.shared.data
 
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
 import io.ktor.client.plugins.auth.providers.basic
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.statement.HttpResponse
-import io.ktor.serialization.kotlinx.json.json
-import korlibs.io.net.URL
 import kotlinx.serialization.json.Json
 import org.comixedproject.variant.shared.APP_NAME
 import org.comixedproject.variant.shared.X_APP_NAME
@@ -44,11 +40,7 @@ private const val TAG = "FeedAPI"
 public object FeedAPI {
     private val nonStrictJson = Json { isLenient = true; ignoreUnknownKeys = true }
 
-    public suspend fun loadDirectoryOnServer(server: Server, directory: String): HttpResponse {
-        val url = when (directory) {
-            "" -> server.url
-            else -> URL.resolve(server.url, directory)
-        }
+    public suspend fun loadDirectoryOnServer(server: Server, url: String): HttpResponse {
         val client = HttpClient {
             install(Logging) {
                 logger = HttpClientLogger
@@ -68,6 +60,6 @@ public object FeedAPI {
         return client.get(url.toString()) {
             header(X_APP_NAME, APP_NAME)
             header("accept", "application/xml")
-        }.body()
+        }
     }
 }

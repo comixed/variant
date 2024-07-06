@@ -26,11 +26,11 @@ class ServerRepository(private val databaseHelper: DatabaseHelper) {
         get() = databaseHelper.loadServers().map(ServersDb::map)
 
     fun saveServer(server: Server) {
-        if (server.id == null) {
+        if (server.serverId == null) {
             databaseHelper.createServer(server.name, server.url, server.username, server.password)
         } else {
             databaseHelper.updateServer(
-                server.id,
+                server.serverId,
                 server.name,
                 server.url,
                 server.username,
@@ -40,12 +40,12 @@ class ServerRepository(private val databaseHelper: DatabaseHelper) {
     }
 
     fun deleteServer(server: Server) {
-        server.id?.let { id -> databaseHelper.deleteServer(id) }
+        server.serverId?.let { serverId -> databaseHelper.deleteServer(serverId) }
     }
 }
 
 fun ServersDb.map() = Server(
-    id = this.id,
+    serverId = this.serverId,
     name = this.name,
     url = this.url,
     username = this.username,

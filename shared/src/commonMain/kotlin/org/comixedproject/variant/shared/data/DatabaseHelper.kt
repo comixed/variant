@@ -20,10 +20,10 @@ package org.comixedproject.variant.shared.data
 
 import app.cash.sqldelight.db.SqlDriver
 import org.comixedproject.variant.VariantDb
-import org.comixedproject.variant.db.AcquisitionLinksDb
+import org.comixedproject.variant.db.ServerLinksDb
 import org.comixedproject.variant.db.ServersDb
-import org.comixedproject.variant.shared.IDGenerator
-import org.comixedproject.variant.shared.model.server.AcquisitionLink
+import org.comixedproject.variant.shared.model.server.Server
+import org.comixedproject.variant.shared.model.server.ServerLink
 
 class DatabaseHelper(sqlDriver: SqlDriver) {
     private val database: VariantDb = VariantDb(sqlDriver)
@@ -32,7 +32,6 @@ class DatabaseHelper(sqlDriver: SqlDriver) {
 
     fun createServer(name: String, url: String, username: String, password: String) {
         return database.tableQueries.createServer(
-            IDGenerator().toString(),
             name,
             url,
             username,
@@ -40,41 +39,47 @@ class DatabaseHelper(sqlDriver: SqlDriver) {
         )
     }
 
-    fun updateServer(id: String, name: String, url: String, username: String, password: String) {
-        database.tableQueries.updateServer(name, url, username, password, id)
+    fun updateServer(
+        serverId: Long,
+        name: String,
+        url: String,
+        username: String,
+        password: String
+    ) {
+        database.tableQueries.updateServer(name, url, username, password, serverId)
     }
 
-    fun deleteServer(id: String) {
-        database.tableQueries.deleteServer(id)
+    fun deleteServer(serverId: Long) {
+        database.tableQueries.deleteServer(serverId)
     }
 
-    fun loadAllLinks(): List<AcquisitionLinksDb> =
+    fun loadAllLinks(): List<ServerLinksDb> =
         database.tableQueries.loadAllLinks().executeAsList()
 
-    fun loadLinks(serverId: String, directory: String): List<AcquisitionLinksDb> =
+    fun loadLinks(serverId: Long, directory: String): List<ServerLinksDb> =
         database.tableQueries.loadLinksForParent(serverId, directory)
             .executeAsList()
 
     fun saveLinksForServer(
-        serverId: String,
+        server: Server,
         directory: String,
-        acquisitionLinks: List<AcquisitionLink>
+        serverLinks: List<ServerLink>
     ) {
-        val incomingPaths = acquisitionLinks.map { it.link }
+        val incomingPaths = serverLinks.map { it.href }
+        val serverId = server.serverId!!
         val existingLinks =
             database.tableQueries.loadLinksForParent(serverId, directory).executeAsList()
-        existingLinks.filter { link -> !incomingPaths.contains(link.link) }
-            .forEach { link -> database.tableQueries.deleteExistingLink(link.id) }
-        val existingPaths = existingLinks.map { it.link }
-        acquisitionLinks.filter { !existingPaths.contains(it.link) }.forEach { link ->
+        existingLinks.filter { link -> !incomingPaths.contains(link.href) }
+            .forEach { link -> database.tableQueries.deleteExistingLink(link.serverLinkId) }
+        val existingPaths = existingLinks.map { it.href }
+        serverLinks.filter { !existingPaths.contains(it.href) }.forEach { link ->
             database.tableQueries.createLink(
-                IDGenerator().toString(),
                 serverId,
-                link.linkId,
                 link.directory,
-                link.link,
+                link.identifier,
                 link.title,
-                link.thumbnailURL.orEmpty()
+                link.href,
+                link.linkType.name
             )
         }
     }

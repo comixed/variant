@@ -17,7 +17,6 @@
 		B61686B72C371D3F00B47ED6 /* SwiftFormat in Frameworks */ = {isa = PBXBuildFile; productRef = B61686B62C371D3F00B47ED6 /* SwiftFormat */; };
 		B61686B92C371D3F00B47ED6 /* SwiftFormatConfiguration in Frameworks */ = {isa = PBXBuildFile; productRef = B61686B82C371D3F00B47ED6 /* SwiftFormatConfiguration */; };
 		B61686BB2C3743B600B47ED6 /* ServerBrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61686BA2C3743B600B47ED6 /* ServerBrowseView.swift */; };
-		B61686BE2C38B67E00B47ED6 /* FeedClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61686BD2C38B67E00B47ED6 /* FeedClient.swift */; };
 		B68D9C022C1CD7930017D3D6 /* VariantViewModelWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68D9C012C1CD7930017D3D6 /* VariantViewModelWrapper.swift */; };
 		B69A97372C153CCC003D094D /* ServerManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69A97362C153CCC003D094D /* ServerManagementView.swift */; };
 		B6B28AF42C1DCF5A00171449 /* ServerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B28AF32C1DCF5A00171449 /* ServerEditView.swift */; };
@@ -47,7 +46,6 @@
 		B61686B12C36D7F500B47ED6 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		B61686B32C36FD3300B47ED6 /* ServerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListView.swift; sourceTree = "<group>"; };
 		B61686BA2C3743B600B47ED6 /* ServerBrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerBrowseView.swift; sourceTree = "<group>"; };
-		B61686BD2C38B67E00B47ED6 /* FeedClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedClient.swift; sourceTree = "<group>"; };
 		B68D9C012C1CD7930017D3D6 /* VariantViewModelWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariantViewModelWrapper.swift; sourceTree = "<group>"; };
 		B69A97362C153CCC003D094D /* ServerManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerManagementView.swift; sourceTree = "<group>"; };
 		B6B28AF32C1DCF5A00171449 /* ServerEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEditView.swift; sourceTree = "<group>"; };
@@ -134,7 +132,6 @@
 		B61686BC2C38B66E00B47ED6 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				B61686BD2C38B67E00B47ED6 /* FeedClient.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -263,7 +260,6 @@
 				B69A97372C153CCC003D094D /* ServerManagementView.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				B68D9C022C1CD7930017D3D6 /* VariantViewModelWrapper.swift in Sources */,
-				B61686BE2C38B67E00B47ED6 /* FeedClient.swift in Sources */,
 				B61686B42C36FD3300B47ED6 /* ServerListView.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 				B61686BB2C3743B600B47ED6 /* ServerBrowseView.swift in Sources */,

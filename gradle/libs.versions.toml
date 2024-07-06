@@ -17,11 +17,13 @@ koin = "3.5.6"
 sqldelight-plugin = "2.0.2"
 ktor = "2.3.12"
 korio = "4.0.10"
+readium = "2.4.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 lifecycle-viewmodel-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-android", version.ref = "lifecycle-runtime-ktx" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
@@ -41,8 +43,10 @@ androidx-compose-ui-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-jun
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
 junit = { module = "junit:junit", version.ref = "junit" }
-khttp = { group = "org.danilopianini", name = "khttp", version = "1.6.3" }
 korio = { group = "com.soywiz.korlibs.korio", name = "korio", version.ref = "korio" }
+readium-shared = { group = "org.readium.kotlin-toolkit", name = "readium-shared", version.ref = "readium" }
+readium-opds = { group = "org.readium.kotlin-toolkit", name = "readium-opds", version.ref = "readium" }
+readium-streamer = { group = "org.readium.kotlin-toolkit", name = "readium-streamer", version.ref = "readium" }
 
 # koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
@@ -74,10 +78,7 @@ sonarqube = { id = "org.sonarqube", version.ref = "sonarqube-plugin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight-plugin" }
 
 [bundles]
-androidx = ["androidx-activity-compose", "androidx-core-ktx", "androidx-lifecycle-runtime-ktx", "koin-android", "koin-androidx-compose"]
-opds-shared = ["khttp"]
-opds-android = ["khttp"]
-opds-ios = ["khttp"]
+androidx = ["androidx-activity-compose", "androidx-core-ktx", "androidx-lifecycle-runtime-compose", "androidx-lifecycle-runtime-ktx", "koin-android", "koin-androidx-compose"]
 compose = ["androidx-compose-material3", "androidx-compose-ui-ui-graphics", "androidx-compose-ui-ui", "androidx-compose-ui-ui-tooling-preview", "androidx-adaptive", "androidx-adaptive-layout", "androidx-adaptive-navigation", "androidx-adaptive-navigation-suite-android", "androidx-navigation-compose"]
 compose-debug = ["androidx-compose-ui-ui-tooling", "androidx-compose-ui-ui-test-manifest"]
 instrumented-tests = ["androidx-junit", "androidx-espresso-core", "androidx-compose-ui-ui-test-junit4"]
