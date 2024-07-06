@@ -21,13 +21,25 @@ package org.comixedproject.variant.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import org.comixedproject.variant.android.ui.RootView
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.comixedproject.variant.android.ui.HomeView
+import org.comixedproject.variant.android.viewmodel.ServerLinkViewModel
+import org.comixedproject.variant.android.viewmodel.ServerViewModel
 
+/**
+ * <code>MainActivity</code> is the main class for the Android implementation of Variant.
+ *
+ * @author Darryl L. Pierce
+ */
 class MainActivity : ComponentActivity() {
+    private val serverViewModel: ServerViewModel by viewModels()
+    private val serverLinkViewModel: ServerLinkViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +49,23 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    RootView()
+                    val serverList by serverViewModel.serverList.collectAsStateWithLifecycle()
+                    val linkList by serverLinkViewModel.displayLinkList.collectAsStateWithLifecycle()
+
+                    HomeView(
+                        serverList,
+                        serverViewModel,
+                        linkList,
+                        serverLinkViewModel,
+                        onSaveServer = { serverId, name, url, username, password ->
+                            serverViewModel.onSaveServer(
+                                serverId,
+                                name,
+                                url,
+                                username,
+                                password
+                            )
+                        })
                 }
             }
         }

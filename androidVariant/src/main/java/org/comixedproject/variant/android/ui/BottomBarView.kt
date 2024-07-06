@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.ui.server
+package org.comixedproject.variant.android.ui
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -31,18 +31,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.ui.BottomBarItems
 
-
+/**
+ * <code>BottomBarView</code> composes the view of items displayed on the main application's bottom bar.
+ *
+ * @author Darryl L. Pierce
+ */
 @Composable
-fun BottomBar(
+fun BottomBarView(
     currentDestination: NavDestination?,
     onScreenChange: (route: String) -> Unit
 ) {
     var selectedItem by remember { mutableIntStateOf(0) }
 
     NavigationBar {
-        BottomBarItems.all.forEachIndexed { index, item ->
+        BottomBarItem.all.forEachIndexed { index, item ->
             NavigationBarItem(selected = selectedItem == index,
                 onClick = {
                     selectedItem = index
@@ -63,6 +66,6 @@ fun BottomBar(
 @Composable
 fun BottomBarPreview() {
     VariantTheme {
-        BottomBar(null, onScreenChange = {})
+        BottomBarView(null, onScreenChange = {})
     }
 }

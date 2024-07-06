@@ -16,11 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared.domain
+package org.comixedproject.variant.shared.model.server
 
-import org.comixedproject.variant.shared.presentation.FeedPresenter
-
-public object ServiceLocator {
-    public val getFeed: GetFeedData = GetFeedData()
-    public val getFeedPresenter: FeedPresenter = FeedPresenter(getFeed)
-}
+/**
+ * <code>ServerLink</code> represents a link to content within a specific server. The link type determines if the link is to a piece of content or to a directory on the server.
+ *
+ * <p>Links that are for navigation
+ *
+ * @author Darryl L. Pierce
+ */
+data class ServerLink(
+    val serverLinkId: Long? = null,
+    val serverId: Long,
+    val directory: String,
+    val identifier: String,
+    val title: String? = null,
+    val href: String,
+    val linkType: ServerLinkType
+)

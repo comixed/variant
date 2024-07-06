@@ -16,31 +16,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.ui.server
+package org.comixedproject.variant.android.ui.links
 
+import androidx.compose.foundation.clickable
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.shared.model.server.Server
+import org.comixedproject.variant.shared.model.server.ServerLink
+import org.comixedproject.variant.shared.model.server.ServerLinkType
 
+/**
+ * <code>ServerLinkListItem</code> composes a single link for a server.
+ *
+ * @author Darryl L. Pierce
+ */
 @Composable
-fun ServerDetail(server: Server) {
-    Text(server.name)
+fun ServerLinkListItem(
+    server: Server, link: ServerLink, onLoadDirectory: (Server, ServerLink) -> Unit
+) {
+    ListItem(
+        headlineContent = { Text(link.title!!) },
+        modifier = Modifier.clickable { onLoadDirectory(server, link) })
 }
 
 @Preview
 @Composable
-fun ServerDetailPreview() {
+fun ServerLinkListItemPreview() {
     VariantTheme {
-        ServerDetail(
-            server = Server(
-                "1",
-                "Server 1",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedprojecvt.org",
-                "password"
-            )
-        )
+        ServerLinkListItem(Server(
+            1L,
+            "My Server",
+            "http://www.comixedproject.org:7171/opds",
+            "reader@comixedproject.org",
+            "my!password"
+        ), ServerLink(
+            1L, 1L, "", "", "First Link", "", ServerLinkType.NAVIGATION
+        ), onLoadDirectory = { _, _ -> })
     }
 }

@@ -27,7 +27,7 @@ struct ContentView: View {
     HomeView(
       servers: viewModelWrapper.servers,
       directory: viewModelWrapper.directory,
-      links: viewModelWrapper.links,
+      links: viewModelWrapper.displayLinks,
       onSaveServer: { server in viewModelWrapper.viewModel.saveServer(server: server) },
       onDeleteServer: { server in viewModelWrapper.viewModel.deleteServer(server: server) }
     )

@@ -1,44 +1,44 @@
+-- The initial database migration
+
 CREATE TABLE ServersDb (
-id TEXT NOT NULL PRIMARY KEY,
-name TEXT NOT NULL UNIQUE,
-url TEXT NOT NULL,
-username TEXT NOT NULL DEFAULT "",
-password TEXT NOT NULL DEFAULT ""
+  serverId INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  url TEXT NOT NULL,
+  username TEXT NOT NULL DEFAULT "",
+  password TEXT NOT NULL DEFAULT ""
 );
 
 loadAllServers:
 SELECT * FROM ServersDb;
 
 createServer:
-INSERT OR IGNORE INTO ServersDb(id, name, url, username, password) VALUES (?, ?, ?, ?, ?);
+INSERT OR IGNORE INTO ServersDb(name, url, username, password) VALUES (?, ?, ?, ?);
 
 updateServer:
-UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE id = ?;
+UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE serverId = ?;
 
 deleteServer:
-DELETE FROM ServersDb WHERE id = ?;
+DELETE FROM ServersDb WHERE serverId = ?;
 
-CREATE TABLE AcquisitionLinksDb (
-id TEXT NOT NULL PRIMARY KEY,
-serverId TEXT NOT NULL,
-linkId TEXT NOT NULL,
-directory TEXT NOT NULL,
-link TEXT NOT NULL,
-title TEXT NOT NULL,
-thumbnailURL TEXT
+CREATE TABLE ServerLinksDb (
+  serverLinkId INTEGER PRIMARY KEY AUTOINCREMENT,
+  serverId INTEGER NOT NULL,
+  directory TEXT NOT NULL,
+  identifier TEXT NOT NULL,
+  linkType TEXT NOT NULL,
+  href TEXT NOT NULL,
+  title TEXT,
+  FOREIGN KEY(serverId) REFERENCES ServersDb(serverId)
 );
 
 createLink:
-INSERT OR IGNORE INTO AcquisitionLinksDb(id, serverId, linkId, directory, link, title, thumbnailURL) VALUES(?, ?, ?,?, ?, ?, ?);
-
-getExistingLink:
-SELECT id FROM AcquisitionLinksDb WHERE serverId = ? AND directory = ?;
+INSERT OR IGNORE INTO ServerLinksDb(serverId, directory, identifier, title, href, linkType) VALUES(?, ?,?, ?, ?, ?);
 
 deleteExistingLink:
-DELETE FROM AcquisitionLinksDb WHERE id = ?;
+DELETE FROM ServerLinksDb WHERE serverLinkId = ?;
 
 loadAllLinks:
-SELECT * FROM AcquisitionLinksDb;
+SELECT * FROM ServerLinksDb;
 
 loadLinksForParent:
-SELECT * FROM AcquisitionLinksDb WHERE serverId = ? AND directory = ?;
+SELECT * FROM ServerLinksDb WHERE serverId = ? AND directory = ?;

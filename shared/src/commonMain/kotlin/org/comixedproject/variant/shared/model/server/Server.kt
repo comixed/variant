@@ -18,8 +18,13 @@
 
 package org.comixedproject.variant.shared.model.server
 
+/**
+ * <code>Server</code> represents an OPDS enabled server.
+ *
+ * @author Darryl L. Pierce
+ */
 data class Server(
-    val id: String?,
+    val serverId: Long?,
     val name: String,
     val url: String,
     val username: String,

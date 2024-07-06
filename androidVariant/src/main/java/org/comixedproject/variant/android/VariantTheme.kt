@@ -33,6 +33,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * <code>VariantTheme</code> provides the application's theme.
+ *
+ * @author Darryl L. Pierce
+ */
 @Composable
 fun VariantTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
