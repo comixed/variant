@@ -14,6 +14,9 @@ SELECT * FROM ServersDb;
 createServer:
 INSERT OR IGNORE INTO ServersDb(name, url, username, password) VALUES (?, ?, ?, ?);
 
+loadServer:
+SELECT * FROM ServersDb WHERE serverId = ?;
+
 updateServer:
 UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE serverId = ?;
 
@@ -26,13 +29,14 @@ CREATE TABLE ServerLinksDb (
   directory TEXT NOT NULL,
   identifier TEXT NOT NULL,
   linkType TEXT NOT NULL,
-  href TEXT NOT NULL,
-  title TEXT,
+  coverUrl TEXT NOT NULL,
+  downloadLink TEXT NOT NULL,
+  title TEXT NOT NULL,
   FOREIGN KEY(serverId) REFERENCES ServersDb(serverId)
 );
 
 createLink:
-INSERT OR IGNORE INTO ServerLinksDb(serverId, directory, identifier, title, href, linkType) VALUES(?, ?,?, ?, ?, ?);
+INSERT OR IGNORE INTO ServerLinksDb(serverId, directory, identifier, title, coverUrl, downloadLink, linkType) VALUES(?, ?,?, ?, ?, ?, ?);
 
 deleteExistingLink:
 DELETE FROM ServerLinksDb WHERE serverLinkId = ?;

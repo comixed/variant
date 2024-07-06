@@ -24,10 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.android.ui.SERVER_LINK_LIST
+import org.comixedproject.variant.android.ui.SERVER_LIST
 import org.comixedproject.variant.android.ui.links.ServerLinkList
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
-import org.comixedproject.variant.shared.model.server.ServerLinkType
 
 /**
  * <code>BrowseServerView</code> composes a view for browsing the contents of a server.
@@ -39,13 +40,14 @@ import org.comixedproject.variant.shared.model.server.ServerLinkType
 fun BrowseServerView(
     server: Server,
     serverLinks: List<ServerLink>,
-    directory: String,
     onLoadDirectory: (Server, ServerLink) -> Unit,
+    onShowLinkDetails: (Server, ServerLink) -> Unit
 ) {
     ServerLinkList(
         server,
         serverLinks,
         onLoadDirectory,
+        onShowLinkDetails
     )
     Spacer(modifier = Modifier)
 }
@@ -58,62 +60,10 @@ const val DIRECTORY = "/opds/test"
 fun BrowseServerPreview() {
     VariantTheme {
         BrowseServerView(
-            Server(
-                SERVER_ID,
-                "My Server",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedproject.org",
-                "my!password",
-            ),
-            mutableListOf(
-                ServerLink(
-                    100L,
-                    SERVER_ID,
-                    DIRECTORY,
-                    "/opds/link1",
-                    "First Entry",
-                    "",
-                    ServerLinkType.NAVIGATION,
-                ),
-                ServerLink(
-                    101L,
-                    SERVER_ID,
-                    DIRECTORY,
-                    "/opds/link1",
-                    "Second Entry",
-                    "",
-                    ServerLinkType.NAVIGATION,
-                ),
-                ServerLink(
-                    102L,
-                    SERVER_ID,
-                    DIRECTORY,
-                    "/opds/link1",
-                    "Third Entry",
-                    "",
-                    ServerLinkType.NAVIGATION,
-                ),
-                ServerLink(
-                    103L,
-                    SERVER_ID,
-                    DIRECTORY,
-                    "/opds/link1",
-                    "Fourth Entry",
-                    "",
-                    ServerLinkType.NAVIGATION,
-                ),
-                ServerLink(
-                    104L,
-                    SERVER_ID,
-                    DIRECTORY,
-                    "/opds/link1",
-                    "Fifth Entry",
-                    "",
-                    ServerLinkType.NAVIGATION,
-                ),
-            ),
-            DIRECTORY,
+            SERVER_LIST.get(0),
+            SERVER_LINK_LIST,
             onLoadDirectory = { _, _ -> },
+            onShowLinkDetails = { _, _ -> }
         )
     }
 }

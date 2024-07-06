@@ -24,9 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.android.ui.SERVER_LINK_LIST
+import org.comixedproject.variant.android.ui.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
-import org.comixedproject.variant.shared.model.server.ServerLinkType
 
 /**
  * <code>ServerLinkList</code> composes the list of links for the current server.
@@ -38,11 +39,12 @@ fun ServerLinkList(
     server: Server,
     serverLinks: List<ServerLink>,
     onLoadDirectory: (Server, ServerLink) -> Unit,
+    onShowLinkDetails: (Server, ServerLink) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier) {
         items(serverLinks) { link ->
-            ServerLinkListItem(server, link, onLoadDirectory)
+            ServerLinkListItem(server, link, onLoadDirectory, onShowLinkDetails)
         }
     }
 }
@@ -52,35 +54,10 @@ fun ServerLinkList(
 fun ServerLinkListPreview() {
     VariantTheme {
         ServerLinkList(
-            server =
-                Server(
-                    1L,
-                    "My Server",
-                    "http://www.comixedproject.org:7171/opds",
-                    "reader@comixedproject.org",
-                    "my!password",
-                ),
-            listOf(
-                ServerLink(
-                    1L,
-                    1L,
-                    "",
-                    "",
-                    "First Link",
-                    "",
-                    ServerLinkType.NAVIGATION,
-                ),
-                ServerLink(
-                    2L,
-                    2L,
-                    "",
-                    "",
-                    "Second Link",
-                    "",
-                    ServerLinkType.PUBLICATION,
-                ),
-            ),
+            SERVER_LIST.get(0),
+            SERVER_LINK_LIST,
             onLoadDirectory = { server, directory -> },
+            onShowLinkDetails = { server, directory -> }
         )
     }
 }

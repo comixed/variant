@@ -18,13 +18,27 @@
 
 package org.comixedproject.variant.android.ui.links
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.android.ui.SERVER_LIST
+import org.comixedproject.variant.android.ui.SERVER_NAVIGATION_LINK
+import org.comixedproject.variant.android.ui.SERVER_PUBLICATION_LINK
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
@@ -34,40 +48,64 @@ import org.comixedproject.variant.shared.model.server.ServerLinkType
  *
  * @author Darryl L. Pierce
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServerLinkListItem(
     server: Server,
     link: ServerLink,
     onLoadDirectory: (Server, ServerLink) -> Unit,
+    onShowLinkDetails: (Server, ServerLink) -> Unit
 ) {
-    ListItem(
-        headlineContent = { Text(link.title!!) },
-        modifier = Modifier.clickable { onLoadDirectory(server, link) },
-    )
+    Row(
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            if (link.linkType == ServerLinkType.NAVIGATION) {
+                Image(imageVector = Icons.AutoMirrored.Filled.List, contentDescription = "")
+            } else {
+                Image(imageVector = Icons.Filled.PlayArrow, contentDescription = "")
+            }
+        }
+
+        ListItem(
+            headlineContent = { Text(link.title!!) },
+            modifier = Modifier.clickable {
+                if (link.linkType == ServerLinkType.NAVIGATION) {
+                    onLoadDirectory(server, link)
+                } else {
+                    onShowLinkDetails(server, link)
+                }
+            },
+        )
+    }
 }
 
 @Preview
 @Composable
-fun ServerLinkListItemPreview() {
+fun ServerLinkListItemPreview_Navigation() {
     VariantTheme {
         ServerLinkListItem(
-            Server(
-                1L,
-                "My Server",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedproject.org",
-                "my!password",
-            ),
-            ServerLink(
-                1L,
-                1L,
-                "",
-                "",
-                "First Link",
-                "",
-                ServerLinkType.NAVIGATION,
-            ),
+            SERVER_LIST.get(0),
+            SERVER_NAVIGATION_LINK,
             onLoadDirectory = { _, _ -> },
+            onShowLinkDetails = { _, _ -> }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ServerLinkListItemPreview_Publication() {
+    VariantTheme {
+        ServerLinkListItem(
+            SERVER_LIST.get(0),
+            SERVER_PUBLICATION_LINK,
+            onLoadDirectory = { _, _ -> },
+            onShowLinkDetails = { _, _ -> }
         )
     }
 }

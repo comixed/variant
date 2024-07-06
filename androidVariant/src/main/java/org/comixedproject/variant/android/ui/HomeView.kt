@@ -43,6 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.android.ui.links.ServerLinkDetailView
 import org.comixedproject.variant.android.ui.server.BrowseServerView
 import org.comixedproject.variant.android.ui.server.ServerManagementView
 import org.comixedproject.variant.shared.model.server.Server
@@ -60,10 +61,10 @@ private const val TAG = "HomeScreen"
 @Composable
 fun HomeView(
     serverList: List<Server>,
-    directory: String,
     linkList: List<ServerLink>,
     onSaveServer: (Long?, String, String, String, String) -> Unit,
-    onServerLoadDirectory: (Server, String, Boolean) -> Unit
+    onServerLoadDirectory: (Server, String, Boolean) -> Unit,
+    onDownloadLink: (Server, ServerLink) -> Unit
 ) {
     val navController = rememberNavController()
 
@@ -135,7 +136,7 @@ fun HomeView(
                         serverList.firstOrNull { server -> server.serverId == serverId }
                     val currentParent = when (serverLinkId) {
                         0L -> currentServer?.url
-                        else -> linkList.firstOrNull { link -> link.serverLinkId == serverLinkId }?.href
+                        else -> linkList.firstOrNull { link -> link.serverLinkId == serverLinkId }?.downloadLink
                     }
 
                     if (currentServer != null) {
@@ -146,12 +147,39 @@ fun HomeView(
                                 .filter { link -> link.serverId == currentServer.serverId }
                                 .filter { link -> link.directory == currentParent }
                                 .toList(),
-                            directory,
                             onLoadDirectory = { target, selectedLink ->
-                                onServerLoadDirectory(target, selectedLink.href, false)
+                                onServerLoadDirectory(target, selectedLink.downloadLink, false)
                                 navController.navigate("${NavigationScreen.BrowseServer.route}/${target.serverId}/${selectedLink.serverLinkId}")
                             },
+                            onShowLinkDetails = { target, selectedLink ->
+                                navController.navigate("${NavigationScreen.ItemDetail.route}/${target.serverId}/${selectedLink.serverLinkId}")
+                            }
                         )
+                    }
+                }
+                composable(
+                    route = "${NavigationScreen.ItemDetail.route}/{serverId}/{serverLinkId}",
+                    arguments = listOf(
+                        navArgument("serverId", { type = NavType.LongType }),
+                        navArgument("serverLinkId", { type = NavType.LongType })
+                    ),
+                ) { entry ->
+                    val serverId = entry.arguments?.getLong("serverId")
+                    val serverLinkId = entry.arguments?.getLong("serverLinkId")
+                    Logger.d(TAG, "serverId=$serverId serverLinkId=${serverLinkId}")
+                    val server =
+                        serverList.firstOrNull { server -> server.serverId == serverId }
+                    val targetLink =
+                        linkList.firstOrNull { link -> link.serverLinkId == serverLinkId }
+
+                    if (server != null) {
+                        ServerLinkDetailView(
+                            server,
+                            title = targetLink?.title ?: "",
+                            coverUrl = targetLink?.coverUrl ?: "",
+                            showDownload = true,
+                            onDownloadEntry = { onDownloadLink(server, targetLink!!) },
+                            onOpenEntry = { })
                     }
                 }
                 composable(route = NavigationScreen.ComicList.route) {
@@ -167,20 +195,14 @@ fun HomeView(
 
 @Preview
 @Composable
-fun HomeSPreview() {
+fun HomePreview() {
     VariantTheme {
         HomeView(
-            listOf(
-                Server(null, "Server 1", "", "", ""),
-                Server(null, "Server 2", "", "", ""),
-                Server(null, "Server 3", "", "", ""),
-                Server(null, "Server 4", "", "", ""),
-                Server(null, "Server 5", "", "", ""),
-            ),
-            "",
+            SERVER_LIST,
             emptyList(),
             onSaveServer = { _, _, _, _, _ -> },
-            onServerLoadDirectory = { _, _, _ -> }
+            onServerLoadDirectory = { _, _, _ -> },
+            onDownloadLink = { _, _ -> }
         )
     }
 }

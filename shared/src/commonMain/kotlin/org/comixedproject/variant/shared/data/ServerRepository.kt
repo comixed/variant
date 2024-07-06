@@ -27,6 +27,17 @@ class ServerRepository(
     val servers: List<Server>
         get() = databaseHelper.loadServers().map(ServersDb::map)
 
+    fun loadServer(id: Long): Server {
+        val record = databaseHelper.loadServer(id)
+        return Server(
+            serverId = record.serverId,
+            name = record.name,
+            url = record.url,
+            username = record.username,
+            password = record.password
+        )
+    }
+
     fun saveServer(server: Server) {
         if (server.serverId == null) {
             databaseHelper.createServer(server.name, server.url, server.username, server.password)

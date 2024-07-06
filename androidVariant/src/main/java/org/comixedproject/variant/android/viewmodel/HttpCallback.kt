@@ -22,7 +22,9 @@ import android.util.Base64
 import org.comixedproject.variant.shared.model.server.Server
 import org.readium.r2.shared.util.Try
 import org.readium.r2.shared.util.http.DefaultHttpClient
+import org.readium.r2.shared.util.http.HttpError
 import org.readium.r2.shared.util.http.HttpRequest
+import org.readium.r2.shared.util.http.HttpResponse
 import org.readium.r2.shared.util.http.HttpTry
 
 /**
@@ -41,5 +43,28 @@ class HttpCallback(val server: Server) :
         val builder = request.buildUpon()
         builder.addHeader("Authorization", "Basic $credentials")
         return Try.success(builder.build())
+    }
+
+    override suspend fun onRequestFailed(request: HttpRequest, error: HttpError) {
+        super.onRequestFailed(request, error)
+    }
+
+    override suspend fun onFollowUnsafeRedirect(
+        request: HttpRequest,
+        response: HttpResponse,
+        newRequest: HttpRequest
+    ): HttpTry<HttpRequest> {
+        return super.onFollowUnsafeRedirect(request, response, newRequest)
+    }
+
+    override suspend fun onRecoverRequest(
+        request: HttpRequest,
+        error: HttpError
+    ): HttpTry<HttpRequest> {
+        return super.onRecoverRequest(request, error)
+    }
+
+    override suspend fun onResponseReceived(request: HttpRequest, response: HttpResponse) {
+        super.onResponseReceived(request, response)
     }
 }
