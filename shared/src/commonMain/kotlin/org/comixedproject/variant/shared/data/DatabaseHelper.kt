@@ -25,26 +25,31 @@ import org.comixedproject.variant.db.ServersDb
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 
-class DatabaseHelper(sqlDriver: SqlDriver) {
+class DatabaseHelper(
+    sqlDriver: SqlDriver,
+) {
     private val database: VariantDb = VariantDb(sqlDriver)
 
     fun loadServers(): List<ServersDb> = database.tableQueries.loadAllServers().executeAsList()
 
-    fun createServer(name: String, url: String, username: String, password: String) {
-        return database.tableQueries.createServer(
-            name,
-            url,
-            username,
-            password
-        )
-    }
+    fun createServer(
+        name: String,
+        url: String,
+        username: String,
+        password: String,
+    ) = database.tableQueries.createServer(
+        name,
+        url,
+        username,
+        password,
+    )
 
     fun updateServer(
         serverId: Long,
         name: String,
         url: String,
         username: String,
-        password: String
+        password: String,
     ) {
         database.tableQueries.updateServer(name, url, username, password, serverId)
     }
@@ -53,23 +58,27 @@ class DatabaseHelper(sqlDriver: SqlDriver) {
         database.tableQueries.deleteServer(serverId)
     }
 
-    fun loadAllLinks(): List<ServerLinksDb> =
-        database.tableQueries.loadAllLinks().executeAsList()
+    fun loadAllLinks(): List<ServerLinksDb> = database.tableQueries.loadAllLinks().executeAsList()
 
-    fun loadLinks(serverId: Long, directory: String): List<ServerLinksDb> =
-        database.tableQueries.loadLinksForParent(serverId, directory)
+    fun loadLinks(
+        serverId: Long,
+        directory: String,
+    ): List<ServerLinksDb> =
+        database.tableQueries
+            .loadLinksForParent(serverId, directory)
             .executeAsList()
 
     fun saveLinksForServer(
         server: Server,
         directory: String,
-        serverLinks: List<ServerLink>
+        serverLinks: List<ServerLink>,
     ) {
         val incomingPaths = serverLinks.map { it.href }
         val serverId = server.serverId!!
         val existingLinks =
             database.tableQueries.loadLinksForParent(serverId, directory).executeAsList()
-        existingLinks.filter { link -> !incomingPaths.contains(link.href) }
+        existingLinks
+            .filter { link -> !incomingPaths.contains(link.href) }
             .forEach { link -> database.tableQueries.deleteExistingLink(link.serverLinkId) }
         val existingPaths = existingLinks.map { it.href }
         serverLinks.filter { !existingPaths.contains(it.href) }.forEach { link ->
@@ -79,7 +88,7 @@ class DatabaseHelper(sqlDriver: SqlDriver) {
                 link.identifier,
                 link.title,
                 link.href,
-                link.linkType.name
+                link.linkType.name,
             )
         }
     }

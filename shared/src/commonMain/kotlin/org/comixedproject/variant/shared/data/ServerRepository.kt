@@ -21,7 +21,9 @@ package org.comixedproject.variant.shared.data
 import org.comixedproject.variant.db.ServersDb
 import org.comixedproject.variant.shared.model.server.Server
 
-class ServerRepository(private val databaseHelper: DatabaseHelper) {
+class ServerRepository(
+    private val databaseHelper: DatabaseHelper,
+) {
     val servers: List<Server>
         get() = databaseHelper.loadServers().map(ServersDb::map)
 
@@ -34,7 +36,7 @@ class ServerRepository(private val databaseHelper: DatabaseHelper) {
                 server.name,
                 server.url,
                 server.username,
-                server.password
+                server.password,
             )
         }
     }
@@ -44,10 +46,11 @@ class ServerRepository(private val databaseHelper: DatabaseHelper) {
     }
 }
 
-fun ServersDb.map() = Server(
-    serverId = this.serverId,
-    name = this.name,
-    url = this.url,
-    username = this.username,
-    password = this.password
-)
+fun ServersDb.map() =
+    Server(
+        serverId = this.serverId,
+        name = this.name,
+        url = this.url,
+        username = this.username,
+        password = this.password,
+    )

@@ -32,18 +32,19 @@ lateinit var koin: Koin
  * @author Darryl L. Pierce
  */
 class VariantApp : Application() {
-
     override fun onCreate() {
         super.onCreate()
 
         VariantApp.appContext = applicationContext
 
-        koin = initKoin(
-            appModule = module {
-                single<Context> { this@VariantApp }
-
-            },
-            viewModelsModule = module { }).koin
+        koin =
+            initKoin(
+                appModule =
+                    module {
+                        single<Context> { this@VariantApp }
+                    },
+                viewModelsModule = module { },
+            ).koin
     }
 
     companion object {

@@ -52,7 +52,7 @@ import org.comixedproject.variant.shared.model.server.Server
 fun ServerEditView(
     server: Server,
     onSave: (Long?, String, String, String, String) -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
 ) {
     val serverId by remember { mutableStateOf(server.serverId) }
     var name by remember { mutableStateOf(server.name) }
@@ -65,38 +65,40 @@ fun ServerEditView(
             Button(onClick = { onSave(serverId, name, url, username, password) }) {
                 Icon(
                     imageVector = Icons.Filled.Check,
-                    contentDescription = stringResource(id = R.string.saveButtonLabel)
+                    contentDescription = stringResource(id = R.string.saveButtonLabel),
                 )
             }
-        }) { padding ->
+        },
+    ) { padding ->
         Column(
-            modifier = Modifier
-                .padding(32.dp)
-                .verticalScroll(rememberScrollState())
+            modifier =
+                Modifier
+                    .padding(32.dp)
+                    .verticalScroll(rememberScrollState()),
         ) {
             TextField(
                 value = name,
                 placeholder = { Text(text = stringResource(id = R.string.serverNamePlaceholder)) },
                 onValueChange = { name = it },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
             TextField(
                 value = url,
                 placeholder = { Text(text = stringResource(id = R.string.serverUrlPlaceholder)) },
                 onValueChange = { url = it },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
             TextField(
                 value = username,
                 placeholder = { Text(text = stringResource(id = R.string.useramePlaceholder)) },
                 onValueChange = { username = it },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
             TextField(
                 value = password,
                 placeholder = { Text(text = stringResource(id = R.string.passwordPlaceholder)) },
                 onValueChange = { password = it },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
@@ -107,13 +109,16 @@ fun ServerEditView(
 fun ServerEditPreview_Create() {
     VariantTheme {
         ServerEditView(
-            server = Server(
-                null,
-                "",
-                "",
-                "",
-                ""
-            ), onSave = { _, _, _, _, _ -> }, onCancel = {}
+            server =
+                Server(
+                    null,
+                    "",
+                    "",
+                    "",
+                    "",
+                ),
+            onSave = { _, _, _, _, _ -> },
+            onCancel = {},
         )
     }
 }
@@ -123,13 +128,16 @@ fun ServerEditPreview_Create() {
 fun ServerEditPreview_Edit() {
     VariantTheme {
         ServerEditView(
-            server = Server(
-                1L,
-                "My Server",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedproject.org",
-                "my!password"
-            ), onSave = { _, _, _, _, _ -> }, onCancel = {}
+            server =
+                Server(
+                    1L,
+                    "My Server",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedproject.org",
+                    "my!password",
+                ),
+            onSave = { _, _, _, _, _ -> },
+            onCancel = {},
         )
     }
 }

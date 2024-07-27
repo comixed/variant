@@ -50,7 +50,7 @@ fun SwipeBoxView(
     modifier: Modifier = Modifier,
     onDelete: () -> Unit,
     onEdit: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val swipeState = rememberSwipeToDismissBoxState()
 
@@ -85,16 +85,18 @@ fun SwipeBoxView(
         backgroundContent = {
             Box(
                 contentAlignment = alignment,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(color),
             ) {
                 Icon(
                     modifier = Modifier.minimumInteractiveComponentSize(),
-                    imageVector = icon, contentDescription = null
+                    imageVector = icon,
+                    contentDescription = null,
                 )
             }
-        }
+        },
     ) {
         content()
     }

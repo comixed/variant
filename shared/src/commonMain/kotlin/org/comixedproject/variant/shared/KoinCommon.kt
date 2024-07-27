@@ -27,18 +27,20 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 object Modules {
-    val core = module {
-        factory { DatabaseHelper(get()) }
-    }
+    val core =
+        module {
+            factory { DatabaseHelper(get()) }
+        }
 
-    val repositories = module {
-        factory {
-            ServerRepository(get())
+    val repositories =
+        module {
+            factory {
+                ServerRepository(get())
+            }
+            factory {
+                ServerLinkRepository(get())
+            }
         }
-        factory {
-            ServerLinkRepository(get())
-        }
-    }
 
     val viewModels = module { }
 }
@@ -50,12 +52,13 @@ fun initKoin(
     coreModule: Module = Modules.core,
     repositoriesModule: Module = Modules.repositories,
     viewModelsModule: Module = Modules.viewModels,
-): KoinApplication = startKoin {
-    modules(
-        appModule,
-        coreModule,
-        repositoriesModule,
-        viewModelsModule,
-        platformModule
-    )
-}
+): KoinApplication =
+    startKoin {
+        modules(
+            appModule,
+            coreModule,
+            repositoriesModule,
+            viewModelsModule,
+            platformModule,
+        )
+    }

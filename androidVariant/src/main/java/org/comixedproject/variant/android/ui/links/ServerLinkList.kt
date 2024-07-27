@@ -38,7 +38,7 @@ fun ServerLinkList(
     server: Server,
     serverLinks: List<ServerLink>,
     onLoadDirectory: (Server, ServerLink) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier) {
         items(serverLinks) { link ->
@@ -52,13 +52,14 @@ fun ServerLinkList(
 fun ServerLinkListPreview() {
     VariantTheme {
         ServerLinkList(
-            server = Server(
-                1L,
-                "My Server",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedproject.org",
-                "my!password"
-            ),
+            server =
+                Server(
+                    1L,
+                    "My Server",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedproject.org",
+                    "my!password",
+                ),
             listOf(
                 ServerLink(
                     1L,
@@ -67,18 +68,19 @@ fun ServerLinkListPreview() {
                     "",
                     "First Link",
                     "",
-                    ServerLinkType.NAVIGATION
-                ), ServerLink(
+                    ServerLinkType.NAVIGATION,
+                ),
+                ServerLink(
                     2L,
                     2L,
                     "",
                     "",
                     "Second Link",
                     "",
-                    ServerLinkType.PUBLICATION
-                )
+                    ServerLinkType.PUBLICATION,
+                ),
             ),
-            onLoadDirectory = { server, directory -> }
+            onLoadDirectory = { server, directory -> },
         )
     }
 }

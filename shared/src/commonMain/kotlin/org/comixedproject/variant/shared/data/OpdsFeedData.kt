@@ -29,7 +29,7 @@ public class OpdsFeedData {
         server: Server,
         directory: String,
         onSuccess: (Any) -> Unit,
-        onFailure: (Exception) -> Unit
+        onFailure: (Exception) -> Unit,
     ) {
         try {
             Logger.d(TAG, "Loading directory content: server=${server.name} directory=$directory")
@@ -42,7 +42,7 @@ public class OpdsFeedData {
             Logger.e(TAG, "Failed to load directory contents: $error")
             coroutineScope {
                 {
-                    onFailure(error);
+                    onFailure(error)
                 }
             }
         }

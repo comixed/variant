@@ -51,13 +51,13 @@ fun ServerListView(
     onCreateServer: () -> Unit,
     onEditServer: (Server) -> Unit,
     onDeleteServer: (Server) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(floatingActionButton = {
         Button(onClick = onCreateServer) {
             Icon(
                 imageVector = Icons.Filled.Add,
-                contentDescription = stringResource(id = R.string.serverAddButton)
+                contentDescription = stringResource(id = R.string.serverAddButton),
             )
         }
     }) { padding ->
@@ -66,13 +66,13 @@ fun ServerListView(
                 SwipeBoxView(
                     onDelete = { onDeleteServer(server) },
                     onEdit = { onEditServer(server) },
-                    modifier = Modifier.animateItemPlacement()
+                    modifier = Modifier.animateItemPlacement(),
                 ) {
                     ServerListItemView(
                         server,
                         onServerClicked = onBrowseServer,
                         onEditServer = onEditServer,
-                        onDeleteServer = onDeleteServer
+                        onDeleteServer = onDeleteServer,
                     )
                 }
             }
@@ -80,43 +80,52 @@ fun ServerListView(
     }
 }
 
-
 @Preview
 @Composable
 fun ServerListPreview() {
     VariantTheme {
-        ServerListView(mutableListOf(
-            Server(
-                1L,
-                "Server 1",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedprojecvt.org",
-                "password"
-            ), Server(
-                2L,
-                "Server 2",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedprojecvt.org",
-                "password"
-            ), Server(
-                3L,
-                "Server 3",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedprojecvt.org",
-                "password"
-            ), Server(
-                4L,
-                "Server 4",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedprojecvt.org",
-                "password"
-            ), Server(
-                5L,
-                "Server 5",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedprojecvt.org",
-                "password"
-            )
-        ), onCreateServer = {}, onBrowseServer = {}, onEditServer = {}, onDeleteServer = {})
+        ServerListView(
+            mutableListOf(
+                Server(
+                    1L,
+                    "Server 1",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password",
+                ),
+                Server(
+                    2L,
+                    "Server 2",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password",
+                ),
+                Server(
+                    3L,
+                    "Server 3",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password",
+                ),
+                Server(
+                    4L,
+                    "Server 4",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password",
+                ),
+                Server(
+                    5L,
+                    "Server 5",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password",
+                ),
+            ),
+            onCreateServer = {},
+            onBrowseServer = {},
+            onEditServer = {},
+            onDeleteServer = {},
+        )
     }
 }

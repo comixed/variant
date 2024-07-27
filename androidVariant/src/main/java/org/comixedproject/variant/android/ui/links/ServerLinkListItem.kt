@@ -36,25 +36,38 @@ import org.comixedproject.variant.shared.model.server.ServerLinkType
  */
 @Composable
 fun ServerLinkListItem(
-    server: Server, link: ServerLink, onLoadDirectory: (Server, ServerLink) -> Unit
+    server: Server,
+    link: ServerLink,
+    onLoadDirectory: (Server, ServerLink) -> Unit,
 ) {
     ListItem(
         headlineContent = { Text(link.title!!) },
-        modifier = Modifier.clickable { onLoadDirectory(server, link) })
+        modifier = Modifier.clickable { onLoadDirectory(server, link) },
+    )
 }
 
 @Preview
 @Composable
 fun ServerLinkListItemPreview() {
     VariantTheme {
-        ServerLinkListItem(Server(
-            1L,
-            "My Server",
-            "http://www.comixedproject.org:7171/opds",
-            "reader@comixedproject.org",
-            "my!password"
-        ), ServerLink(
-            1L, 1L, "", "", "First Link", "", ServerLinkType.NAVIGATION
-        ), onLoadDirectory = { _, _ -> })
+        ServerLinkListItem(
+            Server(
+                1L,
+                "My Server",
+                "http://www.comixedproject.org:7171/opds",
+                "reader@comixedproject.org",
+                "my!password",
+            ),
+            ServerLink(
+                1L,
+                1L,
+                "",
+                "",
+                "First Link",
+                "",
+                ServerLinkType.NAVIGATION,
+            ),
+            onLoadDirectory = { _, _ -> },
+        )
     }
 }

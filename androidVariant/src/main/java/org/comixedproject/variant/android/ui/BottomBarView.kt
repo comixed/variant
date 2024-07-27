@@ -40,13 +40,14 @@ import org.comixedproject.variant.android.VariantTheme
 @Composable
 fun BottomBarView(
     currentDestination: NavDestination?,
-    onScreenChange: (route: String) -> Unit
+    onScreenChange: (route: String) -> Unit,
 ) {
     var selectedItem by remember { mutableIntStateOf(0) }
 
     NavigationBar {
         BottomBarItem.all.forEachIndexed { index, item ->
-            NavigationBarItem(selected = selectedItem == index,
+            NavigationBarItem(
+                selected = selectedItem == index,
                 onClick = {
                     selectedItem = index
                     onScreenChange(item.screen.route)
@@ -55,9 +56,10 @@ fun BottomBarView(
                 icon = {
                     Icon(
                         imageVector = item.icon,
-                        contentDescription = stringResource(id = item.label)
+                        contentDescription = stringResource(id = item.label),
                     )
-                })
+                },
+            )
         }
     }
 }

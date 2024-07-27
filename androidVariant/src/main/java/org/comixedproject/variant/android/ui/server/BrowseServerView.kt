@@ -40,12 +40,12 @@ fun BrowseServerView(
     server: Server,
     serverLinks: List<ServerLink>,
     directory: String,
-    onLoadDirectory: (Server, ServerLink) -> Unit
+    onLoadDirectory: (Server, ServerLink) -> Unit,
 ) {
     ServerLinkList(
         server,
         serverLinks,
-        onLoadDirectory
+        onLoadDirectory,
     )
     Spacer(modifier = Modifier)
 }
@@ -63,7 +63,7 @@ fun BrowseServerPreview() {
                 "My Server",
                 "http://www.comixedproject.org:7171/opds",
                 "reader@comixedproject.org",
-                "my!password"
+                "my!password",
             ),
             mutableListOf(
                 ServerLink(
@@ -72,7 +72,8 @@ fun BrowseServerPreview() {
                     DIRECTORY,
                     "/opds/link1",
                     "First Entry",
-                    "", ServerLinkType.NAVIGATION
+                    "",
+                    ServerLinkType.NAVIGATION,
                 ),
                 ServerLink(
                     101L,
@@ -80,7 +81,8 @@ fun BrowseServerPreview() {
                     DIRECTORY,
                     "/opds/link1",
                     "Second Entry",
-                    "", ServerLinkType.NAVIGATION
+                    "",
+                    ServerLinkType.NAVIGATION,
                 ),
                 ServerLink(
                     102L,
@@ -88,7 +90,8 @@ fun BrowseServerPreview() {
                     DIRECTORY,
                     "/opds/link1",
                     "Third Entry",
-                    "", ServerLinkType.NAVIGATION
+                    "",
+                    ServerLinkType.NAVIGATION,
                 ),
                 ServerLink(
                     103L,
@@ -96,7 +99,8 @@ fun BrowseServerPreview() {
                     DIRECTORY,
                     "/opds/link1",
                     "Fourth Entry",
-                    "", ServerLinkType.NAVIGATION
+                    "",
+                    ServerLinkType.NAVIGATION,
                 ),
                 ServerLink(
                     104L,
@@ -104,12 +108,12 @@ fun BrowseServerPreview() {
                     DIRECTORY,
                     "/opds/link1",
                     "Fifth Entry",
-                    "", ServerLinkType.NAVIGATION
-                )
+                    "",
+                    ServerLinkType.NAVIGATION,
+                ),
             ),
-
             DIRECTORY,
-            onLoadDirectory = { _, _ -> }
+            onLoadDirectory = { _, _ -> },
         )
     }
 }

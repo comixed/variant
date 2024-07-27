@@ -39,7 +39,7 @@ fun ServerManagementView(
     servers: List<Server>,
     onSaveServer: (Long?, String, String, String, String) -> Unit,
     onBrowseServer: (Server) -> Unit,
-    onDeleteServer: (Server) -> Unit
+    onDeleteServer: (Server) -> Unit,
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Server>()
 
@@ -56,17 +56,17 @@ fun ServerManagementView(
                 onCreateServer = {
                     navigator.navigateTo(
                         ListDetailPaneScaffoldRole.Extra,
-                        Server(null, "", "", "", "")
+                        Server(null, "", "", "", ""),
                     )
                 },
                 onBrowseServer = onBrowseServer,
                 onEditServer = { server ->
                     navigator.navigateTo(
                         ListDetailPaneScaffoldRole.Extra,
-                        server
+                        server,
                     )
                 },
-                onDeleteServer = onDeleteServer
+                onDeleteServer = onDeleteServer,
             )
         },
         detailPane = {
@@ -82,9 +82,11 @@ fun ServerManagementView(
                         onSaveServer(serverId, name, url, username, password)
                         navigator.navigateBack()
                     },
-                    onCancel = { navigator.navigateBack() })
+                    onCancel = { navigator.navigateBack() },
+                )
             }
-        })
+        },
+    )
 }
 
 @Preview
@@ -98,36 +100,40 @@ fun ServerManagementPreview() {
                     "Server 1",
                     "http://www.comixedproject.org:7171/opds",
                     "reader@comixedprojecvt.org",
-                    "password"
-                ), Server(
+                    "password",
+                ),
+                Server(
                     2L,
                     "Server 2",
                     "http://www.comixedproject.org:7171/opds",
                     "reader@comixedprojecvt.org",
-                    "password"
-                ), Server(
+                    "password",
+                ),
+                Server(
                     3L,
                     "Server 3",
                     "http://www.comixedproject.org:7171/opds",
                     "reader@comixedprojecvt.org",
-                    "password"
-                ), Server(
+                    "password",
+                ),
+                Server(
                     4L,
                     "Server 4",
                     "http://www.comixedproject.org:7171/opds",
                     "reader@comixedprojecvt.org",
-                    "password"
-                ), Server(
+                    "password",
+                ),
+                Server(
                     5L,
                     "Server 5",
                     "http://www.comixedproject.org:7171/opds",
                     "reader@comixedprojecvt.org",
-                    "password"
-                )
+                    "password",
+                ),
             ),
             onSaveServer = { _, _, _, _, _ -> },
             onBrowseServer = {},
-            onDeleteServer = {}
+            onDeleteServer = {},
         )
     }
 }

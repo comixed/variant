@@ -32,7 +32,7 @@ class KoinIntegrationTest {
             modules(
                 Modules.core,
                 Modules.repositories,
-                Modules.viewModels
+                Modules.viewModels,
             )
         }.checkModules()
     }

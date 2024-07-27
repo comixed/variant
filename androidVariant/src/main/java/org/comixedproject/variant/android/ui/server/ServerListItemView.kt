@@ -40,7 +40,7 @@ fun ServerListItemView(
     server: Server,
     onServerClicked: (Server) -> Unit,
     onEditServer: (Server) -> Unit,
-    onDeleteServer: (Server) -> Unit
+    onDeleteServer: (Server) -> Unit,
 ) {
     ListItem(
         headlineContent = { Text(server.name) },
@@ -48,31 +48,32 @@ fun ServerListItemView(
         leadingContent = {
             Icon(
                 imageVector = Icons.Filled.AccountBox,
-                contentDescription = server.name
+                contentDescription = server.name,
             )
         },
-        modifier = Modifier.clickable {
-            onServerClicked(server)
-        }
+        modifier =
+            Modifier.clickable {
+                onServerClicked(server)
+            },
     )
 }
-
 
 @Preview
 @Composable
 fun ServerListItemPreview() {
     VariantTheme {
         ServerListItemView(
-            server = Server(
-                1L,
-                "Server 1",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedprojecvt.org",
-                "password"
-            ),
+            server =
+                Server(
+                    1L,
+                    "Server 1",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password",
+                ),
             onServerClicked = {},
             onEditServer = {},
-            onDeleteServer = {}
+            onDeleteServer = {},
         )
     }
 }

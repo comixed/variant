@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
             VariantTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     val serverList by serverViewModel.serverList.collectAsStateWithLifecycle()
                     val linkList by serverLinkViewModel.displayLinkList.collectAsStateWithLifecycle()
@@ -63,9 +63,10 @@ class MainActivity : ComponentActivity() {
                                 name,
                                 url,
                                 username,
-                                password
+                                password,
                             )
-                        })
+                        },
+                    )
                 }
             }
         }

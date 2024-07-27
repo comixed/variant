@@ -30,14 +30,19 @@ import org.comixedproject.variant.android.R
  *
  * @author Darryl L. Pierce
  */
-enum class BottomBarItem(val label: Int, val icon: ImageVector, val screen: NavigationScreen) {
+enum class BottomBarItem(
+    val label: Int,
+    val icon: ImageVector,
+    val screen: NavigationScreen,
+) {
     ServerList(R.string.serverButtonLabel, Icons.Filled.AccountBox, NavigationScreen.Servers),
     ComicList(
         R.string.comicsButtonLabel,
         Icons.AutoMirrored.Filled.List,
-        NavigationScreen.ComicList
+        NavigationScreen.ComicList,
     ),
-    Settings(R.string.settingsButtonLabel, Icons.Filled.Settings, NavigationScreen.Settings);
+    Settings(R.string.settingsButtonLabel, Icons.Filled.Settings, NavigationScreen.Settings),
+    ;
 
     companion object {
         val all = values()
