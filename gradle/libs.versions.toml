@@ -17,8 +17,9 @@ koin = "3.5.6"
 sqldelight-plugin = "2.0.2"
 ktor = "2.3.12"
 korio = "4.0.10"
-readium = "2.4.1"
+readium = "3.0.0-beta.2"
 kotlinter-plugin = "4.4.1"
+desugar-jdk = "2.0.4"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -48,6 +49,7 @@ korio = { group = "com.soywiz.korlibs.korio", name = "korio", version.ref = "kor
 readium-shared = { group = "org.readium.kotlin-toolkit", name = "readium-shared", version.ref = "readium" }
 readium-opds = { group = "org.readium.kotlin-toolkit", name = "readium-opds", version.ref = "readium" }
 readium-streamer = { group = "org.readium.kotlin-toolkit", name = "readium-streamer", version.ref = "readium" }
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk" }
 
 # koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }

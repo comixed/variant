@@ -13,6 +13,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        multiDexEnabled = true
     }
     buildFeatures {
         compose = true
@@ -31,6 +32,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -59,4 +61,6 @@ dependencies {
     androidTestImplementation(libs.bundles.instrumented.tests)
 
     debugImplementation(libs.bundles.compose.debug)
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

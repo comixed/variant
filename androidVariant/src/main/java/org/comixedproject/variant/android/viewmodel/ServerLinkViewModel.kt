@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.koin
 import org.comixedproject.variant.shared.data.ServerLinkRepository
@@ -71,17 +72,10 @@ class ServerLinkViewModel : ViewModel() {
             TAG,
             "Loading url: server=${server.name} url=$url reload=$reload",
         )
-        val credentials =
-            Base64.encodeToString(
-                "${server.username}:${server.password}".toByteArray(),
-                Base64.DEFAULT,
-            )
-        val headers = HashMap<String, String>()
-        headers.put("Authorization", "Basic $credentials")
         val httpClient =
             DefaultHttpClient(
                 userAgent = "CX-Variant",
-                additionalHeaders = headers,
+                callback = HttpCallback(server)
             )
         val parser = OPDS1Parser.parseUrlString(url, httpClient)
         val feed = parser.getOrNull()?.feed
@@ -97,8 +91,8 @@ class ServerLinkViewModel : ViewModel() {
                             server.serverId!!,
                             url,
                             "",
-                            link.title ?: link.href,
-                            link.href,
+                            link.title,
+                            link.href.toString(),
                             ServerLinkType.NAVIGATION,
                         ),
                     )
@@ -110,9 +104,9 @@ class ServerLinkViewModel : ViewModel() {
                 val link =
                     publication.links
                         .filter { link ->
-                            (link.type ?: "").startsWith("application/")
+                            (link.mediaType?.type ?: "").startsWith("application/")
                         }.firstOrNull()
-                        ?.href ?: ""
+                        ?.href.toString()
 
                 links.add(
                     ServerLink(
