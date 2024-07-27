@@ -63,7 +63,7 @@ fun HomeView(
     serverViewModel: ServerViewModel,
     linkList: List<ServerLink>,
     serverLinkViewModel: ServerLinkViewModel,
-    onSaveServer: (Long?, String, String, String, String) -> Unit
+    onSaveServer: (Long?, String, String, String, String) -> Unit,
 ) {
     val navController = rememberNavController()
 
@@ -71,36 +71,43 @@ fun HomeView(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu",
-                        modifier = Modifier.clickable { })
+                    Icon(
+                        imageVector = Icons.Filled.Menu,
+                        contentDescription = "Menu",
+                        modifier = Modifier.clickable { },
+                    )
                 },
                 title = {
                     var title = stringResource(id = R.string.appName)
                     Text(title)
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorScheme.primaryContainer,
-                    titleContentColor = colorScheme.primary
-                )
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = colorScheme.primaryContainer,
+                        titleContentColor = colorScheme.primary,
+                    ),
             )
         },
         bottomBar = {
-            BottomBarView(currentDestination = navController.currentBackStackEntryAsState().value?.destination,
-                onScreenChange = { route -> navController.navigate(route) })
+            BottomBarView(
+                currentDestination = navController.currentBackStackEntryAsState().value?.destination,
+                onScreenChange = { route -> navController.navigate(route) },
+            )
         },
     ) { padding ->
         Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .padding(padding)
+                    .fillMaxSize(),
         ) {
             NavHost(
                 modifier = Modifier,
                 navController = navController,
-                startDestination = NavigationScreen.Servers.route
+                startDestination = NavigationScreen.Servers.route,
             ) {
                 composable(
-                    route = NavigationScreen.Servers.route
+                    route = NavigationScreen.Servers.route,
                 ) {
                     ServerManagementView(
                         servers = serverList,
@@ -110,34 +117,37 @@ fun HomeView(
                             serverLinkViewModel.directory = server.url
                             navController.navigate("servers?serverId=${server.serverId}")
                         },
-                        onDeleteServer = { }
+                        onDeleteServer = { },
                     )
                 }
                 composable(
                     route = NavigationScreen.BrowseServer.route,
-                    arguments = NavigationScreen.BrowseServer.navArguments
+                    arguments = NavigationScreen.BrowseServer.navArguments,
                 ) { entry ->
                     val serverId = entry.arguments?.getLong(NAVARG_SERVER_ID)
-                    Logger.d(TAG, "serverId=${serverId} directory=${serverLinkViewModel.directory}")
+                    Logger.d(TAG, "serverId=$serverId directory=${serverLinkViewModel.directory}")
                     val currentServer =
                         serverList.firstOrNull { server -> server.serverId == serverId }
 
                     if (currentServer != null) {
                         BrowseServerView(
                             server = currentServer,
-                            serverLinks = linkList.filter { link -> link.serverId == currentServer.serverId }
-                                .filter { link -> link.directory == serverLinkViewModel.directory }
-                                .toList(),
+                            serverLinks =
+                                linkList
+                                    .filter { link -> link.serverId == currentServer.serverId }
+                                    .filter { link -> link.directory == serverLinkViewModel.directory }
+                                    .toList(),
                             serverLinkViewModel.directory,
                             onLoadDirectory = { target, selectedLink ->
                                 serverLinkViewModel.loadServerDirectory(
                                     target,
                                     selectedLink.href,
-                                    false
+                                    false,
                                 )
                                 serverLinkViewModel.directory = selectedLink.href
                                 navController.navigate("servers?serverId=${target.serverId}")
-                            })
+                            },
+                        )
                     }
                 }
                 composable(route = NavigationScreen.ComicList.route) {
@@ -161,12 +171,12 @@ fun HomeSPreview() {
                 Server(null, "Server 2", "", "", ""),
                 Server(null, "Server 3", "", "", ""),
                 Server(null, "Server 4", "", "", ""),
-                Server(null, "Server 5", "", "", "")
+                Server(null, "Server 5", "", "", ""),
             ),
             ServerViewModel(),
             emptyList(),
             ServerLinkViewModel(),
-            onSaveServer = { _, _, _, _, _ -> }
+            onSaveServer = { _, _, _, _, _ -> },
         )
     }
 }

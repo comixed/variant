@@ -23,8 +23,9 @@ import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import org.comixedproject.variant.VariantDb
 import org.koin.dsl.module
 
-actual val platformModule = module {
-    single<SqlDriver> {
-        AndroidSqliteDriver(VariantDb.Schema, get(), "VariantDb")
+actual val platformModule =
+    module {
+        single<SqlDriver> {
+            AndroidSqliteDriver(VariantDb.Schema, get(), "VariantDb")
+        }
     }
-}

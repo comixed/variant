@@ -38,25 +38,33 @@ private const val TAG = "FeedAPI"
 
 @ThreadLocal
 public object FeedAPI {
-    private val nonStrictJson = Json { isLenient = true; ignoreUnknownKeys = true }
+    private val nonStrictJson =
+        Json {
+            isLenient = true
+            ignoreUnknownKeys = true
+        }
 
-    public suspend fun loadDirectoryOnServer(server: Server, url: String): HttpResponse {
-        val client = HttpClient {
-            install(Logging) {
-                logger = HttpClientLogger
-                level = LogLevel.HEADERS
-            }
+    public suspend fun loadDirectoryOnServer(
+        server: Server,
+        url: String,
+    ): HttpResponse {
+        val client =
+            HttpClient {
+                install(Logging) {
+                    logger = HttpClientLogger
+                    level = LogLevel.HEADERS
+                }
 
-            install(Auth) {
-                basic {
-                    credentials {
-                        BasicAuthCredentials(username = server.username, password = server.password)
+                install(Auth) {
+                    basic {
+                        credentials {
+                            BasicAuthCredentials(username = server.username, password = server.password)
+                        }
                     }
                 }
             }
-        }
 
-        Logger.d(TAG, "Loading directory on server: url=${url.toString()}")
+        Logger.d(TAG, "Loading directory on server: url=$url")
         return client.get(url.toString()) {
             header(X_APP_NAME, APP_NAME)
             header("accept", "application/xml")

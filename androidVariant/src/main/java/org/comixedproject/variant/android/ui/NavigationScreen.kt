@@ -29,19 +29,24 @@ const val NAVARG_SERVER_ID = "serverId"
  *
  * @author Darryl L. Pierce
  */
-enum class NavigationScreen(val route: String, val navArguments: List<NamedNavArgument>) {
+enum class NavigationScreen(
+    val route: String,
+    val navArguments: List<NamedNavArgument>,
+) {
     ComicList("comics", emptyList()),
     Servers("servers", emptyList()),
     BrowseServer(
-        "servers?serverId={serverId}", listOf(
+        "servers?serverId={serverId}",
+        listOf(
             navArgument(NAVARG_SERVER_ID) {
                 type = NavType.LongType
-            }
-        )),
-    Settings("settings", emptyList());
+            },
+        ),
+    ),
+    Settings("settings", emptyList()),
+    ;
 
     companion object {
         val all = values()
     }
 }
-

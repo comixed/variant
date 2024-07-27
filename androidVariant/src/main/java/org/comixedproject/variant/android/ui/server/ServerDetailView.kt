@@ -39,13 +39,14 @@ fun ServerDetailView(server: Server) {
 fun ServerDetailPreview() {
     VariantTheme {
         ServerDetailView(
-            server = Server(
-                1L,
-                "Server 1",
-                "http://www.comixedproject.org:7171/opds",
-                "reader@comixedprojecvt.org",
-                "password"
-            )
+            server =
+                Server(
+                    1L,
+                    "Server 1",
+                    "http://www.comixedproject.org:7171/opds",
+                    "reader@comixedprojecvt.org",
+                    "password",
+                ),
         )
     }
 }

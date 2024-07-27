@@ -32,5 +32,5 @@ data class ServerLink(
     val identifier: String,
     val title: String? = null,
     val href: String,
-    val linkType: ServerLinkType
+    val linkType: ServerLinkType,
 )

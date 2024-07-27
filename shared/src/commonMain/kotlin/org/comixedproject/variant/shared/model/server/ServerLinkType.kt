@@ -25,5 +25,5 @@ package org.comixedproject.variant.shared.model.server
  */
 enum class ServerLinkType {
     NAVIGATION,
-    PUBLICATION
+    PUBLICATION,
 }

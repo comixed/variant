@@ -28,18 +28,18 @@ import org.comixedproject.variant.shared.data.ServerRepository
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Logger
 
+private val TAG = "ServerViewModel"
+
 /**
  * <code>ServerViewModel</code> provides a view model for the server list.
  *
  * @author Darryl L. Pierce
  */
-class ServerViewModel() : ViewModel() {
-    val TAG = "ServerViewModel"
-
+class ServerViewModel : ViewModel() {
     private val serverRespository: ServerRepository = koin.get()
     private val _serversFlow: MutableStateFlow<List<Server>> by lazy {
         MutableStateFlow(
-            serverRespository.servers
+            serverRespository.servers,
         )
     }
     val serverList = _serversFlow.asStateFlow()
@@ -49,7 +49,7 @@ class ServerViewModel() : ViewModel() {
         name: String,
         url: String,
         username: String,
-        password: String
+        password: String,
     ) {
         viewModelScope.launch {
             doCreateServer(serverId, name, url, username, password)
@@ -61,11 +61,11 @@ class ServerViewModel() : ViewModel() {
         name: String,
         url: String,
         username: String,
-        password: String
+        password: String,
     ) {
         Logger.d(
             TAG,
-            "Saving server: serverId=${serverId} name=${name} url=${url} username=${username} password=${password}"
+            "Saving server: serverId=$serverId name=$name url=$url username=$username password=$password",
         )
 
         val server = Server(serverId, name, url, username, password)

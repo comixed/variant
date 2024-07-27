@@ -33,52 +33,61 @@ import org.comixedproject.variant.shared.platform.Logger
 import org.readium.r2.opds.OPDS1Parser
 import org.readium.r2.shared.util.http.DefaultHttpClient
 
+private const val TAG = "LinkViewModel"
+
 /**
  * <code>ServerLinkViewModel</code> provides a view model for the links currently displayed for a server.
  *
  * @author Darryl L. Pierce
  */
 class ServerLinkViewModel : ViewModel() {
-    val TAG = "LinkViewModel"
-
     private val serverLinkRespository: ServerLinkRepository = koin.get()
 
     private val _displayLinksFlow: MutableStateFlow<List<ServerLink>> by lazy {
         MutableStateFlow(
-            serverLinkRespository.serverLinks
+            serverLinkRespository.serverLinks,
         )
     }
     val displayLinkList = _displayLinksFlow.asStateFlow()
 
     var directory: String = ""
 
-    fun loadServerDirectory(server: Server, url: String, reload: Boolean) {
+    fun loadServerDirectory(
+        server: Server,
+        url: String,
+        reload: Boolean,
+    ) {
         viewModelScope.launch {
             doLoadServerDirectory(server, url, reload)
         }
     }
 
-    suspend fun doLoadServerDirectory(server: Server, url: String, reload: Boolean) {
+    suspend fun doLoadServerDirectory(
+        server: Server,
+        url: String,
+        reload: Boolean,
+    ) {
         Logger.d(
             TAG,
-            "Loading url: server=${server.name} url=${url} reload=${reload}"
+            "Loading url: server=${server.name} url=$url reload=$reload",
         )
-        val credentials = Base64.encodeToString(
-            "${server.username}:${server.password}".toByteArray(),
-            Base64.DEFAULT
-        )
+        val credentials =
+            Base64.encodeToString(
+                "${server.username}:${server.password}".toByteArray(),
+                Base64.DEFAULT,
+            )
         val headers = HashMap<String, String>()
-        headers.put("Authorization", "Basic ${credentials}")
-        val httpClient = DefaultHttpClient(
-            userAgent = "CX-Variant",
-            additionalHeaders = headers
-        )
+        headers.put("Authorization", "Basic $credentials")
+        val httpClient =
+            DefaultHttpClient(
+                userAgent = "CX-Variant",
+                additionalHeaders = headers,
+            )
         val parser = OPDS1Parser.parseUrlString(url, httpClient)
         val feed = parser.getOrNull()?.feed
         if (feed == null) {
             Logger.d(TAG, "No feed elements retrieved")
         } else {
-
             val links: MutableList<ServerLink> = mutableListOf()
             if (!feed.navigation.isEmpty()) {
                 feed.navigation.forEach { link ->
@@ -90,17 +99,20 @@ class ServerLinkViewModel : ViewModel() {
                             "",
                             link.title ?: link.href,
                             link.href,
-                            ServerLinkType.NAVIGATION
-                        )
+                            ServerLinkType.NAVIGATION,
+                        ),
                     )
                 }
             }
             feed.publications.forEach { publication ->
                 val identifier = publication.metadata.identifier ?: ""
                 val title = publication.metadata.title
-                val link = publication.links.filter { link ->
-                    (link.type ?: "").startsWith("application/")
-                }.firstOrNull()?.href ?: ""
+                val link =
+                    publication.links
+                        .filter { link ->
+                            (link.type ?: "").startsWith("application/")
+                        }.firstOrNull()
+                        ?.href ?: ""
 
                 links.add(
                     ServerLink(
@@ -110,8 +122,8 @@ class ServerLinkViewModel : ViewModel() {
                         identifier,
                         title,
                         link,
-                        ServerLinkType.PUBLICATION
-                    )
+                        ServerLinkType.PUBLICATION,
+                    ),
                 )
             }
             serverLinkRespository.saveLinksForServer(server, url, links)

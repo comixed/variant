@@ -28,5 +28,5 @@ data class Server(
     val name: String,
     val url: String,
     val username: String,
-    val password: String
+    val password: String,
 )
