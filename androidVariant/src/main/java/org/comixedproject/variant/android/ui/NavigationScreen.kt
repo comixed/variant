@@ -18,10 +18,6 @@
 
 package org.comixedproject.variant.android.ui
 
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
-
 const val NAVARG_SERVER_ID = "serverId"
 
 /**
@@ -30,21 +26,12 @@ const val NAVARG_SERVER_ID = "serverId"
  * @author Darryl L. Pierce
  */
 enum class NavigationScreen(
-    val route: String,
-    val navArguments: List<NamedNavArgument>,
+    val route: String
 ) {
-    ComicList("comics", emptyList()),
-    Servers("servers", emptyList()),
-    BrowseServer(
-        "servers?serverId={serverId}",
-        listOf(
-            navArgument(NAVARG_SERVER_ID) {
-                type = NavType.LongType
-            },
-        ),
-    ),
-    Settings("settings", emptyList()),
-    ;
+    ComicList("comics"),
+    Servers("servers"),
+    BrowseServer("servers/browse"),
+    Settings("settings");
 
     companion object {
         val all = values()

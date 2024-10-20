@@ -50,13 +50,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     val serverList by serverViewModel.serverList.collectAsStateWithLifecycle()
-                    val linkList by serverLinkViewModel.displayLinkList.collectAsStateWithLifecycle()
+                    val linkList by serverLinkViewModel.serverLinkList.collectAsStateWithLifecycle()
 
                     HomeView(
                         serverList,
-                        serverViewModel,
+                        serverLinkViewModel.directory,
                         linkList,
-                        serverLinkViewModel,
                         onSaveServer = { serverId, name, url, username, password ->
                             serverViewModel.onSaveServer(
                                 serverId,
@@ -66,6 +65,10 @@ class MainActivity : ComponentActivity() {
                                 password,
                             )
                         },
+                        onServerLoadDirectory = { server, directory, reload ->
+                            serverLinkViewModel.directory = directory
+                            serverLinkViewModel.loadServerDirectory(server, directory, false)
+                        }
                     )
                 }
             }

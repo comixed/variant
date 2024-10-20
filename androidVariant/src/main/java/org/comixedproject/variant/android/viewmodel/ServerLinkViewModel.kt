@@ -18,7 +18,6 @@
 
 package org.comixedproject.variant.android.viewmodel
 
-import android.util.Base64
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,12 +42,12 @@ private const val TAG = "LinkViewModel"
 class ServerLinkViewModel : ViewModel() {
     private val serverLinkRespository: ServerLinkRepository = koin.get()
 
-    private val _displayLinksFlow: MutableStateFlow<List<ServerLink>> by lazy {
+    private val _serverLinkListFlow: MutableStateFlow<List<ServerLink>> by lazy {
         MutableStateFlow(
             serverLinkRespository.serverLinks,
         )
     }
-    val displayLinkList = _displayLinksFlow.asStateFlow()
+    val serverLinkList = _serverLinkListFlow.asStateFlow()
 
     var directory: String = ""
 
@@ -71,17 +70,10 @@ class ServerLinkViewModel : ViewModel() {
             TAG,
             "Loading url: server=${server.name} url=$url reload=$reload",
         )
-        val credentials =
-            Base64.encodeToString(
-                "${server.username}:${server.password}".toByteArray(),
-                Base64.DEFAULT,
-            )
-        val headers = HashMap<String, String>()
-        headers.put("Authorization", "Basic $credentials")
         val httpClient =
             DefaultHttpClient(
                 userAgent = "CX-Variant",
-                additionalHeaders = headers,
+                callback = HttpCallback(server)
             )
         val parser = OPDS1Parser.parseUrlString(url, httpClient)
         val feed = parser.getOrNull()?.feed
@@ -97,8 +89,8 @@ class ServerLinkViewModel : ViewModel() {
                             server.serverId!!,
                             url,
                             "",
-                            link.title ?: link.href,
-                            link.href,
+                            link.title,
+                            link.href.toString(),
                             ServerLinkType.NAVIGATION,
                         ),
                     )
@@ -110,9 +102,9 @@ class ServerLinkViewModel : ViewModel() {
                 val link =
                     publication.links
                         .filter { link ->
-                            (link.type ?: "").startsWith("application/")
+                            (link.mediaType?.type ?: "").startsWith("application/")
                         }.firstOrNull()
-                        ?.href ?: ""
+                        ?.href.toString()
 
                 links.add(
                     ServerLink(
@@ -128,7 +120,7 @@ class ServerLinkViewModel : ViewModel() {
             }
             serverLinkRespository.saveLinksForServer(server, url, links)
             viewModelScope.launch {
-                _displayLinksFlow.emit(links)
+                _serverLinkListFlow.emit(serverLinkRespository.serverLinks)
             }
         }
     }
