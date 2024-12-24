@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.comixedproject.variant.android.ui.HomeView
+import org.comixedproject.variant.android.viewmodel.PublicationViewModel
 import org.comixedproject.variant.android.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.android.viewmodel.ServerViewModel
 
@@ -40,6 +41,7 @@ import org.comixedproject.variant.android.viewmodel.ServerViewModel
 class MainActivity : ComponentActivity() {
     private val serverViewModel: ServerViewModel by viewModels()
     private val serverLinkViewModel: ServerLinkViewModel by viewModels()
+    private val publicationViewModel: PublicationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,12 +71,16 @@ class MainActivity : ComponentActivity() {
                             serverLinkViewModel.loadServerDirectory(server, directory, false)
                         },
                         onDownloadLink = { server, link ->
-                            serverLinkViewModel.downloadPublication(
+                            publicationViewModel.downloadPublication(
                                 server,
-                                link.downloadLink,
+                                link,
                                 !link.downloaded
                             )
-                        }
+                        },
+                        onStreamLink = { server, link ->
+                            publicationViewModel.streamPublication(server, link)
+                        },
+                        onOpenLink = { _, _ -> }
                     )
                 }
             }

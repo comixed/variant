@@ -95,4 +95,8 @@ class DatabaseHelper(
             )
         }
     }
+
+    fun setStoredFilename(filename: String, serverLink: ServerLink) {
+        database.tableQueries.setStoredFilename(filename, serverLink.serverLinkId!!)
+    }
 }

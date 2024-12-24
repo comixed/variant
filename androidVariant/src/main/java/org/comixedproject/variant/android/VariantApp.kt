@@ -20,6 +20,7 @@ package org.comixedproject.variant.android
 
 import android.app.Application
 import android.content.Context
+import org.comixedproject.variant.shared.VariantAppContext
 import org.comixedproject.variant.shared.initKoin
 import org.koin.core.Koin
 import org.koin.dsl.module
@@ -34,8 +35,7 @@ lateinit var koin: Koin
 class VariantApp : Application() {
     override fun onCreate() {
         super.onCreate()
-
-        VariantApp.appContext = applicationContext
+        VariantAppContext.setUp(applicationContext)
 
         koin =
             initKoin(
@@ -45,9 +45,5 @@ class VariantApp : Application() {
                 },
                 viewModelsModule = module { },
             ).koin
-    }
-
-    companion object {
-        lateinit var appContext: Context
     }
 }

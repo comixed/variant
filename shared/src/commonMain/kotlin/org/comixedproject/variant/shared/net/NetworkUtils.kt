@@ -16,8 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared
+package org.comixedproject.variant.shared.net
 
-public const val X_APP_NAME = "X-App-Name"
-public const val APP_NAME = "Variant"
-public const val VARIANT_USER_AGENT = "CX-Variant"
+import korlibs.crypto.encoding.Base64
+import korlibs.io.lang.toByteArray
+
+/**
+ * Encodes the provided username and password for use in basic authorization headers.
+ *
+ * @param username the username
+ * @param password the password
+ * @return the encoded credentials
+ */
+fun encodeCredentials(username: String, password: String): String {
+    return Base64.encode("${username}:${password}".toByteArray())
+}

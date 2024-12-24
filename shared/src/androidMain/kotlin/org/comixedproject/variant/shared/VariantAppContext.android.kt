@@ -18,6 +18,18 @@
 
 package org.comixedproject.variant.shared
 
-public const val X_APP_NAME = "X-App-Name"
-public const val APP_NAME = "Variant"
-public const val VARIANT_USER_AGENT = "CX-Variant"
+import android.app.Application
+import android.content.Context
+
+actual object VariantAppContext {
+    private lateinit var application: Application
+
+    fun setUp(context: Context) {
+        application = context as Application
+    }
+
+    fun get(): Context {
+        if (::application.isInitialized.not()) throw Exception("Application context is not initialized")
+        return application.applicationContext
+    }
+}
