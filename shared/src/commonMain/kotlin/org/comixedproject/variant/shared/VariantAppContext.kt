@@ -18,6 +18,4 @@
 
 package org.comixedproject.variant.shared
 
-public const val X_APP_NAME = "X-App-Name"
-public const val APP_NAME = "Variant"
-public const val VARIANT_USER_AGENT = "CX-Variant"
+expect object VariantAppContext

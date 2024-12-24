@@ -23,20 +23,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.comixedproject.variant.android.VariantApp
 import org.comixedproject.variant.android.koin
+import org.comixedproject.variant.android.net.createOpdsHttpClient
 import org.comixedproject.variant.shared.data.ServerLinkRepository
-import org.comixedproject.variant.shared.manager.FileContentManager
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
 import org.comixedproject.variant.shared.platform.Logger
 import org.readium.r2.opds.OPDS1Parser
-import org.readium.r2.shared.util.AbsoluteUrl
-import org.readium.r2.shared.util.asset.AssetRetriever
-import org.readium.r2.shared.util.format.FormatHints
-import org.readium.r2.shared.util.http.DefaultHttpClient
-import org.readium.r2.shared.util.http.HttpClient
 
 private const val TAG = "LinkViewModel"
 
@@ -47,7 +41,6 @@ private const val TAG = "LinkViewModel"
  */
 class ServerLinkViewModel : ViewModel() {
     private val serverLinkRepository: ServerLinkRepository = koin.get()
-    private val fileContentManager: FileContentManager = koin.get()
 
     private val _serverLinkListFlow: MutableStateFlow<List<ServerLink>> by lazy {
         MutableStateFlow(
@@ -58,17 +51,6 @@ class ServerLinkViewModel : ViewModel() {
 
     var directory: String = ""
 
-    /**
-     * Retrieves the contents for a directory on a server.
-     *
-     * If the contents are found locally and the reload flag is false, then no data is retrieved.
-     *
-     * If the contents are not found locally, or if the reload flag is set, then the contents are fetched from the server.
-     *
-     * @param server the server
-     * @param url the directory
-     * @param reload
-     */
     fun loadServerDirectory(
         server: Server,
         url: String,
@@ -100,7 +82,7 @@ class ServerLinkViewModel : ViewModel() {
                 TAG,
                 "Loading url: server=${server.name} url=$url reload=$reload",
             )
-            val httpClient = doCreateHttpClient(server)
+            val httpClient = createOpdsHttpClient(server)
             val parser = OPDS1Parser.parseUrlString(url, httpClient)
             val feed = parser.getOrNull()?.feed
             if (feed == null) {
@@ -159,66 +141,6 @@ class ServerLinkViewModel : ViewModel() {
             viewModelScope.launch {
                 _serverLinkListFlow.emit(serverLinkRepository.serverLinks)
             }
-        }
-    }
-
-    private fun doCreateHttpClient(server: Server): HttpClient =
-        DefaultHttpClient(
-            userAgent = "CX-Variant",
-            callback = HttpCallback(server)
-        )
-
-    /**
-     * Retrieves a publication from a server.
-     *
-     * If the publication is already downloaded and the reload flag is false, then no data is retrieved.
-     *
-     * If the publication is not already downloaded, or if the reload flag is set, then the publication is fetched from the server.
-     *
-     * @param server the server
-     * @param url the directory
-     * @param reload
-     */
-    fun downloadPublication(server: Server, url: String, reload: Boolean) {
-        Logger.d(
-            TAG,
-            "Loading publication: reload=${reload} publication: server=${server.name} url=${url}"
-        )
-
-        viewModelScope.launch {
-            doDownloadPublication(server, url, reload)
-        }
-    }
-
-    suspend fun doDownloadPublication(server: Server, url: String, reload: Boolean) {
-        if (!reload) {
-            Logger.d(TAG, "Skipping download: content found locally")
-        } else {
-            Logger.d(TAG, "Fetching content")
-            val httpClient = doCreateHttpClient(server)
-            val assetRetriever = AssetRetriever(
-                contentResolver = VariantApp.appContext.contentResolver,
-                httpClient = httpClient
-            )
-            val absoluteUrl = AbsoluteUrl(url)
-            Logger.d(TAG, "Retrieving asset: ${absoluteUrl}")
-
-            val asset = assetRetriever.retrieve(
-                absoluteUrl!!,
-                FormatHints(
-                    listOf(
-                        "application/vnd.comicbook+zip",
-                        "application/vnd.comicbook+rar",
-                        "application/vnd.comicbook+octet-stream",
-                    ), listOf("CBZ", "CBR", "CB7", "cbz", "cbr", "cb7")
-                )
-            )
-                .onSuccess { thing ->
-                    Logger.d(TAG, "Got my thing! ${thing}")
-                }
-                .onFailure { error ->
-                    Logger.e(TAG, "Failed to open comic book: ${error}")
-                }
         }
     }
 }

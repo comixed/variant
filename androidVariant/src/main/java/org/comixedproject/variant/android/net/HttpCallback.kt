@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.viewmodel
+package org.comixedproject.variant.android.net
 
-import android.util.Base64
 import org.comixedproject.variant.shared.model.server.Server
+import org.comixedproject.variant.shared.net.encodeCredentials
 import org.readium.r2.shared.util.Try
 import org.readium.r2.shared.util.http.DefaultHttpClient
 import org.readium.r2.shared.util.http.HttpError
@@ -35,11 +35,7 @@ import org.readium.r2.shared.util.http.HttpTry
 class HttpCallback(val server: Server) :
     DefaultHttpClient.Callback {
     override suspend fun onStartRequest(request: HttpRequest): HttpTry<HttpRequest> {
-        val credentials =
-            Base64.encodeToString(
-                "${server.username}:${server.password}".toByteArray(),
-                Base64.DEFAULT,
-            )
+        val credentials = encodeCredentials(server.username, server.password)
         val builder = request.buildUpon()
         builder.addHeader("Authorization", "Basic $credentials")
         return Try.success(builder.build())

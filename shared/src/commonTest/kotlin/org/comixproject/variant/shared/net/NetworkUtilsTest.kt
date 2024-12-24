@@ -16,8 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared
+package org.comixproject.variant.shared.net
 
-public const val X_APP_NAME = "X-App-Name"
-public const val APP_NAME = "Variant"
-public const val VARIANT_USER_AGENT = "CX-Variant"
+import org.comixedproject.variant.shared.net.encodeCredentials
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class NetworkUtilsTest {
+    companion object {
+        val username = "reader@comixedproject.org"
+        val password = "mY!p455w0Rd!"
+        val encodedPassword = "cmVhZGVyQGNvbWl4ZWRwcm9qZWN0Lm9yZzptWSFwNDU1dzBSZCE="
+    }
+
+    @Test
+    fun testEncodeCredentials() {
+        var result = encodeCredentials(username, password);
+
+        assertEquals(encodedPassword, result)
+    }
+}

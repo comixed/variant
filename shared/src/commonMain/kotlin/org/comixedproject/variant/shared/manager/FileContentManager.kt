@@ -1,6 +1,7 @@
 package org.comixedproject.variant.shared.manager
 
 import org.comixedproject.variant.shared.model.server.Server
+import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.platform.Logger
 
 private const val TAG = "FileContentManager"
@@ -12,14 +13,32 @@ private const val TAG = "FileContentManager"
  */
 class FileContentManager {
     /**
+     * Checks if the server link has already been downloaded.
+     *
+     * @param server the server
+     * @param serverLink the server link
+     */
+    fun contentFound(server: Server, serverLink: ServerLink): Boolean {
+        Logger.d(
+            TAG,
+            "Looking for content: server=${server.name} serverLink=${serverLink.serverLinkId}"
+        )
+        return doContentFound(server, createServerLinkFilename(serverLink))
+    }
+
+    private fun createServerLinkFilename(serverLink: ServerLink): String {
+        return "serverLink-${serverLink.serverLinkId!!}"
+    }
+
+    /**
      * Checks if the content has already been downloaded.
      *
      * @param server the server
-     * @param url the content url
+     * @param filename the filename
      */
-    fun contentFound(server: Server, url: String): Boolean {
-        Logger.d(TAG, "Looking for content: server=${server.name} url=${url}")
-        return doContentFound(server, url)
+    fun contentFound(server: Server, filename: String): Boolean {
+        Logger.d(TAG, "Looking for content: server=${server.name} filename=${filename}")
+        return doContentFound(server, filename)
     }
 
     /**
@@ -28,10 +47,14 @@ class FileContentManager {
      * @param server the server
      * @param url the content url
      * @param content the content
+     * @return the filename
      */
-    fun storeContent(server: Server, url: String, content: ByteArray) {
-        Logger.d(TAG, "Storing file content: server=${server.name} url=${url} size=${content.size}")
-        doStoreContent(server, url, content)
+    fun storeContent(server: Server, serverLink: ServerLink, content: ByteArray): String {
+        Logger.d(
+            TAG,
+            "Storing file content: server=${server.name} serverLink=${serverLink.serverLinkId} size=${content.size}"
+        )
+        return doStoreContent(server, "serverLink-${serverLink.serverLinkId!!}", content)
     }
 
     /**
@@ -56,10 +79,10 @@ class FileContentManager {
     }
 }
 
-expect fun doContentFound(server: Server, url: String): Boolean;
+expect fun doContentFound(server: Server, filename: String): Boolean
 
-expect fun doStoreContent(server: Server, url: String, content: ByteArray)
+expect fun doStoreContent(server: Server, filename: String, content: ByteArray): String
 
-expect fun doFetchContent(server: Server, url: String): ByteArray
+expect fun doFetchContent(server: Server, filename: String): ByteArray
 
 expect fun doPurgeContent(server: Server)

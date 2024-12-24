@@ -64,7 +64,9 @@ fun HomeView(
     linkList: List<ServerLink>,
     onSaveServer: (Long?, String, String, String, String) -> Unit,
     onServerLoadDirectory: (Server, String, Boolean) -> Unit,
-    onDownloadLink: (Server, ServerLink) -> Unit
+    onDownloadLink: (Server, ServerLink) -> Unit,
+    onStreamLink: (Server, ServerLink) -> Unit,
+    onOpenLink: (Server, ServerLink) -> Unit
 ) {
     val navController = rememberNavController()
 
@@ -177,9 +179,10 @@ fun HomeView(
                             server,
                             title = targetLink?.title ?: "",
                             coverUrl = targetLink?.coverUrl ?: "",
-                            showDownload = true,
+                            showOpen = true,
                             onDownloadEntry = { onDownloadLink(server, targetLink!!) },
-                            onOpenEntry = { })
+                            onStreamEntry = { onStreamLink(server, targetLink!!) },
+                            onOpenEntry = { onOpenLink(server, targetLink!!) })
                     }
                 }
                 composable(route = NavigationScreen.ComicList.route) {
@@ -202,7 +205,9 @@ fun HomePreview() {
             emptyList(),
             onSaveServer = { _, _, _, _, _ -> },
             onServerLoadDirectory = { _, _, _ -> },
-            onDownloadLink = { _, _ -> }
+            onDownloadLink = { _, _ -> },
+            onStreamLink = { _, _ -> },
+            onOpenLink = { _, _ -> }
         )
     }
 }

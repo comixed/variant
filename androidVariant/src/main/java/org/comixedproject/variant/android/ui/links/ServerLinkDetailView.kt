@@ -47,8 +47,9 @@ fun ServerLinkDetailView(
     server: Server,
     title: String,
     coverUrl: String,
-    showDownload: Boolean,
+    showOpen: Boolean,
     onDownloadEntry: () -> Unit,
+    onStreamEntry: () -> Unit,
     onOpenEntry: () -> Unit
 ) {
     Column(
@@ -63,11 +64,15 @@ fun ServerLinkDetailView(
             style = MaterialTheme.typography.titleLarge
         );
 
-        if (showDownload) {
-            Button(onClick = onDownloadEntry) {
-                Text("Download")
-            }
-        } else {
+        Button(onClick = onDownloadEntry) {
+            Text("Download")
+        }
+
+        Button(onClick = onStreamEntry) {
+            Text("Stream")
+        }
+
+        if (showOpen) {
             Button(onClick = onOpenEntry) {
                 Text("Open")
             }
@@ -107,7 +112,13 @@ fun ServerLinkDetail_withDownload_Preview() {
                 "http://server1.org:7171/opds",
                 "admin@comixedproject.org",
                 "p455w0rD"
-            ), "The Title", "The cover URL", true, onDownloadEntry = {}, onOpenEntry = {})
+            ),
+            "The Title",
+            "The cover URL",
+            true,
+            onDownloadEntry = {},
+            onStreamEntry = {},
+            onOpenEntry = {})
     }
 }
 
@@ -122,6 +133,12 @@ fun ServerLinkDetail_withOpen_Preview() {
                 "http://server1.org:7171/opds",
                 "admin@comixedproject.org",
                 "p455w0rD"
-            ), "The Title", "The cover URL", false, onDownloadEntry = {}, onOpenEntry = {})
+            ),
+            "The Title",
+            "The cover URL",
+            false,
+            onDownloadEntry = {},
+            onStreamEntry = {},
+            onOpenEntry = {})
     }
 }

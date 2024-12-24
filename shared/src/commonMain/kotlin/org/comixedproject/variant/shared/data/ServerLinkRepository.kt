@@ -51,6 +51,10 @@ class ServerLinkRepository(
     ) {
         databaseHelper.saveLinksForServer(server, directory, serverLinks)
     }
+
+    fun setStoredFilename(filename: String, serverLink: ServerLink) {
+        databaseHelper.setStoredFilename(filename, serverLink)
+    }
 }
 
 fun ServerLinksDb.map() =

@@ -32,11 +32,15 @@ CREATE TABLE ServerLinksDb (
   coverUrl TEXT NOT NULL,
   downloadLink TEXT NOT NULL,
   title TEXT NOT NULL,
+  storedFilename TEXT,
   FOREIGN KEY(serverId) REFERENCES ServersDb(serverId)
 );
 
 createLink:
 INSERT OR IGNORE INTO ServerLinksDb(serverId, directory, identifier, title, coverUrl, downloadLink, linkType) VALUES(?, ?,?, ?, ?, ?, ?);
+
+setStoredFilename:
+UPDATE ServerLinksDb SET storedFilename = ? WHERE serverLinkId = ?;
 
 deleteExistingLink:
 DELETE FROM ServerLinksDb WHERE serverLinkId = ?;
