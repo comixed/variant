@@ -1,6 +1,6 @@
 /*
  * Variant - A digital comic book reading application for the iPad and Android tablets.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.ui.server
+package org.comixedproject.variant.android.viewmodel
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.ui.SERVER_LIST
-import org.comixedproject.variant.shared.model.server.Server
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
-/**
- * <code>ServerDetailView</code> composes a view showing the details for a single server.
- *
- * @author Darryl L. Pierce
- */
-@Composable
-fun ServerDetailView(server: Server) {
-    Text(server.name)
-}
+class SplashScreenViewModel : ViewModel() {
+    private val splashShowFlow = MutableStateFlow(true)
+    val isSplashShow = splashShowFlow.asStateFlow()
 
-@Preview
-@Composable
-fun ServerDetailPreview() {
-    VariantTheme {
-        ServerDetailView(
-            SERVER_LIST.get(0)
-        )
+    init {
+        viewModelScope.launch {
+            delay(5000)
+            splashShowFlow.value = false
+        }
     }
 }

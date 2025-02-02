@@ -18,20 +18,25 @@
 
 package org.comixedproject.variant.android
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.animation.OvershootInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.animation.doOnEnd
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.comixedproject.variant.android.ui.HomeView
 import org.comixedproject.variant.android.viewmodel.PublicationViewModel
 import org.comixedproject.variant.android.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.android.viewmodel.ServerViewModel
+import org.comixedproject.variant.android.viewmodel.SplashScreenViewModel
 
 /**
  * <code>MainActivity</code> is the main class for the Android implementation of Variant.
@@ -42,8 +47,15 @@ class MainActivity : ComponentActivity() {
     private val serverViewModel: ServerViewModel by viewModels()
     private val serverLinkViewModel: ServerLinkViewModel by viewModels()
     private val publicationViewModel: PublicationViewModel by viewModels()
+    private val splashViewModel: SplashScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen().apply {
+            this.setKeepOnScreenCondition {
+                splashViewModel.isSplashShow.value
+            }
+        }
+
         super.onCreate(savedInstanceState)
         setContent {
             VariantTheme {
@@ -54,34 +66,7 @@ class MainActivity : ComponentActivity() {
                     val serverList by serverViewModel.serverList.collectAsStateWithLifecycle()
                     val linkList by serverLinkViewModel.serverLinkList.collectAsStateWithLifecycle()
 
-                    HomeView(
-                        serverList,
-                        linkList,
-                        onSaveServer = { serverId, name, url, username, password ->
-                            serverViewModel.onSaveServer(
-                                serverId,
-                                name,
-                                url,
-                                username,
-                                password,
-                            )
-                        },
-                        onServerLoadDirectory = { server, directory, reload ->
-                            serverLinkViewModel.directory = directory
-                            serverLinkViewModel.loadServerDirectory(server, directory, false)
-                        },
-                        onDownloadLink = { server, link ->
-                            publicationViewModel.downloadPublication(
-                                server,
-                                link,
-                                !link.downloaded
-                            )
-                        },
-                        onStreamLink = { server, link ->
-                            publicationViewModel.streamPublication(server, link)
-                        },
-                        onOpenLink = { _, _ -> }
-                    )
+                    Text("ComiXed Variant!")
                 }
             }
         }
