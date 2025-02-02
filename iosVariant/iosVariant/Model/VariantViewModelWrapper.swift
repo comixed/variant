@@ -22,17 +22,4 @@ import Variant
 @available(iOS 17.0, *)
 @Observable
 final class VariantViewModelWrapper {
-  let viewModel: VariantViewModel = Koin.instance.get()
-
-  private(set) var servers: [Server] = []
-  private(set) var server: Server? = nil
-  private(set) var directory: String = ""
-  private(set) var displayLinks: [AcquisitionLink] = []
-  private(set) var allLinks: [AcquisitionLink] = []
-
-  init() {
-    viewModel.onServerListUpdated = { [weak self] servers in self?.servers = servers }
-    viewModel.onDisplayLinksUpdated = { [weak self] links in self?.displayLinks = links }
-    viewModel.onAllLinksUpdated = { [weak self] links in self?.allLinks = links }
-  }
 }

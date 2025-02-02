@@ -19,56 +19,8 @@
 import SwiftUI
 import Variant
 
-@available(iOS 17.0, *)
 struct HomeView: View {
-  var servers: [Server]
-  var directory: String
-  var links: [AcquisitionLink]
-
-  var onSaveServer: (Server) -> Void
-  var onDeleteServer: (Server) -> Void
-
-  var body: some View {
-    TabView {
-      ServerManagementView(
-        servers: servers,
-        directory: directory,
-        links: links,
-        onBrowseServer: { _ in },
-        onSaveServer: { server in onSaveServer(server) },
-        onDeleteServer: { server in onDeleteServer(server) }
-      )
-      .tabItem {
-        Label("Servers", systemImage: "person")
-      }
-
-      Text("Comics")
-        .tabItem {
-          Label("Comics", systemImage: "list.bullet")
-        }
-
-      Text("Settings")
-        .tabItem {
-          Label("Settings", systemImage: "gear")
-        }
+    var body: some View {
+        Text("ComiXed Variant!")
     }
-  }
-}
-
-@available(iOS 17.0, *)#Preview{
-  HomeView(
-    servers: [
-      Server(
-        id: "1",
-        name: "My Server",
-        url: "http://www.comixedproject.org:7171/opds",
-        username: "reader@comixedproject.org",
-        password: "my!password"
-      )
-    ],
-    directory: "",
-    links: [],
-    onSaveServer: { _ in },
-    onDeleteServer: { _ in }
-  )
 }

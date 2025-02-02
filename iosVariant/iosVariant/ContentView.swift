@@ -24,12 +24,6 @@ struct ContentView: View {
   @State private var viewModelWrapper = VariantViewModelWrapper()
 
   var body: some View {
-    HomeView(
-      servers: viewModelWrapper.servers,
-      directory: viewModelWrapper.directory,
-      links: viewModelWrapper.displayLinks,
-      onSaveServer: { server in viewModelWrapper.viewModel.saveServer(server: server) },
-      onDeleteServer: { server in viewModelWrapper.viewModel.deleteServer(server: server) }
-    )
+    HomeView()
   }
 }
