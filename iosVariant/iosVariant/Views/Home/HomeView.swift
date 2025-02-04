@@ -20,7 +20,18 @@ import SwiftUI
 import Variant
 
 struct HomeView: View {
-    var body: some View {
-        Text("ComiXed Variant!")
+  @State var selectedItem: String?
+
+  var body: some View {
+    NavigationSplitView {
+      List(NavigationTarget.items, id: \.label, selection: $selectedItem) { target in
+        Text(target.label)
+          .onTapGesture {
+            selectedItem = target.label
+          }
+      }
+    } detail: {
+      Text("\(selectedItem ?? "No selection")")
     }
+  }
 }
