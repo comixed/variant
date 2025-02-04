@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.comixedproject.variant.android.ui.home.HomeView
 import org.comixedproject.variant.android.viewmodel.PublicationViewModel
 import org.comixedproject.variant.android.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.android.viewmodel.ServerViewModel
@@ -57,6 +58,7 @@ class MainActivity : ComponentActivity() {
         }
 
         super.onCreate(savedInstanceState)
+
         setContent {
             VariantTheme {
                 Surface(
@@ -66,7 +68,7 @@ class MainActivity : ComponentActivity() {
                     val serverList by serverViewModel.serverList.collectAsStateWithLifecycle()
                     val linkList by serverLinkViewModel.serverLinkList.collectAsStateWithLifecycle()
 
-                    Text("ComiXed Variant!")
+                    HomeView()
                 }
             }
         }
