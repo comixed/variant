@@ -25,7 +25,7 @@ struct HomeView: View {
   var body: some View {
     NavigationSplitView {
       List(NavigationTarget.items, id: \.label, selection: $selectedItem) { target in
-        Text(target.label)
+        Label(target.label, systemImage: target.icon)
           .onTapGesture {
             selectedItem = target.label
           }
@@ -34,4 +34,8 @@ struct HomeView: View {
       Text("\(selectedItem ?? "No selection")")
     }
   }
+}
+
+#Preview {
+  HomeView()
 }

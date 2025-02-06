@@ -20,14 +20,16 @@ import Foundation
 
 class NavigationTarget {
   var label: String
+  var icon: String
 
-  init(label: String) {
+  init(label: String, icon: String) {
     self.label = label
+    self.icon = icon
   }
 
   static let items = [
-    NavigationTarget(label: "Servers"),
-    NavigationTarget(label: "Comics"),
-    NavigationTarget(label: "Settings"),
+    NavigationTarget(label: "Comics", icon: "book.circle"),
+    NavigationTarget(label: "Servers", icon: "person.crop.circle"),
+    NavigationTarget(label: "Settings", icon: "gear"),
   ]
 }

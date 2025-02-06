@@ -20,9 +20,9 @@ package org.comixedproject.variant.android.model
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountBox
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.comixedproject.variant.android.R
 
@@ -31,7 +31,7 @@ enum class NavigationTarget(
     val icon: ImageVector,
     @StringRes val contentDescription: Int
 ) {
-    SERVERS(R.string.serverButtonLabel, Icons.Outlined.AccountBox, R.string.serverButtonLabel),
-    COMICS(R.string.comicsButtonLabel, Icons.Outlined.Home, R.string.comicsButtonLabel),
-    SETTINGS(R.string.settingsButtonLabel, Icons.Outlined.Settings, R.string.settingsButtonLabel)
+    COMICS(R.string.comicsButtonLabel, Icons.Rounded.Home, R.string.comicsButtonLabel),
+    SERVERS(R.string.serverButtonLabel, Icons.Rounded.AccountCircle, R.string.serverButtonLabel),
+    SETTINGS(R.string.settingsButtonLabel, Icons.Rounded.Settings, R.string.settingsButtonLabel)
 }
