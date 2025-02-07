@@ -20,21 +20,42 @@ import SwiftUI
 import Variant
 
 struct ServerListView: View {
+  @State var selected: Server?
   let servers: [Server]
-  let currentServer: Server?
 
-  var onServerSelected: (Server?) -> Void
+  var onEditServer: (Server) -> Void
+  var onDeleteServer: (Server) -> Void
+  var onBrowseServer: (Server) -> Void
 
   var body: some View {
-    List(servers, id: \.serverId) { server in
+    List(servers, id: \.serverId, selection: $selected) { server in
       ServerDetailView(
-        server: server, selected: server.serverId == currentServer?.serverId,
-        onServerSelected: { selection in onServerSelected(selection) }
-      )
+        server: server
+      ).swipeActions(edge: .leading, allowsFullSwipe: false) {
+        Button {
+
+        } label: {
+          Label("Delete", systemImage: "trash.fill")
+        }
+        .tint(.red)
+      }
+      .swipeActions(edge: .trailing) {
+        Button {
+          onEditServer(server)
+        } label: {
+          Label("Edit", systemImage: "pencil")
+        }
+        .tint(.green)
+      }
     }
   }
 }
 
 #Preview {
-  ServerListView(servers: SERVER_LIST, currentServer: SERVER_LIST[0], onServerSelected: { _ in })
+  ServerListView(
+    servers: SERVER_LIST,
+    onEditServer: { _ in },
+    onDeleteServer: { _ in },
+    onBrowseServer: { _ in }
+  )
 }

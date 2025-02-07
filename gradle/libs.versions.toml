@@ -31,6 +31,7 @@ androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtim
 lifecycle-viewmodel-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-android", version.ref = "lifecycle-runtime-ktx" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive", version.ref = "adaptive-layout-android" }
 androidx-adaptive-layout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout", version.ref = "adaptive-layout-android" }
 androidx-adaptive-layout-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout-android", version.ref = "adaptive-layout-android" }
@@ -53,7 +54,7 @@ readium-streamer = { group = "org.readium.kotlin-toolkit", name = "readium-strea
 readium-navigator = { group = "org.readium.kotlin-toolkit", name = "readium-navigator", version.ref = "readium" }
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk" }
 coil-compose-android = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-android-splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.1"}
+android-splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.1" }
 
 # koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
@@ -88,7 +89,7 @@ kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter-plugin" }
 
 [bundles]
 androidx = ["androidx-activity-compose", "androidx-core-ktx", "androidx-lifecycle-runtime-compose", "androidx-lifecycle-runtime-ktx", "koin-android", "koin-androidx-compose", "android-splashscreen"]
-compose = ["androidx-compose-material3", "androidx-compose-ui-ui-graphics", "androidx-compose-ui-ui", "androidx-compose-ui-ui-tooling-preview", "androidx-adaptive", "androidx-adaptive-layout", "androidx-adaptive-navigation", "androidx-adaptive-navigation-suite-android", "androidx-navigation-compose"]
+compose = ["androidx-compose-material3", "androidx-foundation", "androidx-compose-ui-ui-graphics", "androidx-compose-ui-ui", "androidx-compose-ui-ui-tooling-preview", "androidx-adaptive", "androidx-adaptive-layout", "androidx-adaptive-navigation", "androidx-adaptive-navigation-suite-android", "androidx-navigation-compose"]
 compose-debug = ["androidx-compose-ui-ui-tooling", "androidx-compose-ui-ui-test-manifest"]
 instrumented-tests = ["androidx-junit", "androidx-espresso-core", "androidx-compose-ui-ui-test-junit4"]
 unit-tests = ["junit"]

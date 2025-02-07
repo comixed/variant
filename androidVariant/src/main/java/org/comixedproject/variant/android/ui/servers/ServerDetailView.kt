@@ -18,29 +18,31 @@
 
 package org.comixedproject.variant.android.ui.servers
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 
 @Composable
-fun ServerView(
-    serverList: List<Server>,
-    currentServer: Server?,
-    onSetCurrentServer: (Server?) -> Unit
-) {
-    ServerListView(serverList, currentServer, onSelectServer = onSetCurrentServer)
+fun ServerDetailView(server: Server) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(server.name, style = MaterialTheme.typography.titleLarge)
+        Text(server.url, style = MaterialTheme.typography.titleMedium)
+        Text(server.username, style = MaterialTheme.typography.bodyMedium)
+    }
 }
+
 
 @Composable
 @Preview
-fun ServerPreview_noSelection() {
-    VariantTheme { ServerView(SERVER_LIST, null, onSetCurrentServer = { _ -> }) }
-}
-
-@Composable
-@Preview
-fun ServerPreview_withSelection() {
-    VariantTheme { ServerView(SERVER_LIST, SERVER_LIST.get(0), onSetCurrentServer = { _ -> }) }
+fun ServerDetailPreview() {
+    VariantTheme {
+        ServerDetailView(SERVER_LIST.get(0))
+    }
 }

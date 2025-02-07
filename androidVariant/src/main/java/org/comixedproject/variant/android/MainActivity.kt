@@ -34,7 +34,6 @@ import org.comixedproject.variant.android.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.android.viewmodel.ServerViewModel
 import org.comixedproject.variant.android.viewmodel.SplashScreenViewModel
 import org.comixedproject.variant.android.viewmodel.VariantViewModel
-import org.comixedproject.variant.shared.platform.Logger
 
 private const val TAG = "MainActivity"
 
@@ -66,12 +65,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     HomeView(
-                        variantViewModel.serverList.collectAsState().value,
-                        variantViewModel.currentServer.collectAsState().value,
-                        onSetCurrentServer = { server ->
-                            Logger.d(TAG, "Server selected: ${server?.name ?: "Nil"}")
-                            variantViewModel.setCurrentServer(server)
-                        }
+                        variantViewModel.serverList.collectAsState().value
                     )
                 }
             }

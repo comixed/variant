@@ -21,21 +21,17 @@ import Variant
 
 struct ServersView: View {
   let servers: [Server]
-  let currentServer: Server?
-
-  var onServerSelected: (Server?) -> Void
 
   var body: some View {
-    if currentServer == nil {
-      ServerListView(
-        servers: servers, currentServer: currentServer, onServerSelected: onServerSelected)
-    } else {
-      ServerDetailView(
-        server: currentServer!, selected: false, onServerSelected: { _ in onServerSelected(nil) })
-    }
+    ServerListView(
+      servers: servers,
+      onEditServer: { _ in },
+      onDeleteServer: { _ in },
+      onBrowseServer: { _ in }
+    )
   }
 }
 
 #Preview {
-  ServersView(servers: SERVER_LIST, currentServer: nil, onServerSelected: { _ in })
+  ServersView(servers: SERVER_LIST)
 }

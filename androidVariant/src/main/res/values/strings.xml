@@ -6,14 +6,20 @@
     <string name="appNameAndVersion">Variant v0.1-SNAPSHOT</string>
     <string name="settingsButtonLabel">Settings</string>
     <string name="serverAddButton">Add a new server</string>
+    <string name="serverNameLabel">Server Name</string>
     <string name="serverNamePlaceholder">User friendly name for the server</string>
+    <string name="serverUrlLabel">Server URL</string>
     <string name="serverUrlPlaceholder">The server\'s web address</string>
-    <string name="useramePlaceholder">Your username</string>
-    <string name="passwordPlaceholder">Your password</string>
+    <string name="usernameLabel">Username</string>
+    <string name="usernamePlaceholder"></string>
+    <string name="passwordLabel">Password</string>
+    <string name="passwordPlaceholder"></string>
     <string name="saveButtonLabel">Save changes</string>
     <string name="cancelButtonLabel">Cancel action</string>
-    <string name="editServer">Edit this server</string>
+    <string name="editServerTitle">Edit Server</string>
     <string name="deleteServer">Delete this server</string>
     <string name="saveButton">Save</string>
     <string name="closeButton">Cancel</string>
+    <string name="invalidServerName">The server name is invalid...</string>
+    <string name="invalidServerUrl">The server URL is invalid...</string>
 </resources>

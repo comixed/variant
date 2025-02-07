@@ -25,8 +25,8 @@ package org.comixedproject.variant.shared.model.server
  */
 data class Server(
     val serverId: Long?,
-    val name: String,
-    val url: String,
-    val username: String,
-    val password: String,
+    var name: String,
+    var url: String,
+    var username: String,
+    var password: String,
 )
