@@ -39,8 +39,9 @@ import org.comixedproject.variant.shared.model.server.Server
 @Composable
 fun ServerListView(
     serverList: List<Server>,
-    currentServer: Server?,
-    onSelectServer: (Server?) -> Unit
+    onEditServer: (Server) -> Unit,
+    onDeleteServer: (Server) -> Unit,
+    onBrowseServer: (Server) -> Unit
 ) {
     Scaffold(floatingActionButton = {
         Button(onClick = {}) {
@@ -58,8 +59,10 @@ fun ServerListView(
             items(serverList) { server ->
                 ServerListItem(
                     server,
-                    server == currentServer,
-                    onServerSelected = { selection -> onSelectServer(selection) })
+                    onEditServer = onEditServer,
+                    onDeleteServer = onDeleteServer,
+                    onBrowseServer = onBrowseServer
+                )
             }
         }
     }
@@ -67,16 +70,12 @@ fun ServerListView(
 
 @Composable
 @Preview
-fun ServerListPreview_noSelection() {
+fun ServerListPreview() {
     VariantTheme {
-        ServerListView(SERVER_LIST, null, onSelectServer = { _ -> })
-    }
-}
-
-@Composable
-@Preview
-fun ServerListPreview_hasSelection() {
-    VariantTheme {
-        ServerListView(SERVER_LIST, SERVER_LIST.get(2), onSelectServer = { _ -> })
+        ServerListView(
+            SERVER_LIST,
+            onEditServer = { _ -> },
+            onDeleteServer = { _ -> },
+            onBrowseServer = { _ -> })
     }
 }

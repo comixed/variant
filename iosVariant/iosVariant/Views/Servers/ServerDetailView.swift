@@ -21,12 +21,8 @@ import Variant
 
 struct ServerDetailView: View {
   let server: Server
-  let selected: Bool
-  var onServerSelected: (Server?) -> Void
 
   var body: some View {
-    let background = selected ? Color.gray.opacity(0.1) : Color.clear
-
     VStack(alignment: .leading) {
       Text(server.name)
         .font(.headline)
@@ -34,29 +30,12 @@ struct ServerDetailView: View {
         .font(.subheadline)
       Text(server.username)
         .font(.body)
-    }.background(background)
-      .onTapGesture {
-        if selected {
-          onServerSelected(nil)
-        } else {
-          onServerSelected(server)
-        }
-      }
+    }
   }
 }
 
-#Preview("selected") {
+#Preview {
   ServerDetailView(
-    server: Server(
-      serverId: 1, name: "Test Server", url: "http://www.comixedproject.org:7171/opds/root.xml",
-      username: "reader@comixedproject.org", password: "the!password"),
-    selected: true, onServerSelected: { _ in })
-}
-
-#Preview("not selected") {
-  ServerDetailView(
-    server: Server(
-      serverId: 1, name: "Test Server", url: "http://www.comixedproject.org:7171/opds/root.xml",
-      username: "reader@comixedproject.org", password: "the!password"), selected: false,
-    onServerSelected: { _ in })
+    server: SERVER_LIST[0]
+  )
 }

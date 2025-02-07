@@ -21,9 +21,9 @@ import Variant
 
 struct HomeView: View {
   @State private var currentScreen: NavigationTarget? = NavigationTarget.Comics
-
   @State var servers: [Server] = SERVER_LIST
   @State var currentServer: Server?
+  @State var editServer: Bool = false
 
   var body: some View {
     NavigationSplitView {
@@ -34,15 +34,32 @@ struct HomeView: View {
       switch self.currentScreen {
       case .Comics: Text("Comics detail!")
       case .Servers:
-          if self.currentServer != nil {
-              ServerDetailView(
-                server: self.currentServer!, selected: true,
-                onServerSelected: { server in self.currentServer = server })
+        if self.currentServer != nil {
+          if self.editServer {
+            ServerEditView(
+              server: self.currentServer!,
+              onSaveChanges: { _ in
+                self.editServer = false
+                self.currentServer = nil
+              },
+              onCancelChanges: {
+                self.editServer = false
+                self.currentServer = nil
+              })
           } else {
-              ServerListView(
-                servers: self.servers, currentServer: self.currentServer,
-                onServerSelected: { server in self.currentServer = server })
+            ServerDetailView(
+              server: self.currentServer!)
           }
+        } else {
+          ServerListView(
+            servers: self.servers,
+            onEditServer: { server in
+              self.currentServer = server
+              self.editServer = true
+            },
+            onDeleteServer: { _ in },
+            onBrowseServer: { _ in })
+        }
       case .Settings: Text("Settings detail!")
       default: Text("No idea what \(String(describing: self.currentScreen)) is")
       }

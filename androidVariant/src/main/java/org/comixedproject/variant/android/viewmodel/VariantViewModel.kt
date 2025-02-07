@@ -37,6 +37,10 @@ class VariantViewModel : ViewModel() {
     }
     val serverList = _serversFlow.asStateFlow()
 
+    fun saveServer(server: Server) {
+        serverRespository.saveServer(server)
+    }
+
     private val _currentServer = MutableStateFlow<Server?>(null)
     val currentServer: StateFlow<Server?> = _currentServer
 
