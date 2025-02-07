@@ -34,9 +34,14 @@ import org.comixedproject.variant.android.model.NavigationTarget
 import org.comixedproject.variant.android.ui.comics.ComicView
 import org.comixedproject.variant.android.ui.servers.ServerView
 import org.comixedproject.variant.android.ui.setings.SettingsView
+import org.comixedproject.variant.shared.model.server.Server
 
 @Composable
-fun HomeView() {
+fun HomeView(
+    serverList: List<Server>,
+    currentServer: Server?,
+    onSetCurrentServer: (Server?) -> Unit
+) {
     var currentDestination by rememberSaveable { mutableStateOf(NavigationTarget.SERVERS) }
 
     NavigationSuiteScaffold(
@@ -54,10 +59,15 @@ fun HomeView() {
             }
         },
         containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.primary
+        contentColor = MaterialTheme.colorScheme.primary,
     ) {
         when (currentDestination) {
-            NavigationTarget.SERVERS -> ServerView()
+            NavigationTarget.SERVERS -> ServerView(
+                serverList,
+                currentServer,
+                onSetCurrentServer = onSetCurrentServer
+            )
+
             NavigationTarget.COMICS -> ComicView()
             NavigationTarget.SETTINGS -> SettingsView()
         }
@@ -68,6 +78,6 @@ fun HomeView() {
 @Preview
 fun HomePreview() {
     VariantTheme {
-        HomeView()
+        HomeView(emptyList<Server>(), null, onSetCurrentServer = { _ -> })
     }
 }

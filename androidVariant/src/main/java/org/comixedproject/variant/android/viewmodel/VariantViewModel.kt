@@ -16,31 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.ui.servers
+package org.comixedproject.variant.android.viewmodel
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import org.comixedproject.variant.android.VariantTheme
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import org.comixedproject.variant.android.koin
 import org.comixedproject.variant.android.model.SERVER_LIST
+import org.comixedproject.variant.shared.data.ServerRepository
 import org.comixedproject.variant.shared.model.server.Server
 
-@Composable
-fun ServerView(
-    serverList: List<Server>,
-    currentServer: Server?,
-    onSetCurrentServer: (Server?) -> Unit
-) {
-    ServerListView(serverList, currentServer, onSelectServer = onSetCurrentServer)
-}
 
-@Composable
-@Preview
-fun ServerPreview_noSelection() {
-    VariantTheme { ServerView(SERVER_LIST, null, onSetCurrentServer = { _ -> }) }
-}
+class VariantViewModel : ViewModel() {
+    private val serverRespository: ServerRepository = koin.get()
+    private val _serversFlow: MutableStateFlow<List<Server>> by lazy {
+        MutableStateFlow(
+            SERVER_LIST, // serverRespository.servers,
+        )
+    }
+    val serverList = _serversFlow.asStateFlow()
 
-@Composable
-@Preview
-fun ServerPreview_withSelection() {
-    VariantTheme { ServerView(SERVER_LIST, SERVER_LIST.get(0), onSetCurrentServer = { _ -> }) }
+    private val _currentServer = MutableStateFlow<Server?>(null)
+    val currentServer: StateFlow<Server?> = _currentServer
+
+    fun setCurrentServer(server: Server?) {
+        this._currentServer.value = server
+    }
 }

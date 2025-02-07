@@ -1,6 +1,6 @@
 /*
  * Variant - A digital comic book reading application for the iPad and Android tablets.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,28 +19,22 @@
 import SwiftUI
 import Variant
 
-struct HomeView: View {
-  @State var selectedItem: String?
-  @State var currentServer: Server?
+struct ServerListView: View {
+  let servers: [Server]
+  let currentServer: Server?
+
+  var onServerSelected: (Server?) -> Void
 
   var body: some View {
-    NavigationSplitView {
-      List(NavigationTarget.items, id: \.label, selection: $selectedItem) { target in
-        Label(target.label, systemImage: target.icon)
-          .onTapGesture {
-            selectedItem = target.label
-          }
-      }
-    } detail: {
-      ServerListView(
-        servers: SERVER_LIST, currentServer: currentServer,
-        onServerSelected: { server in
-          self.currentServer = server
-        })
+    List(servers, id: \.serverId) { server in
+      ServerDetailView(
+        server: server, selected: server.serverId == currentServer?.serverId,
+        onServerSelected: { selection in onServerSelected(selection) }
+      )
     }
   }
 }
 
 #Preview {
-  HomeView()
+  ServerListView(servers: SERVER_LIST, currentServer: SERVER_LIST[0], onServerSelected: { _ in })
 }

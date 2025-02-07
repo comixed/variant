@@ -18,26 +18,25 @@
 
 package org.comixedproject.variant.android
 
-import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.view.animation.OvershootInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.comixedproject.variant.android.ui.home.HomeView
 import org.comixedproject.variant.android.viewmodel.PublicationViewModel
 import org.comixedproject.variant.android.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.android.viewmodel.ServerViewModel
 import org.comixedproject.variant.android.viewmodel.SplashScreenViewModel
+import org.comixedproject.variant.android.viewmodel.VariantViewModel
+import org.comixedproject.variant.shared.platform.Logger
+
+private const val TAG = "MainActivity"
 
 /**
  * <code>MainActivity</code> is the main class for the Android implementation of Variant.
@@ -45,6 +44,7 @@ import org.comixedproject.variant.android.viewmodel.SplashScreenViewModel
  * @author Darryl L. Pierce
  */
 class MainActivity : ComponentActivity() {
+    private val variantViewModel: VariantViewModel by viewModels()
     private val serverViewModel: ServerViewModel by viewModels()
     private val serverLinkViewModel: ServerLinkViewModel by viewModels()
     private val publicationViewModel: PublicationViewModel by viewModels()
@@ -65,10 +65,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    val serverList by serverViewModel.serverList.collectAsStateWithLifecycle()
-                    val linkList by serverLinkViewModel.serverLinkList.collectAsStateWithLifecycle()
-
-                    HomeView()
+                    HomeView(
+                        variantViewModel.serverList.collectAsState().value,
+                        variantViewModel.currentServer.collectAsState().value,
+                        onSetCurrentServer = { server ->
+                            Logger.d(TAG, "Server selected: ${server?.name ?: "Nil"}")
+                            variantViewModel.setCurrentServer(server)
+                        }
+                    )
                 }
             }
         }
