@@ -16,20 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
+import SwiftUI
 
-class NavigationTarget {
-  var label: String
-  var icon: String
-
-  init(label: String, icon: String) {
-    self.label = label
-    self.icon = icon
+struct ComicsView: View {
+  var body: some View {
+    Text("Comics View!")
   }
+}
 
-  static let items = [
-    NavigationTarget(label: "Comics", icon: "book.circle"),
-    NavigationTarget(label: "Servers", icon: "person.crop.circle"),
-    NavigationTarget(label: "Settings", icon: "gear"),
-  ]
+#Preview {
+  ComicsView()
 }
