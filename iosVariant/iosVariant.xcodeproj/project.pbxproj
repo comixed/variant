@@ -20,6 +20,9 @@
 		B61686B72C371D3F00B47ED6 /* SwiftFormat in Frameworks */ = {isa = PBXBuildFile; productRef = B61686B62C371D3F00B47ED6 /* SwiftFormat */; };
 		B61686B92C371D3F00B47ED6 /* SwiftFormatConfiguration in Frameworks */ = {isa = PBXBuildFile; productRef = B61686B82C371D3F00B47ED6 /* SwiftFormatConfiguration */; };
 		B68D9C022C1CD7930017D3D6 /* VariantViewModelWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68D9C012C1CD7930017D3D6 /* VariantViewModelWrapper.swift */; };
+		B6A5B7272D590553000AC9AA /* ComicsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A5B7262D590553000AC9AA /* ComicsView.swift */; };
+		B6A5B7292D59057B000AC9AA /* ServersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A5B7282D59057B000AC9AA /* ServersView.swift */; };
+		B6A5B72C2D5905A5000AC9AA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A5B72B2D5905A5000AC9AA /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +52,9 @@
 		B60624CE2C31BD90002AE74C /* Koin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Koin.swift; sourceTree = "<group>"; };
 		B61686B12C36D7F500B47ED6 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		B68D9C012C1CD7930017D3D6 /* VariantViewModelWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariantViewModelWrapper.swift; sourceTree = "<group>"; };
+		B6A5B7262D590553000AC9AA /* ComicsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsView.swift; sourceTree = "<group>"; };
+		B6A5B7282D59057B000AC9AA /* ServersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServersView.swift; sourceTree = "<group>"; };
+		B6A5B72B2D5905A5000AC9AA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,8 +81,11 @@
 		6A1DEA3F2D52987A00D84717 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B6A5B72A2D59059D000AC9AA /* Settings */,
+				B6A5B7252D590549000AC9AA /* Comics */,
 				6A7DF3122D567AAF00829D46 /* Servers */,
 				6A1DEA402D52988B00D84717 /* Home */,
+				6A1DEA442D529A0000D84717 /* NavigationTarget.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -92,7 +101,6 @@
 		6A1DEA432D5299E900D84717 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				6A1DEA442D529A0000D84717 /* NavigationTarget.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -102,6 +110,7 @@
 			children = (
 				6A7DF3132D567ABF00829D46 /* ServerDetailView.swift */,
 				6A7DF3152D567D8900829D46 /* ServerListView.swift */,
+				B6A5B7282D59057B000AC9AA /* ServersView.swift */,
 			);
 			path = Servers;
 			sourceTree = "<group>";
@@ -185,6 +194,22 @@
 				B68D9C012C1CD7930017D3D6 /* VariantViewModelWrapper.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		B6A5B7252D590549000AC9AA /* Comics */ = {
+			isa = PBXGroup;
+			children = (
+				B6A5B7262D590553000AC9AA /* ComicsView.swift */,
+			);
+			path = Comics;
+			sourceTree = "<group>";
+		};
+		B6A5B72A2D59059D000AC9AA /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				B6A5B72B2D5905A5000AC9AA /* SettingsView.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -290,11 +315,14 @@
 				B60624CF2C31BD90002AE74C /* Koin.swift in Sources */,
 				6A1DEA452D529A0000D84717 /* NavigationTarget.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				B6A5B7292D59057B000AC9AA /* ServersView.swift in Sources */,
 				B68D9C022C1CD7930017D3D6 /* VariantViewModelWrapper.swift in Sources */,
+				B6A5B7272D590553000AC9AA /* ComicsView.swift in Sources */,
 				6A7DF3192D567E1D00829D46 /* Fixtures.swift in Sources */,
 				6A7DF3162D567D8900829D46 /* ServerListView.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 				6A7DF3142D567ABF00829D46 /* ServerDetailView.swift in Sources */,
+				B6A5B72C2D5905A5000AC9AA /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

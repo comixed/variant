@@ -20,23 +20,32 @@ import SwiftUI
 import Variant
 
 struct HomeView: View {
-  @State var selectedItem: String?
+  @State private var currentScreen: NavigationTarget? = NavigationTarget.Comics
+
+  @State var servers: [Server] = SERVER_LIST
   @State var currentServer: Server?
 
   var body: some View {
     NavigationSplitView {
-      List(NavigationTarget.items, id: \.label, selection: $selectedItem) { target in
-        Label(target.label, systemImage: target.icon)
-          .onTapGesture {
-            selectedItem = target.label
-          }
+      List(NavigationTarget.allCases, id: \.self, selection: $currentScreen) { target in
+        Text(target.rawValue)
       }
     } detail: {
-      ServerListView(
-        servers: SERVER_LIST, currentServer: currentServer,
-        onServerSelected: { server in
-          self.currentServer = server
-        })
+      switch self.currentScreen {
+      case .Comics: Text("Comics detail!")
+      case .Servers:
+          if self.currentServer != nil {
+              ServerDetailView(
+                server: self.currentServer!, selected: true,
+                onServerSelected: { server in self.currentServer = server })
+          } else {
+              ServerListView(
+                servers: self.servers, currentServer: self.currentServer,
+                onServerSelected: { server in self.currentServer = server })
+          }
+      case .Settings: Text("Settings detail!")
+      default: Text("No idea what \(String(describing: self.currentScreen)) is")
+      }
     }
   }
 }
