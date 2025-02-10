@@ -28,11 +28,11 @@ import org.comixedproject.variant.android.koin
 import org.comixedproject.variant.android.net.createDownloadHttpClient
 import org.comixedproject.variant.android.net.createOpdsHttpClient
 import org.comixedproject.variant.shared.VariantAppContext
-import org.comixedproject.variant.shared.data.ServerLinkRepository
 import org.comixedproject.variant.shared.manager.FileContentManager
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.repositories.ServerLinkRepository
 import org.readium.r2.shared.util.AbsoluteUrl
 import org.readium.r2.shared.util.asset.AssetRetriever
 import org.readium.r2.shared.util.format.FormatHints

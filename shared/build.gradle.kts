@@ -70,7 +70,7 @@ android {
 sqldelight {
     databases {
         create("VariantDb") {
-            packageName.set("org.comixedproject.variant")
+            packageName.set("org.comixedproject.variant.database")
             schemaOutputDirectory.set(
                 file("src/commonMain/sqldelight/org/comixedproject/variant/db")
             )

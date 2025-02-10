@@ -39,11 +39,7 @@ class VariantApp : Application() {
 
         koin =
             initKoin(
-                appModule =
-                module {
-                    single<Context> { this@VariantApp }
-                },
-                viewModelsModule = module { },
+                appModule = module { single<Context> { this@VariantApp } }
             ).koin
     }
 }

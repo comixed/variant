@@ -18,33 +18,5 @@
 
 package org.comixedproject.variant.android.viewmodel
 
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import org.comixedproject.variant.android.koin
-import org.comixedproject.variant.android.model.SERVER_LIST
-import org.comixedproject.variant.shared.data.ServerRepository
-import org.comixedproject.variant.shared.model.server.Server
+private val TAG = "VariantViewModel"
 
-
-class VariantViewModel : ViewModel() {
-    private val serverRespository: ServerRepository = koin.get()
-    private val _serversFlow: MutableStateFlow<List<Server>> by lazy {
-        MutableStateFlow(
-            SERVER_LIST, // serverRespository.servers,
-        )
-    }
-    val serverList = _serversFlow.asStateFlow()
-
-    fun saveServer(server: Server) {
-        serverRespository.saveServer(server)
-    }
-
-    private val _currentServer = MutableStateFlow<Server?>(null)
-    val currentServer: StateFlow<Server?> = _currentServer
-
-    fun setCurrentServer(server: Server?) {
-        this._currentServer.value = server
-    }
-}

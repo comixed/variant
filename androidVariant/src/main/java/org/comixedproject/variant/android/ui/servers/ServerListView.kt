@@ -35,6 +35,9 @@ import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
+import org.comixedproject.variant.shared.platform.Logger
+
+private val TAG = "ServerListView"
 
 @Composable
 fun ServerListView(
@@ -44,7 +47,10 @@ fun ServerListView(
     onBrowseServer: (Server) -> Unit
 ) {
     Scaffold(floatingActionButton = {
-        Button(onClick = {}) {
+        Button(onClick = {
+            Logger.d(TAG, "Adding a new server")
+            onEditServer(Server(null, "", "", "", ""))
+        }) {
             Icon(
                 imageVector = Icons.Rounded.Add,
                 contentDescription = stringResource(R.string.serverAddButton)

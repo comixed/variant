@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared.data
+package org.comixedproject.variant.shared.repositories
 
 import org.comixedproject.variant.db.ServerLinksDb
 import org.comixedproject.variant.shared.manager.FileContentManager
@@ -38,7 +38,7 @@ class ServerLinkRepository(
         get() {
             val result = databaseHelper.loadAllLinks().map(ServerLinksDb::map)
             result.forEach { entry ->
-                val server = serverRepository.loadServer(entry.serverId)
+                val server = serverRepository.getById(entry.serverId)
                 entry.downloaded = fileContentManager.contentFound(server, entry.downloadLink)
             }
             return result

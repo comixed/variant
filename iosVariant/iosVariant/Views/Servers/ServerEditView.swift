@@ -48,8 +48,7 @@ struct ServerEditView: View {
       let saveCaption = self.server.serverId != nil ? "Save" : "Add"
 
       Button(saveCaption) {
-        onSaveChanges(
-          $server.wrappedValue)
+        onSaveChanges($server.wrappedValue)
       }
       Button("Close") {
         onCancelChanges()

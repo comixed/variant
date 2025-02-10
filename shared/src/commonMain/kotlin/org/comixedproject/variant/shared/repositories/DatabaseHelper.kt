@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared.data
+package org.comixedproject.variant.shared.repositories
 
 import app.cash.sqldelight.db.SqlDriver
-import org.comixedproject.variant.VariantDb
+import org.comixedproject.variant.database.VariantDb
 import org.comixedproject.variant.db.ServerLinksDb
 import org.comixedproject.variant.db.ServersDb
 import org.comixedproject.variant.shared.model.server.Server

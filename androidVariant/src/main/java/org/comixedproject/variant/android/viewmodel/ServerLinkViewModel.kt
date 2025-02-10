@@ -25,11 +25,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.koin
 import org.comixedproject.variant.android.net.createOpdsHttpClient
-import org.comixedproject.variant.shared.data.ServerLinkRepository
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
 import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.repositories.ServerLinkRepository
 import org.readium.r2.opds.OPDS1Parser
 
 private const val TAG = "LinkViewModel"

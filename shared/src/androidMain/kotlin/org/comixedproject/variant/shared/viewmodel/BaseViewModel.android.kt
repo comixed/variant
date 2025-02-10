@@ -16,6 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared.model
+package org.comixedproject.variant.shared.viewmodel
 
-actual abstract class BaseViewModel actual constructor()
+import androidx.lifecycle.ViewModel
+
+/**
+ * <code>BaseViewModel</code> provides an implementation for Android platforms.
+ *
+ * @author Darryl L. Pierce
+ */
+actual abstract class BaseViewModel : ViewModel()

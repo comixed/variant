@@ -24,6 +24,20 @@ struct ContentView: View {
   @State private var viewModelWrapper = VariantViewModelWrapper()
 
   var body: some View {
-    HomeView()
+    HomeView(
+      servers: self.viewModelWrapper.serverList,
+      onSaveServer: { server in
+        self.viewModelWrapper.saveServer(server: server)
+      },
+      onDeleteServer: { server in
+        self.viewModelWrapper.deleteServer(server: server)
+      })
+  }
+}
+
+@available(iOS 17.0, *)
+struct ContentView_Previews: PreviewProvider {
+  static var previews: some View {
+    ContentView()
   }
 }
