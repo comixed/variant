@@ -21,9 +21,12 @@ import Variant
 
 struct HomeView: View {
   @State private var currentScreen: NavigationTarget? = NavigationTarget.Comics
-  @State var servers: [Server] = SERVER_LIST
   @State var currentServer: Server?
   @State var editServer: Bool = false
+
+  let servers: [Server]
+  var onSaveServer: (Server) -> Void
+  var onDeleteServer: (Server) -> Void
 
   var body: some View {
     NavigationSplitView {
@@ -38,7 +41,8 @@ struct HomeView: View {
           if self.editServer {
             ServerEditView(
               server: self.currentServer!,
-              onSaveChanges: { _ in
+              onSaveChanges: { server in
+                self.onSaveServer(server)
                 self.editServer = false
                 self.currentServer = nil
               },
@@ -57,7 +61,9 @@ struct HomeView: View {
               self.currentServer = server
               self.editServer = true
             },
-            onDeleteServer: { _ in },
+            onDeleteServer: { server in
+              self.onDeleteServer(server)
+            },
             onBrowseServer: { _ in })
         }
       case .Settings: Text("Settings detail!")
@@ -68,5 +74,5 @@ struct HomeView: View {
 }
 
 #Preview {
-  HomeView()
+  HomeView(servers: SERVER_LIST, onSaveServer: { _ in }, onDeleteServer: { _ in })
 }

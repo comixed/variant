@@ -21,6 +21,7 @@ import Variant
 
 struct ServerListView: View {
   @State var selected: Server?
+
   let servers: [Server]
 
   var onEditServer: (Server) -> Void
@@ -28,24 +29,53 @@ struct ServerListView: View {
   var onBrowseServer: (Server) -> Void
 
   var body: some View {
-    List(servers, id: \.serverId, selection: $selected) { server in
-      ServerDetailView(
-        server: server
-      ).swipeActions(edge: .leading, allowsFullSwipe: false) {
-        Button {
-
-        } label: {
-          Label("Delete", systemImage: "trash.fill")
+    ZStack {
+      List(servers, id: \.serverId, selection: $selected) { server in
+        ServerDetailView(
+          server: server
+        ).swipeActions(edge: .leading, allowsFullSwipe: false) {
+          Button {
+            onDeleteServer(server)
+          } label: {
+            Label("Delete", systemImage: "trash.fill")
+          }
+          .tint(.red)
         }
-        .tint(.red)
+        .swipeActions(edge: .trailing) {
+          Button {
+            onEditServer(server)
+          } label: {
+            Label("Edit", systemImage: "pencil")
+          }
+          .tint(.green)
+        }
       }
-      .swipeActions(edge: .trailing) {
-        Button {
-          onEditServer(server)
-        } label: {
-          Label("Edit", systemImage: "pencil")
+
+      VStack {
+        Spacer()
+
+        HStack {
+          Spacer()
+
+          Button(
+            action: {
+              onEditServer(Server(serverId: nil, name: "", url: "", username: "", password: ""))
+            },
+            label: {
+              Text("+").font(.system(.largeTitle))
+                .frame(width: 77, height: 70)
+                .foregroundColor(Color.white)
+                .padding(.bottom, 7)
+            }
+          ).background(Color.blue)
+            .cornerRadius(38.5)
+            .padding()
+            .shadow(
+              color: Color.black.opacity(0.3),
+              radius: 3,
+              x: 3,
+              y: 3)
         }
-        .tint(.green)
       }
     }
   }

@@ -16,10 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
+import Observation
 import Variant
 
 @available(iOS 17.0, *)
 @Observable
 final class VariantViewModelWrapper {
+  let viewModel: VariantViewModel = Koin.instance.get()
+
+  private(set) var serverList: [Server] = []
+
+  init() {
+    viewModel.onServerListUpdated = { [weak self] servers in
+      self?.serverList = servers
+    }
+  }
+
+  func saveServer(server: Server) {
+    self.viewModel.saveServer(server: server)
+  }
+
+  func deleteServer(server: Server) {
+    self.viewModel.deleteServer(server: server)
+  }
 }

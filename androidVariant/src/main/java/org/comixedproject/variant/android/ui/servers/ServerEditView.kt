@@ -19,7 +19,6 @@
 package org.comixedproject.variant.android.ui.servers
 
 import android.webkit.URLUtil
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -134,24 +133,17 @@ fun ServerEditView(server: Server, onSave: (Server) -> Unit, onCancel: () -> Uni
         Spacer(modifier = Modifier.weight(1.0f))
 
         Row {
-            Button(onClick = {
-                validateServer(serverName, serverUrl, username, password, onValid = {
-                    Logger.d(
-                        TAG,
-                        "Updating server: name=${serverName} url=${serverUrl} username=${username} password=${password}"
-                    )
-                    server.name = serverName
-                    server.url = serverUrl
-                    server.username = username
-                    server.password = password
-                    onSave(server)
-                }, onInvalid = { messageId ->
-                    Toast.makeText(
-                        context,
-                        context.resources.getString(messageId),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
+            val valid = validateServer(serverName, serverUrl, username, password)
+            Button(enabled = valid, onClick = {
+                Logger.d(
+                    TAG,
+                    "Updating server: name=${serverName} url=${serverUrl} username=${username} password=${password}"
+                )
+                server.name = serverName
+                server.url = serverUrl
+                server.username = username
+                server.password = password
+                onSave(server)
             }) {
                 Icon(
                     imageVector = Icons.Rounded.Check,
@@ -180,16 +172,17 @@ fun validateServer(
     url: String,
     username: String,
     password: String,
-    onValid: (Server) -> Unit, onInvalid: (Int) -> Unit
-) {
+): Boolean {
     if (name.isEmpty()) {
-        onInvalid(R.string.invalidServerName)
+        Logger.d(TAG, "Server name cannot be empty")
+        return false
     }
     if (url.isEmpty() || !URLUtil.isValidUrl(url)) {
-        onInvalid(R.string.invalidServerUrl)
+        Logger.d(TAG, "Server url is invalid")
+        return false
     }
 
-    onValid
+    return true
 }
 
 @Composable
@@ -197,5 +190,15 @@ fun validateServer(
 fun ServerEditPreview() {
     VariantTheme {
         ServerEditView(SERVER_LIST.get(0), onSave = { }, onCancel = {})
+    }
+}
+
+@Composable
+@Preview
+fun ServerEditPreview_invalid() {
+    val server = SERVER_LIST.get(0)
+    server.name = ""
+    VariantTheme {
+        ServerEditView(server, onSave = { }, onCancel = {})
     }
 }

@@ -20,7 +20,7 @@ package org.comixedproject.variant.shared
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
-import org.comixedproject.variant.VariantDb
+import org.comixedproject.variant.database.VariantDb
 import org.koin.dsl.module
 
 actual val platformModule =

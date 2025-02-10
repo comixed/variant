@@ -42,7 +42,9 @@ import org.comixedproject.variant.shared.model.server.Server
 
 @Composable
 fun HomeView(
-    serverList: List<Server>
+    serverList: List<Server>,
+    onSaveServer: (Server) -> Unit,
+    onDeleteServer: (Server) -> Unit
 ) {
     var currentDestination by rememberSaveable { mutableStateOf(NavigationTarget.COMICS) }
     var currentServer by remember { mutableStateOf<Server?>(null) }
@@ -72,6 +74,7 @@ fun HomeView(
                         if (editServer) {
                             ServerEditView(server,
                                 onSave = { update ->
+                                    onSaveServer(update)
                                     currentServer = null
                                     editServer = false
                                 },
@@ -87,7 +90,7 @@ fun HomeView(
                             currentServer = server
                             editServer = true
                         },
-                            onDeleteServer = { _ -> },
+                            onDeleteServer = onDeleteServer,
                             onBrowseServer = { _ -> }
                         )
                     }
@@ -103,8 +106,6 @@ fun HomeView(
 @Preview
 fun HomePreview() {
     VariantTheme {
-        HomeView(
-            SERVER_LIST
-        )
+        HomeView(SERVER_LIST, onSaveServer = { _ -> }, onDeleteServer = { _ -> })
     }
 }

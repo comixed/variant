@@ -22,7 +22,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import kotlinx.cinterop.ObjCClass
 import kotlinx.cinterop.getOriginalKotlinClass
-import org.comixedproject.variant.VariantDb
+import org.comixedproject.variant.database.VariantDb
 import org.koin.core.Koin
 import org.koin.core.KoinApplication
 import org.koin.core.module.Module

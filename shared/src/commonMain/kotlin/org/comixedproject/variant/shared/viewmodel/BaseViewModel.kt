@@ -16,6 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared.model
+package org.comixedproject.variant.shared.viewmodel
 
+/**
+ * <code>BaseViewModel</code> provides a foundation for creating platform independent view models.
+ *
+ * @author Darryl L. Pierce
+ */
 expect abstract class BaseViewModel()
