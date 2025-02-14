@@ -21,16 +21,33 @@ import Variant
 
 @available(iOS 17.0, *)
 struct ContentView: View {
-  @State private var viewModelWrapper = VariantViewModelWrapper()
+  private var serverViewModel = ServerViewModelWrapper()
+  private var serverLinkViewModel = ServerLinkViewModelWrapper()
 
   var body: some View {
     HomeView(
-      servers: self.viewModelWrapper.serverList,
+      servers: self.serverViewModel.serverList,
+      serverLinks: self.serverLinkViewModel.serverLinkList,
       onSaveServer: { server in
-        self.viewModelWrapper.saveServer(server: server)
+        self.serverViewModel.saveServer(server: server)
       },
       onDeleteServer: { server in
-        self.viewModelWrapper.deleteServer(server: server)
+        self.serverViewModel.deleteServer(server: server)
+      },
+      onBrowseServer: { server, directory, reload in
+        if reload || !self.serverLinkViewModel.hasLinks(server: server, directory: directory) {
+          Task {
+            await loadServerLinks(
+              server: server, directory: directory,
+              onSuccess: { links in
+                self.serverLinkViewModel.saveLinks(
+                  server: server, directory: directory, links: links)
+              },
+              onFailure: {})
+          }
+        } else {
+          self.serverLinkViewModel.loadLinks(server: server, directory: directory)
+        }
       })
   }
 }

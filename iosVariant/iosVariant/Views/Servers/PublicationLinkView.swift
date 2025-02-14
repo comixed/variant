@@ -16,7 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.viewmodel
+import SwiftUI
+import Variant
 
-private val TAG = "VariantViewModel"
+struct PublicationLinkView: View {
+  let serverLink: ServerLink
 
+  var body: some View {
+    VStack(alignment: .leading) {
+      Text("\(serverLink.title)").font(.headline)
+      Text("\(serverLink.downloadLink)").font(.subheadline)
+    }
+  }
+}
+
+#Preview {
+  PublicationLinkView(serverLink: SERVER_LINK_LIST[0])
+}

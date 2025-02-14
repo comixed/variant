@@ -19,10 +19,13 @@
 package org.comixedproject.variant.shared.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 /**
  * <code>BaseViewModel</code> provides an implementation for Android platforms.
  *
  * @author Darryl L. Pierce
  */
-actual abstract class BaseViewModel : ViewModel()
+actual open class BaseViewModel : ViewModel() {
+    actual val scope = viewModelScope
+}

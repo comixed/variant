@@ -32,23 +32,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.NavigationTarget
+import org.comixedproject.variant.android.model.SERVER_LINK_LIST
 import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.android.ui.comics.ComicView
+import org.comixedproject.variant.android.ui.servers.BrowseServerView
 import org.comixedproject.variant.android.ui.servers.ServerDetailView
 import org.comixedproject.variant.android.ui.servers.ServerEditView
 import org.comixedproject.variant.android.ui.servers.ServerListView
 import org.comixedproject.variant.android.ui.setings.SettingsView
 import org.comixedproject.variant.shared.model.server.Server
+import org.comixedproject.variant.shared.model.server.ServerLink
 
 @Composable
 fun HomeView(
     serverList: List<Server>,
+    serverLinkList: List<ServerLink>,
     onSaveServer: (Server) -> Unit,
-    onDeleteServer: (Server) -> Unit
+    onDeleteServer: (Server) -> Unit,
+    onLoadLinks: (Server, String, Boolean) -> Unit
 ) {
     var currentDestination by rememberSaveable { mutableStateOf(NavigationTarget.COMICS) }
     var currentServer by remember { mutableStateOf<Server?>(null) }
     var editServer by remember { mutableStateOf(false) }
+    var browseServer by remember { mutableStateOf(false) }
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -82,16 +88,30 @@ fun HomeView(
                                     currentServer = null
                                     editServer = false
                                 })
+                        } else if (browseServer) {
+                            BrowseServerView(
+                                server,
+                                serverLinkList,
+                                onFollowLink = onLoadLinks,
+                                onStopBrowsing = {
+                                    browseServer = false
+                                    currentServer = null
+                                }
+                            )
                         } else {
                             ServerDetailView(server)
                         }
                     } else {
-                        ServerListView(serverList, onEditServer = { server ->
-                            currentServer = server
+                        ServerListView(serverList, onEditServer = { target ->
+                            currentServer = target
                             editServer = true
                         },
                             onDeleteServer = onDeleteServer,
-                            onBrowseServer = { _ -> }
+                            onBrowseServer = { target ->
+                                currentServer = target
+                                browseServer = true
+                                onLoadLinks(target, target.url, false)
+                            }
                         )
                     }
                 }
@@ -106,6 +126,11 @@ fun HomeView(
 @Preview
 fun HomePreview() {
     VariantTheme {
-        HomeView(SERVER_LIST, onSaveServer = { _ -> }, onDeleteServer = { _ -> })
+        HomeView(
+            SERVER_LIST,
+            SERVER_LINK_LIST,
+            onSaveServer = { _ -> },
+            onDeleteServer = { _ -> },
+            onLoadLinks = { _, _, _ -> })
     }
 }

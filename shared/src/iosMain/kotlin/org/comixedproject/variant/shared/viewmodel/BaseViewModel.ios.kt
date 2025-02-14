@@ -18,9 +18,15 @@
 
 package org.comixedproject.variant.shared.viewmodel
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+
 /**
  * <code>BaseViewModel</code> provides an implementation for iPads.
  *
  * @author Darryl L. Pierce
  */
-actual abstract class BaseViewModel actual constructor()
+actual open class BaseViewModel actual constructor() {
+    actual val scope = CoroutineScope(Dispatchers.IO)
+}

@@ -18,6 +18,7 @@
 
 package org.comixedproject.variant.android.viewmodel
 
+/*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.ktor.client.call.body
@@ -25,8 +26,8 @@ import io.ktor.client.plugins.onDownload
 import io.ktor.client.request.get
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.koin
-import org.comixedproject.variant.android.net.createDownloadHttpClient
-import org.comixedproject.variant.android.net.createOpdsHttpClient
+import org.comixedproject.variant.shared.net.createDownloadHttpClient
+import org.comixedproject.variant.shared.net.createOpdsHttpClient
 import org.comixedproject.variant.shared.VariantAppContext
 import org.comixedproject.variant.shared.manager.FileContentManager
 import org.comixedproject.variant.shared.model.server.Server
@@ -114,3 +115,4 @@ class PublicationViewModel : ViewModel() {
         }
     }
 }
+ */
