@@ -19,6 +19,7 @@
 package org.comixedproject.variant.android.ui.servers
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,11 +44,9 @@ import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.android.ui.DismissBackground
 import org.comixedproject.variant.shared.model.server.Server
+import org.comixedproject.variant.shared.platform.Logger
 
-enum class SlideToActionAnchors {
-    Start,
-    End
-}
+private val TAG = "ServerListItem"
 
 @Composable
 fun ServerListItem(
@@ -87,6 +86,10 @@ fun ServerListItem(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable {
+                        Logger.d(TAG, "Browsing server: ${server.name}")
+                        onBrowseServer(server)
+                    }
 
             ) {
                 Column(

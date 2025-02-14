@@ -16,31 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+import ReadiumShared
 import Variant
 
-struct ServerDetailView: View {
-  let server: Server
-  let onTapped: () -> Void
-
-  var body: some View {
-    VStack(alignment: .leading) {
-      Text(server.name)
-        .font(.headline)
-      Text(server.url)
-        .font(.subheadline)
-      Text(server.username)
-        .font(.body)
-    }
-    .onTapGesture {
-      onTapped()
-    }
-  }
-}
-
-#Preview {
-  ServerDetailView(
-    server: SERVER_LIST[0],
-    onTapped: {}
+func createOpdsHttpClient(server: Server) -> DefaultHTTPClient {
+  let encodedPassword: String = NetworkUtilsKt.encodeCredentials(
+    username: server.username, password: server.password)
+  return DefaultHTTPClient(
+    userAgent: ValuesKt.VARIANT_USER_AGENT,
+    additionalHeaders: ["Authorization": encodedPassword]
   )
 }

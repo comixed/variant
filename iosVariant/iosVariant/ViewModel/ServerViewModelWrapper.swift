@@ -21,8 +21,8 @@ import Variant
 
 @available(iOS 17.0, *)
 @Observable
-final class VariantViewModelWrapper {
-  let viewModel: VariantViewModel = Koin.instance.get()
+final class ServerViewModelWrapper {
+  let viewModel: ServerViewModel = Koin.instance.get()
 
   private(set) var serverList: [Server] = []
 
@@ -30,6 +30,7 @@ final class VariantViewModelWrapper {
     viewModel.onServerListUpdated = { [weak self] servers in
       self?.serverList = servers
     }
+    self.serverList = self.viewModel.serverList.value as! [Server]
   }
 
   func saveServer(server: Server) {

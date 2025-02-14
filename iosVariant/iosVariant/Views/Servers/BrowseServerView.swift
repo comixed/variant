@@ -19,28 +19,47 @@
 import SwiftUI
 import Variant
 
-struct ServerDetailView: View {
+struct BrowseServerView: View {
   let server: Server
-  let onTapped: () -> Void
+  let serverLinkList: [ServerLink]
+
+  @State var directory: String = ""
+
+  var onFollowLink: (Server, String, Bool) -> Void
+  var onStopBrowsing: () -> Void
 
   var body: some View {
-    VStack(alignment: .leading) {
-      Text(server.name)
-        .font(.headline)
-      Text(server.url)
-        .font(.subheadline)
-      Text(server.username)
-        .font(.body)
-    }
-    .onTapGesture {
-      onTapped()
+    ZStack {
+      List(serverLinkList, id: \.serverLinkId) { serverLink in
+        if serverLink.linkType == ServerLinkType.navigation {
+          NavigationLinkView(serverLink: serverLink)
+        } else {
+          PublicationLinkView(serverLink: serverLink)
+        }
+      }
+      VStack(alignment: .leading) {
+        Text("\(server.name)").font(.title)
+        Spacer()
+        Text("\(directory)")
+      }
     }
   }
 }
 
-#Preview {
-  ServerDetailView(
+#Preview("root") {
+  BrowseServerView(
     server: SERVER_LIST[0],
-    onTapped: {}
+    serverLinkList: SERVER_LINK_LIST,
+    onFollowLink: { _, _, _ in },
+    onStopBrowsing: {}
+  )
+}
+
+#Preview("root") {
+  BrowseServerView(
+    server: SERVER_LIST[0],
+    serverLinkList: SERVER_LINK_LIST,
+    onFollowLink: { _, _, _ in },
+    onStopBrowsing: {}
   )
 }

@@ -18,9 +18,13 @@
 
 package org.comixedproject.variant.shared.viewmodel
 
+import kotlinx.coroutines.CoroutineScope
+
 /**
  * <code>BaseViewModel</code> provides a foundation for creating platform independent view models.
  *
  * @author Darryl L. Pierce
  */
-expect abstract class BaseViewModel()
+expect open class BaseViewModel() {
+    val scope: CoroutineScope
+}

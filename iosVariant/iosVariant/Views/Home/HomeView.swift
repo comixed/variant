@@ -23,10 +23,13 @@ struct HomeView: View {
   @State private var currentScreen: NavigationTarget? = NavigationTarget.Comics
   @State var currentServer: Server?
   @State var editServer: Bool = false
+  @State var browseServer: Bool = false
 
   let servers: [Server]
+  let serverLinks: [ServerLink]
   var onSaveServer: (Server) -> Void
   var onDeleteServer: (Server) -> Void
+  var onBrowseServer: (Server, String, Bool) -> Void
 
   var body: some View {
     NavigationSplitView {
@@ -50,9 +53,16 @@ struct HomeView: View {
                 self.editServer = false
                 self.currentServer = nil
               })
+          } else if self.browseServer {
+            BrowseServerView(
+              server: self.currentServer!,
+              serverLinkList: self.serverLinks,
+              onFollowLink: { _, _, _ in }, onStopBrowsing: {})
           } else {
             ServerDetailView(
-              server: self.currentServer!)
+              server: self.currentServer!,
+              onTapped: { onBrowseServer(self.currentServer!, self.currentServer!.url, false) }
+            )
           }
         } else {
           ServerListView(
@@ -64,7 +74,11 @@ struct HomeView: View {
             onDeleteServer: { server in
               self.onDeleteServer(server)
             },
-            onBrowseServer: { _ in })
+            onBrowseServer: { server in
+              self.currentServer = server
+              self.browseServer = true
+              self.onBrowseServer(server, server.url, false)
+            })
         }
       case .Settings: Text("Settings detail!")
       default: Text("No idea what \(String(describing: self.currentScreen)) is")
@@ -74,5 +88,8 @@ struct HomeView: View {
 }
 
 #Preview {
-  HomeView(servers: SERVER_LIST, onSaveServer: { _ in }, onDeleteServer: { _ in })
+  HomeView(
+    servers: SERVER_LIST,
+    serverLinks: [], onSaveServer: { _ in }, onDeleteServer: { _ in },
+    onBrowseServer: { _, _, _ in })
 }

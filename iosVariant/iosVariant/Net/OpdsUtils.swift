@@ -16,31 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+import Foundation
+import ReadiumOPDS
+import ReadiumShared
 import Variant
 
-struct ServerDetailView: View {
-  let server: Server
-  let onTapped: () -> Void
+func loadServerLinks(
+  server: Server, directory: String, onSuccess: ([ServerLink]) -> Void, onFailure: () -> Void
+) async {
+  let httpClient = createOpdsHttpClient(server: server)
+  let assetRetriever = AssetRetriever(httpClient: httpClient)
+  let url = URL(string: directory, relativeTo: URL(string: server.url))
+  print("Preparing to load url: \(url!.absoluteString)")
 
-  var body: some View {
-    VStack(alignment: .leading) {
-      Text(server.name)
-        .font(.headline)
-      Text(server.url)
-        .font(.subheadline)
-      Text(server.username)
-        .font(.body)
-    }
-    .onTapGesture {
-      onTapped()
-    }
+  switch await assetRetriever.retrieve(url: (url!.anyURL.absoluteURL!)) {
+  case .success(let success):
+    print("SUCCESS!")
+  case .failure(let failure):
+    print("FAILURE! \(failure.localizedDescription)")
   }
-}
-
-#Preview {
-  ServerDetailView(
-    server: SERVER_LIST[0],
-    onTapped: {}
-  )
 }

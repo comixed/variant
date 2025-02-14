@@ -22,4 +22,7 @@
     <string name="closeButton">Cancel</string>
     <string name="invalidServerName">The server name is invalid...</string>
     <string name="invalidServerUrl">The server URL is invalid...</string>
+    <string name="stopBrowsingLabel">Stop browsing this server...</string>
+    <string name="downloadPublicationLabel">Download this publication...</string>
+    <string name="downloadNavigationLabel">Download this directory...</string>
 </resources>

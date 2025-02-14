@@ -18,13 +18,14 @@
 
 package org.comixedproject.variant.android.viewmodel
 
+/*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.koin
-import org.comixedproject.variant.android.net.createOpdsHttpClient
+import org.comixedproject.variant.shared.net.createOpdsHttpClient
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
@@ -34,11 +35,6 @@ import org.readium.r2.opds.OPDS1Parser
 
 private const val TAG = "LinkViewModel"
 
-/**
- * <code>ServerLinkViewModel</code> provides a view model for the links currently displayed for a server.
- *
- * @author Darryl L. Pierce
- */
 class ServerLinkViewModel : ViewModel() {
     private val serverLinkRepository: ServerLinkRepository = koin.get()
 
@@ -144,3 +140,4 @@ class ServerLinkViewModel : ViewModel() {
         }
     }
 }
+*/

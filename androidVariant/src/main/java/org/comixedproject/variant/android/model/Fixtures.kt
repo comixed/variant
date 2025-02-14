@@ -19,6 +19,8 @@
 package org.comixedproject.variant.android.model
 
 import org.comixedproject.variant.shared.model.server.Server
+import org.comixedproject.variant.shared.model.server.ServerLink
+import org.comixedproject.variant.shared.model.server.ServerLinkType
 
 val SERVER_LIST = listOf(
     Server(
@@ -57,3 +59,106 @@ val SERVER_LIST = listOf(
         password = "test4echo"
     ),
 );
+
+val SERVER_LINK_LIST = listOf(
+    ServerLink(
+        serverLinkId = 101L,
+        serverId = 1L,
+        directory = "/",
+        identifier = "foo",
+        title = "Captain America",
+        coverUrl = "http://www.comixedproject.org/cover.png",
+        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        linkType = ServerLinkType.NAVIGATION
+    ),
+    ServerLink(
+        serverLinkId = 102L,
+        serverId = 1L,
+        directory = "/",
+        identifier = "foo",
+        title = "Daredevil",
+        coverUrl = "http://www.comixedproject.org/cover.png",
+        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        linkType = ServerLinkType.NAVIGATION
+    ),
+    ServerLink(
+        serverLinkId = 103L,
+        serverId = 1L,
+        directory = "/",
+        identifier = "foo",
+        title = "The Avengers",
+        coverUrl = "http://www.comixedproject.org/cover.png",
+        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        linkType = ServerLinkType.NAVIGATION
+    ),
+    ServerLink(
+        serverLinkId = 104L,
+        serverId = 1L,
+        directory = "/",
+        identifier = "foo",
+        title = "JSA",
+        coverUrl = "http://www.comixedproject.org/cover.png",
+        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        linkType = ServerLinkType.NAVIGATION
+    ),
+    ServerLink(
+        serverLinkId = 105L,
+        serverId = 1L,
+        directory = "/",
+        identifier = "foo",
+        title = "The Green Lantern Corps",
+        coverUrl = "http://www.comixedproject.org/cover.png",
+        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        linkType = ServerLinkType.NAVIGATION
+    ),
+    ServerLink(
+        serverLinkId = 111L,
+        serverId = 1L,
+        directory = "/",
+        identifier = "foo",
+        title = "Detective Comics #27",
+        coverUrl = "http://www.comixedproject.org/cover.png",
+        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        linkType = ServerLinkType.PUBLICATION
+    ),
+    ServerLink(
+        serverLinkId = 111L,
+        serverId = 1L,
+        directory = "/",
+        identifier = "foo",
+        title = "Detective Comics #28",
+        coverUrl = "http://www.comixedproject.org/cover.png",
+        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        linkType = ServerLinkType.PUBLICATION
+    ),
+    ServerLink(
+        serverLinkId = 111L,
+        serverId = 1L,
+        directory = "/",
+        identifier = "foo",
+        title = "Detective Comics #29",
+        coverUrl = "http://www.comixedproject.org/cover.png",
+        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        linkType = ServerLinkType.PUBLICATION
+    ),
+    ServerLink(
+        serverLinkId = 111L,
+        serverId = 1L,
+        directory = "/",
+        identifier = "foo",
+        title = "Detective Comics #30",
+        coverUrl = "http://www.comixedproject.org/cover.png",
+        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        linkType = ServerLinkType.PUBLICATION
+    ),
+    ServerLink(
+        serverLinkId = 111L,
+        serverId = 1L,
+        directory = "/",
+        identifier = "foo",
+        title = "Detective Comics #31",
+        coverUrl = "http://www.comixedproject.org/cover.png",
+        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        linkType = ServerLinkType.PUBLICATION
+    ),
+)

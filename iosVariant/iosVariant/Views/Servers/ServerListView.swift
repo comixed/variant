@@ -32,7 +32,8 @@ struct ServerListView: View {
     ZStack {
       List(servers, id: \.serverId, selection: $selected) { server in
         ServerDetailView(
-          server: server
+          server: server,
+          onTapped: { onBrowseServer(server) }
         ).swipeActions(edge: .leading, allowsFullSwipe: false) {
           Button {
             onDeleteServer(server)

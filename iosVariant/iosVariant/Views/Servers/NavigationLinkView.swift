@@ -19,28 +19,17 @@
 import SwiftUI
 import Variant
 
-struct ServerDetailView: View {
-  let server: Server
-  let onTapped: () -> Void
+struct NavigationLinkView: View {
+  let serverLink: ServerLink
 
   var body: some View {
     VStack(alignment: .leading) {
-      Text(server.name)
-        .font(.headline)
-      Text(server.url)
-        .font(.subheadline)
-      Text(server.username)
-        .font(.body)
-    }
-    .onTapGesture {
-      onTapped()
+      Text("\(serverLink.title)").font(.headline)
+      Text("\(serverLink.downloadLink)").font(.subheadline)
     }
   }
 }
 
 #Preview {
-  ServerDetailView(
-    server: SERVER_LIST[0],
-    onTapped: {}
-  )
+  NavigationLinkView(serverLink: SERVER_LINK_LIST[0])
 }

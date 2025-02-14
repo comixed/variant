@@ -38,7 +38,7 @@ struct ServerEditView: View {
 
       Section {
         TextField("Username", text: $server.username)
-        TextField("Password", text: $server.password)
+        SecureField("Password", text: $server.password)
       }
 
       Spacer()
