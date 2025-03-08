@@ -20,16 +20,23 @@ import SwiftUI
 import Variant
 
 struct PublicationLinkView: View {
+  let server: Server
   let serverLink: ServerLink
+
+  var onBrowseServer: (Server, String, Bool) -> Void
 
   var body: some View {
     VStack(alignment: .leading) {
       Text("\(serverLink.title)").font(.headline)
       Text("\(serverLink.downloadLink)").font(.subheadline)
     }
+    .onTapGesture {
+      onBrowseServer(server, serverLink.downloadLink, false)
+    }
   }
 }
 
 #Preview {
-  PublicationLinkView(serverLink: SERVER_LINK_LIST[0])
+  PublicationLinkView(
+    server: SERVER_LIST[0], serverLink: SERVER_LINK_LIST[0], onBrowseServer: { _, _, _ in })
 }

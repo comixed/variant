@@ -24,6 +24,7 @@
 		B61686B22C36D7F500B47ED6 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61686B12C36D7F500B47ED6 /* HomeView.swift */; };
 		B61686B72C371D3F00B47ED6 /* SwiftFormat in Frameworks */ = {isa = PBXBuildFile; productRef = B61686B62C371D3F00B47ED6 /* SwiftFormat */; };
 		B61686B92C371D3F00B47ED6 /* SwiftFormatConfiguration in Frameworks */ = {isa = PBXBuildFile; productRef = B61686B82C371D3F00B47ED6 /* SwiftFormatConfiguration */; };
+		B628738C2D7DDCA80029468F /* HomeViewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B628738B2D7DDCA80029468F /* HomeViewButton.swift */; };
 		B62E69CB2D61110800A23617 /* BrowseServerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62E69CA2D61110800A23617 /* BrowseServerView.swift */; };
 		B62E69CD2D6137EC00A23617 /* NavigationLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62E69CC2D6137EC00A23617 /* NavigationLinkView.swift */; };
 		B62E69CF2D613C2C00A23617 /* PublicationLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62E69CE2D613C2C00A23617 /* PublicationLinkView.swift */; };
@@ -63,6 +64,7 @@
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B60624CE2C31BD90002AE74C /* Koin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Koin.swift; sourceTree = "<group>"; };
 		B61686B12C36D7F500B47ED6 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		B628738B2D7DDCA80029468F /* HomeViewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewButton.swift; sourceTree = "<group>"; };
 		B62E69CA2D61110800A23617 /* BrowseServerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseServerView.swift; sourceTree = "<group>"; };
 		B62E69CC2D6137EC00A23617 /* NavigationLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLinkView.swift; sourceTree = "<group>"; };
 		B62E69CE2D613C2C00A23617 /* PublicationLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicationLinkView.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				B61686B12C36D7F500B47ED6 /* HomeView.swift */,
+				B628738B2D7DDCA80029468F /* HomeViewButton.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 				B61686B22C36D7F500B47ED6 /* HomeView.swift in Sources */,
 				B60624CF2C31BD90002AE74C /* Koin.swift in Sources */,
 				6A1DEA452D529A0000D84717 /* NavigationTarget.swift in Sources */,
+				B628738C2D7DDCA80029468F /* HomeViewButton.swift in Sources */,
 				B62E69CD2D6137EC00A23617 /* NavigationLinkView.swift in Sources */,
 				6AA7B0ED2D6CCB13009F343A /* ServerLinkViewModelWrapper.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,

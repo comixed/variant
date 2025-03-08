@@ -16,34 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
+import SwiftUI
 
-enum NavigationTarget: String, CaseIterable, Hashable {
-  case Comics
-  case Servers
-  case Settings
-}
+struct HomeViewButton: View {
+  var title: String
+  var subtitle: String
+  var icon: String
 
-func navigationTargetTitle(target: NavigationTarget) -> String {
-  return switch target {
-  case .Comics: "Comics"
-  case .Servers: "Servers"
-  case .Settings: "Settings"
+  var body: some View {
+    VStack(alignment: .leading) {
+      Text(title)
+        .font(.title)
+      Text(subtitle)
+        .font(.subheadline)
+
+    }.padding()
+      .frame(maxWidth: .infinity, alignment: .leading)
   }
 }
 
-func navigationTargetSubtitle(target: NavigationTarget) -> String {
-  return switch target {
-  case .Comics: "View and read comics books"
-  case .Servers: "View, edit, and browse servers"
-  case .Settings: "Application settings"
-  }
-}
-
-func navigationTargetIcon(target: NavigationTarget) -> String {
-  return switch target {
-  case .Comics: "Comics"
-  case .Servers: "Servers"
-  case .Settings: "Settings"
-  }
+#Preview {
+  HomeViewButton(title: "The Title", subtitle: "The subtitle", icon: "")
 }
