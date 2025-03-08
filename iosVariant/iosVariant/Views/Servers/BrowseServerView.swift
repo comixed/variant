@@ -19,6 +19,8 @@
 import SwiftUI
 import Variant
 
+private let TAG = "BrowseServerView"
+
 struct BrowseServerView: View {
   let server: Server
   let serverLinkList: [ServerLink]
@@ -30,11 +32,17 @@ struct BrowseServerView: View {
 
   var body: some View {
     ZStack {
-      List(serverLinkList, id: \.serverLinkId) { serverLink in
+      List(serverLinkList, id: \.self) { serverLink in
         if serverLink.linkType == ServerLinkType.navigation {
-          NavigationLinkView(serverLink: serverLink)
+          NavigationLinkView(
+            server: server, serverLink: serverLink,
+            onBrowseServer: { server, directory, reload in
+              onFollowLink(server, directory, reload)
+            })
         } else {
-          PublicationLinkView(serverLink: serverLink)
+          PublicationLinkView(
+            server: server, serverLink: serverLink,
+            onBrowseServer: { _, _, _ in })
         }
       }
       VStack(alignment: .leading) {

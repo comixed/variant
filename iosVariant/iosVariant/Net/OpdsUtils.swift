@@ -16,23 +16,92 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
 import ReadiumOPDS
-import ReadiumShared
-import Variant
+@preconcurrency import Variant
+
+private let TAG = "OpdsUtils"
 
 func loadServerLinks(
-  server: Server, directory: String, onSuccess: ([ServerLink]) -> Void, onFailure: () -> Void
+  server: Server, directory: String, onSuccess: @escaping ([ServerLink]) -> Void,
+  onFailure: @escaping () -> Void
 ) async {
-  let httpClient = createOpdsHttpClient(server: server)
-  let assetRetriever = AssetRetriever(httpClient: httpClient)
+  Logger().d(
+    tag: TAG, message: "Loading directory from server: server=\(server.name) directory=\(directory)"
+  )
   let url = URL(string: directory, relativeTo: URL(string: server.url))
-  print("Preparing to load url: \(url!.absoluteString)")
+  var request = URLRequest(url: url!)
+  if server.username.isEmpty == false && server.password.isEmpty == false {
+    Logger().d(
+      tag: TAG,
+      message:
+        "Setting authentication heading: username=\(server.username) password=\(server.password.masked)"
+    )
+    let authorization = NetworkUtilsKt.encodeCredentials(
+      username: server.username, password: server.password)
+    request.setValue("Basic \(authorization)", forHTTPHeaderField: "Authorization")
+  }
+  Logger().d(tag: TAG, message: "Fetching url: \(String(describing: request.url))")
+  let task = URLSession.shared.dataTask(with: request) { data, response, error in
+    guard let data = data, let response = response else {
+      Logger().e(tag: TAG, message: "Unable to download feed")
+      onFailure()
+      return
+    }
 
-  switch await assetRetriever.retrieve(url: (url!.anyURL.absoluteURL!)) {
-  case .success(let success):
-    print("SUCCESS!")
-  case .failure(let failure):
-    print("FAILURE! \(failure.localizedDescription)")
+    if let parseData = try? OPDS1Parser.parse(xmlData: data, url: url!, response: response) {
+      var linkList: [ServerLink] = []
+      if let navigations = parseData.feed?.navigation {
+        Logger().d(tag: TAG, message: "Processing \(navigations.count) links")
+        for navigation in navigations {
+          if let title = navigation.title {
+            linkList.append(
+              ServerLink(
+                serverLinkId: nil, serverId: Int64(truncating: server.serverId!),
+                directory: directory,
+                identifier: "",
+                title: title, coverUrl: "", downloadLink: navigation.href,
+                linkType: ServerLinkType.navigation, downloaded: false)
+            )
+          }
+        }
+      }
+
+      if let publications = parseData.feed?.publications {
+        Logger().d(tag: TAG, message: "Processing \(publications.count) publications)")
+        for publication in publications {
+          let identifier = publication.metadata.identifier ?? ""
+          let title = publication.metadata.title ?? ""
+          let coverUrl =
+            publication.links.filter { ($0.mediaType?.type ?? "") == "image" }.first?.href ?? ""
+          let downloadLink =
+            publication.links.filter { ($0.mediaType?.subtype ?? "") == "comicbook" }.first?.href
+            ?? ""
+          linkList.append(
+            ServerLink(
+              serverLinkId: nil, serverId: Int64(truncating: server.serverId!),
+              directory: directory,
+              identifier: identifier,
+              title: title, coverUrl: coverUrl, downloadLink: downloadLink,
+              linkType: ServerLinkType.publication, downloaded: false
+            ))
+        }
+      }
+      onSuccess(linkList)
+    }
+  }
+  Logger().d(tag: TAG, message: "Initiating OPDS request")
+  task.resume()
+}
+
+extension String {
+  var masked: String {
+    self.enumerated().map({ (index, ch) in
+      if index == 0
+        || index == self.count - 1
+      {
+        return String(ch)
+      }
+      return "x"
+    }).joined()
   }
 }

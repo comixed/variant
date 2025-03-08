@@ -20,16 +20,29 @@ import SwiftUI
 import Variant
 
 struct NavigationLinkView: View {
+  let server: Server
   let serverLink: ServerLink
 
+  var onBrowseServer: (Server, String, Bool) -> Void
+
   var body: some View {
-    VStack(alignment: .leading) {
-      Text("\(serverLink.title)").font(.headline)
-      Text("\(serverLink.downloadLink)").font(.subheadline)
+    HStack {
+      Button(action: {
+        onBrowseServer(server, serverLink.downloadLink, false)
+      }) {
+        Image(systemName: "chevron.right")
+      }
+
+      VStack(alignment: .leading) {
+        Text("\(serverLink.title)").font(.headline)
+        Text("\(serverLink.downloadLink)").font(.subheadline)
+      }
     }
   }
 }
 
 #Preview {
-  NavigationLinkView(serverLink: SERVER_LINK_LIST[0])
+  NavigationLinkView(
+    server: SERVER_LIST[0], serverLink: SERVER_LINK_LIST[0],
+    onBrowseServer: { _, _, _ in })
 }

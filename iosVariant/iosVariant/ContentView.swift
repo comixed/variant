@@ -26,8 +26,8 @@ struct ContentView: View {
 
   var body: some View {
     HomeView(
-      servers: self.serverViewModel.serverList,
-      serverLinks: self.serverLinkViewModel.serverLinkList,
+      serverList: self.serverViewModel.serverList,
+      serverLinkList: self.serverLinkViewModel.serverLinkList,
       onSaveServer: { server in
         self.serverViewModel.saveServer(server: server)
       },
