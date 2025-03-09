@@ -21,19 +21,13 @@ import Variant
 
 @available(iOS 17.0, *)
 struct ContentView: View {
-  private var serverViewModel = ServerViewModelWrapper()
+  @StateObject var serverManager = ServerManager()
+
   private var serverLinkViewModel = ServerLinkViewModelWrapper()
 
   var body: some View {
     HomeView(
-      serverList: self.serverViewModel.serverList,
       serverLinkList: self.serverLinkViewModel.serverLinkList,
-      onSaveServer: { server in
-        self.serverViewModel.saveServer(server: server)
-      },
-      onDeleteServer: { server in
-        self.serverViewModel.deleteServer(server: server)
-      },
       onBrowseServer: { server, directory, reload in
         if reload || !self.serverLinkViewModel.hasLinks(server: server, directory: directory) {
           Task {
@@ -48,7 +42,9 @@ struct ContentView: View {
         } else {
           self.serverLinkViewModel.loadLinks(server: server, directory: directory)
         }
-      })
+      }
+    )
+    .environmentObject(serverManager)
   }
 }
 

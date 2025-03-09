@@ -29,15 +29,14 @@ struct ViewButton: Identifiable {
 struct HomeView: View {
   @State private var selectedView: NavigationTarget?
 
+  @EnvironmentObject var serverManager: ServerManager
+
   @State private var currentScreen: NavigationTarget? = NavigationTarget.Comics
   @State var currentServer: Server?
   @State var editServer: Bool = false
   @State var browseServer: Bool = false
 
-  let serverList: [Server]
   let serverLinkList: [ServerLink]
-  var onSaveServer: (Server) -> Void
-  var onDeleteServer: (Server) -> Void
   var onBrowseServer: (Server, String, Bool) -> Void
 
   var buttons: [ViewButton] {
@@ -70,13 +69,15 @@ struct HomeView: View {
       if let view = selectedView {
         switch view {
         case .Comics: Text("Comics detail!")
-        case .Servers:
+        case .Servers: ServersView()
+        /*
           if self.currentServer != nil {
             if self.editServer {
               ServerEditView(
                 server: self.currentServer!,
                 onSaveChanges: { server in
-                  self.onSaveServer(server)
+                  //                  self.onSaveServer(server)
+                  self.serverManager.saveServer(server: server)
                   self.editServer = false
                   self.currentServer = nil
                 },
@@ -99,20 +100,19 @@ struct HomeView: View {
             }
           } else {
             ServerListView(
-              servers: self.serverList,
+              servers: self.serverManager.serverList,
               onEditServer: { server in
                 self.currentServer = server
                 self.editServer = true
               },
-              onDeleteServer: { server in
-                self.onDeleteServer(server)
-              },
+              onDeleteServer: { server in self.serverManager.deleteServer(server: server) },
               onBrowseServer: { server in
                 self.currentServer = server
                 self.browseServer = true
                 self.onBrowseServer(server, server.url, false)
               })
           }
+            */
         case .Settings: Text("Settings detail!")
         }
 
@@ -124,8 +124,10 @@ struct HomeView: View {
 }
 
 #Preview {
+  let serverManager = ServerManager()
   HomeView(
-    serverList: SERVER_LIST,
-    serverLinkList: [], onSaveServer: { _ in }, onDeleteServer: { _ in },
-    onBrowseServer: { _, _, _ in })
+    serverLinkList: [],
+    onBrowseServer: { _, _, _ in }
+  )
+  .environmentObject(serverManager)
 }
