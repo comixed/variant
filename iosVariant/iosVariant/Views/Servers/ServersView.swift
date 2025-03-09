@@ -20,18 +20,61 @@ import SwiftUI
 import Variant
 
 struct ServersView: View {
-  let servers: [Server]
+  @EnvironmentObject var serverManager: ServerManager
+
+  @State var selected: Server?
+  @State var isEditing = false
+  @State var isDeleting = false
+  @State var isBrowsing = false
 
   var body: some View {
-    ServerListView(
-      servers: servers,
-      onEditServer: { _ in },
-      onDeleteServer: { _ in },
-      onBrowseServer: { _ in }
-    )
+    List(serverManager.serverList, id: \.serverId, selection: $selected) { server in
+      ServerDetailView(
+        server: server,
+        onTapped: { self.isBrowsing = true }
+      ).swipeActions(edge: .leading, allowsFullSwipe: false) {
+        Button {
+          serverManager.deleteServer(server: server)
+        } label: {
+          Label("Delete", systemImage: "trash.fill")
+        }
+        .tint(.red)
+      }
+      .swipeActions(edge: .trailing) {
+        Button {
+          self.isEditing = true
+        } label: {
+          Label("Edit", systemImage: "pencil")
+        }
+        .tint(.green)
+      }
+    }
+    .listStyle(.plain)
+    .navigationTitle("Server List")
+    .toolbar {
+      Button("Add") {
+        self.selected = nil
+        self.isEditing = true
+      }
+    }
+    .sheet(isPresented: self.$isEditing) {
+      ServerEditView(
+        server: self.selected
+          ?? Server(serverId: nil, name: "", url: "", username: "", password: ""),
+        onSaveChanges: { server in
+          self.serverManager.saveServer(server: server)
+          self.isEditing = false
+        },
+        onCancelChanges: { self.isEditing = false })
+    }
   }
 }
 
-#Preview {
-  ServersView(servers: SERVER_LIST)
+struct ServersView_Previews: PreviewProvider {
+  static var serverManager = previewableServerManager()
+
+  static var previews: some View {
+    ServersView()
+      .environmentObject(serverManager)
+  }
 }

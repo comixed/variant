@@ -19,6 +19,8 @@
 import SwiftUI
 import Variant
 
+private let TAG = "ServerEditView"
+
 struct ServerEditView: View {
   private let TAG = "ServerEditView"
 
@@ -27,33 +29,58 @@ struct ServerEditView: View {
   var onSaveChanges: (Server) -> Void
   var onCancelChanges: () -> Void
 
+  @State private var name: String
+  @State private var url: String
+  @State private var username: String
+  @State private var password: String
+
+  init(
+    server: Server, onSaveChanges: @escaping (Server) -> Void, onCancelChanges: @escaping () -> Void
+  ) {
+    self.server = server
+    self.name = server.name
+    self.url = server.url
+    self.username = server.username
+    self.password = server.password
+    self.onSaveChanges = onSaveChanges
+    self.onCancelChanges = onCancelChanges
+  }
+
   var body: some View {
-    VStack {
-      Text("\(server.name)").font(.headline)
+    NavigationView {
+      VStack {
+        Text("\(server.name)").font(.title)
 
-      Section {
-        TextField("Server name", text: $server.name)
-        TextField("Server address", text: $server.url)
-      }
+        Section(header: Text("Server Details").font(.headline)) {
+          TextField("Server name", text: $name)
+          TextField("Server address", text: $url)
+        }
 
-      Section {
-        TextField("Username", text: $server.username)
-        SecureField("Password", text: $server.password)
-      }
+        Section(header: Text("Account Details").font(.headline)) {
+          TextField("Username", text: $username)
+          SecureField("Password", text: $password)
+        }
 
-      Spacer()
-    }
-    .padding()
-    .toolbar {
-      let saveCaption = self.server.serverId != nil ? "Save" : "Add"
+        Spacer()
+      }
+      .padding()
+      .toolbar {
+        let saveCaption = self.server.serverId != nil ? "Save" : "Add"
 
-      Button(saveCaption) {
-        onSaveChanges($server.wrappedValue)
+        Button(saveCaption) {
+          let server = self.$server.wrappedValue
+          server.name = self.name
+          server.url = self.url
+          server.username = username
+          server.password = password
+          Logger().d(tag: TAG, message: "id=\(server.serverId)")
+          onSaveChanges(server)
+        }
+        Button("Cancel") {
+          onCancelChanges()
+        }
       }
-      Button("Close") {
-        onCancelChanges()
-      }
-    }
+    }.navigationViewStyle(StackNavigationViewStyle())
   }
 }
 

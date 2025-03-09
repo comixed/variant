@@ -59,12 +59,13 @@ fun HomeView(
     NavigationSuiteScaffold(
         navigationSuiteItems = {
             NavigationTarget.entries.forEach { target ->
-                item(icon = {
-                    Icon(
-                        target.icon,
-                        contentDescription = stringResource(target.contentDescription)
-                    )
-                },
+                item(
+                    icon = {
+                        Icon(
+                            target.icon,
+                            contentDescription = stringResource(target.contentDescription)
+                        )
+                    },
                     label = { Text(stringResource(target.label)) },
                     selected = target == currentDestination,
                     onClick = { currentDestination = target })
@@ -78,7 +79,8 @@ fun HomeView(
                 currentServer.let { server ->
                     if (server != null) {
                         if (editServer) {
-                            ServerEditView(server,
+                            ServerEditView(
+                                server,
                                 onSave = { update ->
                                     onSaveServer(update)
                                     currentServer = null
@@ -102,10 +104,11 @@ fun HomeView(
                             ServerDetailView(server)
                         }
                     } else {
-                        ServerListView(serverList, onEditServer = { target ->
-                            currentServer = target
-                            editServer = true
-                        },
+                        ServerListView(
+                            serverList, onEditServer = { target ->
+                                currentServer = target
+                                editServer = true
+                            },
                             onDeleteServer = onDeleteServer,
                             onBrowseServer = { target ->
                                 currentServer = target
