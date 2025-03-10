@@ -24,98 +24,38 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.NavigationTarget
-import org.comixedproject.variant.android.model.SERVER_LINK_LIST
-import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.android.ui.comics.ComicView
-import org.comixedproject.variant.android.ui.servers.BrowseServerView
-import org.comixedproject.variant.android.ui.servers.ServerDetailView
-import org.comixedproject.variant.android.ui.servers.ServerEditView
-import org.comixedproject.variant.android.ui.servers.ServerListView
+import org.comixedproject.variant.android.ui.servers.ServersView
 import org.comixedproject.variant.android.ui.setings.SettingsView
-import org.comixedproject.variant.shared.model.server.Server
-import org.comixedproject.variant.shared.model.server.ServerLink
 
 @Composable
-fun HomeView(
-    serverList: List<Server>,
-    serverLinkList: List<ServerLink>,
-    onSaveServer: (Server) -> Unit,
-    onDeleteServer: (Server) -> Unit,
-    onLoadLinks: (Server, String, Boolean) -> Unit
-) {
-    var currentDestination by rememberSaveable { mutableStateOf(NavigationTarget.COMICS) }
-    var currentServer by remember { mutableStateOf<Server?>(null) }
-    var editServer by remember { mutableStateOf(false) }
-    var browseServer by remember { mutableStateOf(false) }
+fun HomeView() {
+    var target by rememberSaveable { mutableStateOf(NavigationTarget.COMICS) }
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
-            NavigationTarget.entries.forEach { target ->
+            NavigationTarget.entries.forEach { selection ->
                 item(
                     icon = {
                         Icon(
-                            target.icon,
-                            contentDescription = stringResource(target.contentDescription)
+                            selection.icon,
+                            contentDescription = stringResource(selection.contentDescription)
                         )
                     },
-                    label = { Text(stringResource(target.label)) },
-                    selected = target == currentDestination,
-                    onClick = { currentDestination = target })
+                    label = { Text(stringResource(selection.label)) },
+                    selected = target == selection,
+                    onClick = { target = selection })
             }
         },
     ) {
-        when (currentDestination) {
-            NavigationTarget.SERVERS ->
-                currentServer.let { server ->
-                    if (server != null) {
-                        if (editServer) {
-                            ServerEditView(
-                                server,
-                                onSave = { update ->
-                                    onSaveServer(update)
-                                    currentServer = null
-                                    editServer = false
-                                },
-                                onCancel = {
-                                    currentServer = null
-                                    editServer = false
-                                })
-                        } else if (browseServer) {
-                            BrowseServerView(
-                                server,
-                                serverLinkList,
-                                onFollowLink = onLoadLinks,
-                                onStopBrowsing = {
-                                    browseServer = false
-                                    currentServer = null
-                                }
-                            )
-                        } else {
-                            ServerDetailView(server)
-                        }
-                    } else {
-                        ServerListView(
-                            serverList, onEditServer = { target ->
-                                currentServer = target
-                                editServer = true
-                            },
-                            onDeleteServer = onDeleteServer,
-                            onBrowseServer = { target ->
-                                currentServer = target
-                                browseServer = true
-                                onLoadLinks(target, target.url, false)
-                            }
-                        )
-                    }
-                }
-
+        when (target) {
+            NavigationTarget.SERVERS -> ServersView()
             NavigationTarget.COMICS -> ComicView()
             NavigationTarget.SETTINGS -> SettingsView()
         }
@@ -126,11 +66,6 @@ fun HomeView(
 @Preview
 fun HomePreview() {
     VariantTheme {
-        HomeView(
-            SERVER_LIST,
-            SERVER_LINK_LIST,
-            onSaveServer = { _ -> },
-            onDeleteServer = { _ -> },
-            onLoadLinks = { _, _, _ -> })
+        HomeView()
     }
 }
