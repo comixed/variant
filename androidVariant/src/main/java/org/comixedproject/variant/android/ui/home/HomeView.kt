@@ -19,7 +19,6 @@
 package org.comixedproject.variant.android.ui.home
 
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
@@ -71,8 +70,6 @@ fun HomeView(
                     onClick = { currentDestination = target })
             }
         },
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.primary,
     ) {
         when (currentDestination) {
             NavigationTarget.SERVERS ->
