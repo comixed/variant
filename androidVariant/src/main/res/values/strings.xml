@@ -25,4 +25,5 @@
     <string name="stopBrowsingLabel">Stop browsing this server...</string>
     <string name="downloadPublicationLabel">Download this publication...</string>
     <string name="downloadNavigationLabel">Download this directory...</string>
+    <string name="serverListTitle">Server List</string>
 </resources>

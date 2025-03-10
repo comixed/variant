@@ -52,9 +52,11 @@ struct ServersView: View {
     .listStyle(.plain)
     .navigationTitle("Server List")
     .toolbar {
-      Button("Add") {
+      Button {
         self.selected = nil
         self.isEditing = true
+      } label: {
+          Label("Add", systemImage: "plus")
       }
     }
     .sheet(isPresented: self.$isEditing) {

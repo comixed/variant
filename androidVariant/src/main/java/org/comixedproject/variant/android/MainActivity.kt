@@ -30,11 +30,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import kotlinx.coroutines.launch
-import org.comixedproject.variant.android.net.loadServerLinks
 import org.comixedproject.variant.android.ui.home.HomeView
 import org.comixedproject.variant.android.viewmodel.SplashScreenViewModel
-import org.comixedproject.variant.shared.platform.Logger
 import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.shared.viewmodel.ServerViewModel
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -70,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     val serverList by serverViewModel.serverList.collectAsState()
                     val serverLinkList by serverLinkViewModel.serverLinkList.collectAsState()
 
-                    HomeView(
+                    HomeView(/*
                         serverList, serverLinkList,
                         onSaveServer = { server ->
                             Logger.d(TAG, "Saving server: name=${server.name}")
@@ -92,7 +89,11 @@ class MainActivity : ComponentActivity() {
                                         server,
                                         directory,
                                         onSuccess = { links ->
-                                            serverLinkViewModel.saveLinks(server, directory, links)
+                                            serverLinkViewModel.saveLinks(
+                                                server,
+                                                directory,
+                                                links
+                                            )
                                         },
                                         onFailure = { })
                                 }
@@ -100,6 +101,7 @@ class MainActivity : ComponentActivity() {
                                 serverLinkViewModel.loadLinks(server, directory)
                             }
                         }
+                        */
                     )
                 }
             }

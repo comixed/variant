@@ -64,7 +64,6 @@ struct HomeView: View {
         )
       }
       .listStyle(.plain)
-      .navigationTitle("ComiXed Variant")
     } detail: {
       if let view = selectedView {
         switch view {
