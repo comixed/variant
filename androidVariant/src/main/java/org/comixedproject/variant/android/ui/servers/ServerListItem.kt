@@ -82,7 +82,6 @@ fun ServerListItem(
         backgroundContent = { DismissBackground(dismissState) },
         content = {
             ElevatedCard(
-                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 modifier = Modifier
                     .fillMaxWidth()
