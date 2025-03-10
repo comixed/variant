@@ -26,6 +26,8 @@ struct ContentView: View {
   private var serverLinkViewModel = ServerLinkViewModelWrapper()
 
   var body: some View {
+    Text("ComiXed Variant").font(.headline)
+
     HomeView(
       serverLinkList: self.serverLinkViewModel.serverLinkList,
       onBrowseServer: { server, directory, reload in
@@ -45,6 +47,7 @@ struct ContentView: View {
       }
     )
     .environmentObject(serverManager)
+    Spacer()
   }
 }
 

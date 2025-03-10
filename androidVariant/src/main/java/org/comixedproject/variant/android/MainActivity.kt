@@ -92,7 +92,11 @@ class MainActivity : ComponentActivity() {
                                         server,
                                         directory,
                                         onSuccess = { links ->
-                                            serverLinkViewModel.saveLinks(server, directory, links)
+                                            serverLinkViewModel.saveLinks(
+                                                server,
+                                                directory,
+                                                links
+                                            )
                                         },
                                         onFailure = { })
                                 }
