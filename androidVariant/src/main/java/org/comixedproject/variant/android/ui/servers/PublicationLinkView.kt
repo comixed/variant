@@ -1,12 +1,12 @@
 package org.comixedproject.variant.android.ui.servers
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,19 +30,18 @@ fun PublicationLinkView(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        IconButton(onClick = {
+        Row(modifier = Modifier.clickable {
             Logger.d(TAG, "Publication link selected: ${serverLink.downloadLink}")
             onLoadLink(serverLink.downloadLink)
         }) {
-            Icon(
-                imageVector = Icons.Rounded.AddCircle,
-                contentDescription = stringResource(
-                    R.string.downloadPublicationLabel
-                )
-            )
-        }
-        Column {
             Text("${serverLink.title}", style = MaterialTheme.typography.bodyLarge)
+
+            Spacer(modifier = Modifier.weight(1.0f))
+
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = stringResource(R.string.downloadPublicationLabel)
+            )
         }
     }
 }
