@@ -32,7 +32,6 @@ import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,7 +57,6 @@ private val TAG = "ServersView"
 fun ServersView() {
     val serverViewModel: ServerViewModel = koinViewModel<ServerViewModel>()
     val serverLinkViewModel: ServerLinkViewModel = koinViewModel<ServerLinkViewModel>()
-    val serverLinkList by serverLinkViewModel.serverLinkList.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
     val navigator = rememberListDetailPaneScaffoldNavigator<Server>()
@@ -154,30 +152,6 @@ fun ServersView() {
                     Logger.d(TAG, "Browsing server: [${server.serverId}] ${server.name}")
                     BrowseServerView(
                         server,
-                        serverLinkViewModel.serverLinkList.value,
-                        onFollowLink = { server, directory, reload ->
-                            if (reload || !serverLinkViewModel.hasLinks(server, directory)) {
-                                coroutineScope.launch {
-                                    loadServerLinks(
-                                        server,
-                                        directory,
-                                        onSuccess = { links ->
-                                            serverLinkViewModel.saveLinks(
-                                                server,
-                                                directory,
-                                                links
-                                            )
-                                            serverLinkViewModel.loadLinks(server, directory)
-                                        },
-                                        onFailure = {
-                                            Logger.e(TAG, "Failed to download anyting")
-                                            isBrowsing = false
-                                        })
-                                }
-                            } else {
-                                serverLinkViewModel.loadLinks(server, directory)
-                            }
-                        },
                         onStopBrowsing = {
                             isBrowsing = false
                         })

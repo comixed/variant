@@ -25,16 +25,10 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import org.comixedproject.variant.android.ui.home.HomeView
 import org.comixedproject.variant.android.viewmodel.SplashScreenViewModel
-import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
-import org.comixedproject.variant.shared.viewmodel.ServerViewModel
-import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 private const val TAG = "MainActivity"
 
@@ -61,48 +55,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    val coroutineScope = rememberCoroutineScope()
-                    val serverViewModel: ServerViewModel = getViewModel()
-                    val serverLinkViewModel: ServerLinkViewModel = getViewModel()
-                    val serverList by serverViewModel.serverList.collectAsState()
-                    val serverLinkList by serverLinkViewModel.serverLinkList.collectAsState()
-
-                    HomeView(/*
-                        serverList, serverLinkList,
-                        onSaveServer = { server ->
-                            Logger.d(TAG, "Saving server: name=${server.name}")
-                            serverViewModel.saveServer(server)
-                        },
-                        onDeleteServer = { server ->
-                            Logger.d(TAG, "Deleting server: name=${server.name}")
-                            serverViewModel.deleteServer(server)
-                        },
-                        onLoadLinks = { server, directory, reload ->
-                            Logger.d(
-                                TAG,
-                                "Loading directory: name=${server.name} directory=${directory}"
-                            )
-
-                            if (reload || !serverLinkViewModel.hasLinks(server, directory)) {
-                                coroutineScope.launch {
-                                    loadServerLinks(
-                                        server,
-                                        directory,
-                                        onSuccess = { links ->
-                                            serverLinkViewModel.saveLinks(
-                                                server,
-                                                directory,
-                                                links
-                                            )
-                                        },
-                                        onFailure = { })
-                                }
-                            } else {
-                                serverLinkViewModel.loadLinks(server, directory)
-                            }
-                        }
-                        */
-                    )
+                    HomeView()
                 }
             }
         }
