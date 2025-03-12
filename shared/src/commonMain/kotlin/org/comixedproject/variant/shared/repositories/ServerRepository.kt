@@ -40,16 +40,18 @@ class ServerRepository(
      *
      * @param id the server id
      */
-    fun getById(id: Long): Server {
+    fun getById(id: Long): Server? {
         Logger.d(TAG, "Loading server: id=${id}")
-        val record = databaseHelper.loadServer(id)
-        return Server(
-            serverId = record.serverId,
-            name = record.name,
-            url = record.url,
-            username = record.username,
-            password = record.password
-        )
+        databaseHelper.loadServer(id).let { record ->
+            return Server(
+                serverId = record.serverId,
+                name = record.name,
+                url = record.url,
+                username = record.username,
+                password = record.password
+            )
+        }
+        return null
     }
 
     /**

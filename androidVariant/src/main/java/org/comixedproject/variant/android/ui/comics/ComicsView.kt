@@ -24,12 +24,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
 
 @Composable
-fun ComicView() {
+fun ComicsView() {
     Text("Comics!")
 }
 
 @Composable
 @Preview
-fun ComicPreview() {
-    VariantTheme { ComicView() }
+fun ComicsPreview() {
+    VariantTheme { ComicsView() }
 }
