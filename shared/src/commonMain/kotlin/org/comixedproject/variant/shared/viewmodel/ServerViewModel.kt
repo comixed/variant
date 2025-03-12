@@ -43,6 +43,10 @@ class ServerViewModel(
 
     var onServerListUpdated: ((List<Server>) -> Unit)? = null
 
+    fun getById(id: Long): Server? {
+        return this.serverRepository.getById(id)
+    }
+
     /**
      * Saves the given server to storage.
      *

@@ -27,4 +27,5 @@
     <string name="downloadNavigationLabel">Download this directory...</string>
     <string name="serverListTitle">Server List</string>
     <string name="navigateBackLabel">Go back to parent</string>
+    <string name="unknownLabel">Unknown Item</string>
 </resources>

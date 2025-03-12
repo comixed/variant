@@ -18,20 +18,10 @@
 
 package org.comixedproject.variant.android.model
 
-import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.ui.graphics.vector.ImageVector
-import org.comixedproject.variant.android.R
+import org.comixedproject.variant.android.ui.Screen
 
-enum class NavigationTarget(
-    @StringRes val label: Int,
-    val icon: ImageVector,
-    @StringRes val contentDescription: Int
-) {
-    COMICS(R.string.comicsButtonLabel, Icons.Rounded.Home, R.string.comicsButtonLabel),
-    SERVERS(R.string.serverButtonLabel, Icons.Rounded.AccountCircle, R.string.serverButtonLabel),
-    SETTINGS(R.string.settingsButtonLabel, Icons.Rounded.Settings, R.string.settingsButtonLabel)
+enum class NavigationTarget(val screen: Screen) {
+    SERVERS(Screen.ServersScreen),
+    COMICS(Screen.ComicsScreen),
+    SETTINGS(Screen.SettingsScreen)
 }
