@@ -30,14 +30,12 @@ struct HomeView: View {
   @State private var selectedView: NavigationTarget?
 
   @EnvironmentObject var serverManager: ServerManager
+  @EnvironmentObject var serverLinkManager: ServerLinkManager
 
   @State private var currentScreen: NavigationTarget? = NavigationTarget.Comics
   @State var currentServer: Server?
   @State var editServer: Bool = false
   @State var browseServer: Bool = false
-
-  let serverLinkList: [ServerLink]
-  var onBrowseServer: (Server, String, Bool) -> Void
 
   var buttons: [ViewButton] {
     var buttons: [ViewButton] = []
@@ -87,7 +85,7 @@ struct HomeView: View {
             } else if self.browseServer {
               BrowseServerView(
                 server: self.currentServer!,
-                serverLinkList: self.serverLinkList,
+                serverLinkList: self.serverLinkManager.serverLinkList,
                 onFollowLink: { server, directory, reload in
                   self.onBrowseServer(server, directory, reload)
                 }, onStopBrowsing: {})
@@ -123,10 +121,7 @@ struct HomeView: View {
 }
 
 #Preview {
-  let serverManager = ServerManager()
-  HomeView(
-    serverLinkList: [],
-    onBrowseServer: { _, _, _ in }
-  )
-  .environmentObject(serverManager)
+  HomeView()
+    .environmentObject(previewableServerManager())
+    .environmentObject(previewableServerLinkManager())
 }

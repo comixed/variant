@@ -22,31 +22,14 @@ import Variant
 @available(iOS 17.0, *)
 struct ContentView: View {
   @StateObject var serverManager = ServerManager()
-
-  private var serverLinkViewModel = ServerLinkViewModelWrapper()
+  @StateObject var serverLinkManager = ServerLinkManager()
 
   var body: some View {
     Text("ComiXed Variant").font(.headline)
 
-    HomeView(
-      serverLinkList: self.serverLinkViewModel.serverLinkList,
-      onBrowseServer: { server, directory, reload in
-        if reload || !self.serverLinkViewModel.hasLinks(server: server, directory: directory) {
-          Task {
-            await loadServerLinks(
-              server: server, directory: directory,
-              onSuccess: { links in
-                self.serverLinkViewModel.saveLinks(
-                  server: server, directory: directory, links: links)
-              },
-              onFailure: {})
-          }
-        } else {
-          self.serverLinkViewModel.loadLinks(server: server, directory: directory)
-        }
-      }
-    )
-    .environmentObject(serverManager)
+    HomeView()
+      .environmentObject(serverManager)
+      .environmentObject(serverLinkManager)
     Spacer()
   }
 }

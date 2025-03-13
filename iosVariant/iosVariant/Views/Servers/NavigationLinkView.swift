@@ -27,15 +27,16 @@ struct NavigationLinkView: View {
 
   var body: some View {
     HStack {
+      VStack(alignment: .leading) {
+        Text("\(serverLink.title)").font(.headline)
+      }
+
+      Spacer()
+
       Button(action: {
         onBrowseServer(server, serverLink.downloadLink, false)
       }) {
         Image(systemName: "chevron.right")
-      }
-
-      VStack(alignment: .leading) {
-        Text("\(serverLink.title)").font(.headline)
-        Text("\(serverLink.downloadLink)").font(.subheadline)
       }
     }
   }
