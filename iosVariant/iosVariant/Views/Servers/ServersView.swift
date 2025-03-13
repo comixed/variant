@@ -21,6 +21,7 @@ import Variant
 
 struct ServersView: View {
   @EnvironmentObject var serverManager: ServerManager
+  @EnvironmentObject var serverLinkManager: ServerLinkManager
 
   @State var selected: Server?
   @State var isEditing = false
@@ -28,55 +29,67 @@ struct ServersView: View {
   @State var isBrowsing = false
 
   var body: some View {
-    List(serverManager.serverList, id: \.serverId, selection: $selected) { server in
-      ServerDetailView(
-        server: server,
-        onTapped: { self.isBrowsing = true }
-      ).swipeActions(edge: .leading, allowsFullSwipe: false) {
-        Button {
-          serverManager.deleteServer(server: server)
-        } label: {
-          Label("Delete", systemImage: "trash.fill")
+    if self.isBrowsing {
+      BrowseServerView(
+        server: self.selected!,
+        serverLinkList: self.serverLinkManager.serverLinkList,
+        onFollowLink: self.serverLinkManager.downloadLinks,
+        onStopBrowsing: { self.isBrowsing = false })
+    } else {
+      List(serverManager.serverList, id: \.serverId, selection: $selected) { server in
+        ServerDetailView(
+          server: server,
+          onTapped: {
+            self.isBrowsing = true
+            self.selected = server
+            self.serverLinkManager.downloadLinks(
+              server: server, directory: server.url, reload: false)
+          }
+        ).swipeActions(edge: .leading, allowsFullSwipe: false) {
+          Button {
+            serverManager.deleteServer(server: server)
+          } label: {
+            Label("Delete", systemImage: "trash.fill")
+          }
+          .tint(.red)
         }
-        .tint(.red)
+        .swipeActions(edge: .trailing) {
+          Button {
+            self.isEditing = true
+          } label: {
+            Label("Edit", systemImage: "pencil")
+          }
+          .tint(.green)
+        }
       }
-      .swipeActions(edge: .trailing) {
+      .listStyle(.plain)
+      .navigationTitle("Server List")
+      .toolbar {
         Button {
+          self.selected = nil
           self.isEditing = true
         } label: {
-          Label("Edit", systemImage: "pencil")
-        }
-        .tint(.green)
-      }
-    }
-    .listStyle(.plain)
-    .navigationTitle("Server List")
-    .toolbar {
-      Button {
-        self.selected = nil
-        self.isEditing = true
-      } label: {
           Label("Add", systemImage: "plus")
+        }
       }
-    }
-    .sheet(isPresented: self.$isEditing) {
-      ServerEditView(
-        server: self.selected
-          ?? Server(serverId: nil, name: "", url: "", username: "", password: ""),
-        onSaveChanges: { server in
-          self.serverManager.saveServer(server: server)
-          self.isEditing = false
-        },
-        onCancelChanges: { self.isEditing = false })
+      .sheet(isPresented: self.$isEditing) {
+        ServerEditView(
+          server: self.selected
+            ?? Server(serverId: nil, name: "", url: "", username: "", password: ""),
+          onSaveChanges: { server in
+            self.serverManager.saveServer(server: server)
+            self.isEditing = false
+          },
+          onCancelChanges: { self.isEditing = false })
+      }
     }
   }
 }
 
 struct ServersView_Previews: PreviewProvider {
-  static var serverManager = previewableServerManager()
-
   static var previews: some View {
     ServersView()
-      .environmentObject(serverManager)
+      .environmentObject(previewableServerManager())
+      .environmentObject(previewableServerLinkManager())
   }
 }

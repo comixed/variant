@@ -26,9 +26,18 @@ struct PublicationLinkView: View {
   var onBrowseServer: (Server, String, Bool) -> Void
 
   var body: some View {
-    VStack(alignment: .leading) {
-      Text("\(serverLink.title)").font(.headline)
-      Text("\(serverLink.downloadLink)").font(.subheadline)
+    HStack {
+      VStack(alignment: .leading) {
+        Text("\(serverLink.title)").font(.headline)
+      }
+
+      Spacer()
+
+      Button(action: {
+        onBrowseServer(server, serverLink.downloadLink, false)
+      }) {
+        Image(systemName: "chevron.down")
+      }
     }
     .onTapGesture {
       onBrowseServer(server, serverLink.downloadLink, false)
