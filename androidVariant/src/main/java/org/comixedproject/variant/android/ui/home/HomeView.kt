@@ -57,9 +57,11 @@ fun HomeView(
     serverLinkList: List<ServerLink>,
     onSaveServer: (Server) -> Unit,
     onDeleteServer: (Server) -> Unit,
-    onLoadServerContents: (Server, String, Boolean) -> Unit
+    onLoadServerContents: (Server, String, Boolean, () -> Unit, () -> Unit) -> Unit
 ) {
     var currentTarget by rememberSaveable { mutableStateOf(NavigationTarget.SERVERS) }
+    var currentServer by rememberSaveable { mutableStateOf<Server?>(null) }
+    var currentDirectory by rememberSaveable { mutableStateOf("") }
     val navController = rememberNavController()
 
     NavigationSuiteScaffold(
@@ -100,14 +102,13 @@ fun HomeView(
                     },
                     onBrowseServer = { server ->
                         Logger.d(TAG, "Starting to browse server: name=${server.name}")
-                        onLoadServerContents(server, server.url, false)
-                        navController.navigate(
-                            Screen.BrowseServerScreen.withArgs(
-                                "${server.serverId}",
-                                server.name,
-                                server.url
-                            )
-                        )
+                        currentServer = server
+                        currentDirectory = server.url
+                        onLoadServerContents(
+                            server, server.url, false, {
+                                navController.navigate(Screen.BrowseServerScreen.route)
+                            },
+                            {})
                     })
             }
 
@@ -174,48 +175,43 @@ fun HomeView(
                 Text("Delete Server Screen!")
             }
 
-            composable(
-                route = "${Screen.BrowseServerScreen.route}/{serverId}/{title}/{directory}",
-                arguments = listOf(
-                    navArgument("serverId") {
-                        type = NavType.StringType
-                        nullable = false
-                    },
-                    navArgument("title") {
-                        type = NavType.StringType
-                        nullable = false
-                    },
-                    navArgument("directory") {
-                        type = NavType.StringType
-                        nullable = false
+            composable(route = Screen.BrowseServerScreen.route) { entry ->
+                currentServer?.let { server ->
+                    val directory = currentDirectory
+                    val currentServerLink =
+                        serverLinkList
+                            .filter { link -> link.serverId == server.serverId }
+                            .filter { link -> link.directory == directory }
+                            .firstOrNull()
+                    val parentServerLink = serverLinkList
+                        .filter { link -> link.serverId == server.serverId }
+                        .filter { link -> link.downloadLink == directory }
+                        .firstOrNull()
+                    val title = when (parentServerLink) {
+                        null -> server.name
+                        else -> parentServerLink!!.title
                     }
-                )) { entry ->
-                val serverId = entry.arguments?.getString("serverId")
-                val title = entry.arguments?.getString("title")
-                val directory = entry.arguments?.getString("directory")
-                val server = serverList.filter { it.serverId == serverId!!.toLong() }.first()
 
-                Logger.d(TAG, "Showing directory: server=${server.name} directory=${directory}")
+                    Logger.d(TAG, "Showing directory: server=${server.name} directory=${directory}")
 
-                BrowseServerView(
-                    server!!,
-                    title!!,
-                    serverLinkList,
-                    onLoadDirectory = { server, serverLink, reload ->
-                        Logger.d(
-                            TAG,
-                            "Loading directory on server: server=${server.name} directory=${directory} reload=${reload}"
-                        )
-                        onLoadServerContents(server, serverLink.downloadLink, reload)
-                        navController.navigate(
-                            Screen.BrowseServerScreen.withArgs(
-                                "${server.serverId}",
-                                serverLink.title,
-                                serverLink.downloadLink
+                    BrowseServerView(
+                        server,
+                        title,
+                        parentServerLink,
+                        serverLinkList
+                            .filter { link -> link.serverId == server.serverId }
+                            .filter { link -> link.directory == directory },
+                        onLoadDirectory = { server, directory, reload ->
+                            Logger.d(
+                                TAG,
+                                "Loading directory on server: server=${server.name} directory=${directory} reload=${reload}"
                             )
-                        )
-                    }
-                )
+                            onLoadServerContents(server, directory, reload, {
+                                currentDirectory = directory
+                            }, {})
+                        }
+                    )
+                }
             }
         }
     }
@@ -230,6 +226,6 @@ fun HomePreview() {
             SERVER_LINK_LIST,
             onSaveServer = { _ -> },
             onDeleteServer = { _ -> },
-            onLoadServerContents = { _, _, _ -> })
+            onLoadServerContents = { _, _, _, _, _ -> })
     }
 }

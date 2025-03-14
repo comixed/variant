@@ -39,8 +39,6 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : Base
     private val _serverLinkListFlow: MutableStateFlow<List<ServerLink>> by lazy {
         MutableStateFlow(
             serverLinkRepository.serverLinks
-                .filter { link -> this.directory.length > 0 && link.directory == this.directory }
-                .filter { link -> this.currentServer != null && link.serverId == this.currentServer!!.serverId },
         )
     }
 
@@ -68,10 +66,8 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : Base
     fun loadLinks(server: Server, directory: String) {
         this.currentServer = server
         this.directory = directory
-        val links = serverLinkRepository.serverLinks.filter { link -> link.directory == directory }
-            .filter { link -> link.serverId == server.serverId }
-        _serverLinkListFlow.tryEmit(links)
-        onServerLinkListUpdated?.invoke(links)
+        _serverLinkListFlow.tryEmit(serverLinkRepository.serverLinks)
+        onServerLinkListUpdated?.invoke(serverLinkRepository.serverLinks)
     }
 
     /**

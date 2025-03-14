@@ -23,6 +23,8 @@ private let TAG = "BrowseServerView"
 
 struct BrowseServerView: View {
   let server: Server
+  let title: String
+  let parentLink: ServerLink?
   let serverLinkList: [ServerLink]
 
   @State var directory: String = ""
@@ -31,24 +33,25 @@ struct BrowseServerView: View {
   var onStopBrowsing: () -> Void
 
   var body: some View {
-    ZStack {
-      List(serverLinkList, id: \.self) { serverLink in
-        if serverLink.linkType == ServerLinkType.navigation {
-          NavigationLinkView(
-            server: server, serverLink: serverLink,
-            onBrowseServer: { server, directory, reload in
-              onFollowLink(server, directory, reload)
-            })
-        } else {
-          PublicationLinkView(
-            server: server, serverLink: serverLink,
-            onBrowseServer: { _, _, _ in })
-        }
+    List(serverLinkList, id: \.self) { serverLink in
+      if serverLink.linkType == ServerLinkType.navigation {
+        NavigationLinkView(
+          server: server, serverLink: serverLink,
+          onBrowseServer: { server, directory, reload in
+            onFollowLink(server, directory, reload)
+          })
+      } else {
+        PublicationLinkView(
+          server: server, serverLink: serverLink,
+          onBrowseServer: { _, _, _ in })
       }
-      VStack(alignment: .leading) {
-        Text("\(server.name)").font(.title)
-        Spacer()
-        Text("\(directory)")
+    }
+    .navigationTitle("\(title)")
+    .toolbar {
+      if let link = parentLink {
+        Button(action: { onFollowLink(server, link.directory, false) }) {
+          Text("Back")
+        }
       }
     }
   }
@@ -57,15 +60,19 @@ struct BrowseServerView: View {
 #Preview("root") {
   BrowseServerView(
     server: SERVER_LIST[0],
+    title: SERVER_LIST[0].name,
+    parentLink: nil,
     serverLinkList: SERVER_LINK_LIST,
     onFollowLink: { _, _, _ in },
     onStopBrowsing: {}
   )
 }
 
-#Preview("root") {
+#Preview("child") {
   BrowseServerView(
     server: SERVER_LIST[0],
+    title: SERVER_LINK_LIST[1].title,
+    parentLink: SERVER_LINK_LIST[0],
     serverLinkList: SERVER_LINK_LIST,
     onFollowLink: { _, _, _ in },
     onStopBrowsing: {}
