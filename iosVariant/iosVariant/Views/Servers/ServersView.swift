@@ -28,12 +28,36 @@ struct ServersView: View {
   @State var isDeleting = false
   @State var isBrowsing = false
 
+  @State var server: Server? = nil
+  @State var currentDirectory = ""
+
   var body: some View {
     if self.isBrowsing {
+      var serverId = self.selected!.serverId?.int64Value
+      var parentLink = self.serverLinkManager.serverLinkList
+        .first(where: { $0.serverId == serverId && $0.downloadLink == self.currentDirectory })
+      var currentLink = self.serverLinkManager.serverLinkList
+        .first(where: { $0.serverId == serverId && $0.directory == self.currentDirectory })
+      var serverLinkList = self.serverLinkManager.serverLinkList
+        .filter { $0.serverId == serverId }
+        .filter {
+          $0.directory == currentDirectory
+        }
+      var title = "\(self.selected!.name)"
+      /*
+        if let link = parentLink {
+            title = "\(link.title)"
+        }
+         */
       BrowseServerView(
         server: self.selected!,
-        serverLinkList: self.serverLinkManager.serverLinkList,
-        onFollowLink: self.serverLinkManager.downloadLinks,
+        title: title,
+        parentLink: parentLink,
+        serverLinkList: serverLinkList,
+        onFollowLink: { server, directory, reload in
+          self.serverLinkManager.downloadLinks(server: server, directory: directory, reload: reload)
+          self.currentDirectory = directory
+        },
         onStopBrowsing: { self.isBrowsing = false })
     } else {
       List(serverManager.serverList, id: \.serverId, selection: $selected) { server in
@@ -42,6 +66,7 @@ struct ServersView: View {
           onTapped: {
             self.isBrowsing = true
             self.selected = server
+            self.currentDirectory = server.url
             self.serverLinkManager.downloadLinks(
               server: server, directory: server.url, reload: false)
           }
@@ -64,14 +89,14 @@ struct ServersView: View {
       }
       .listStyle(.plain)
       .navigationTitle("Server List")
-      .toolbar {
+      .toolbar(content: {
         Button {
           self.selected = nil
           self.isEditing = true
         } label: {
           Label("Add", systemImage: "plus")
         }
-      }
+      })
       .sheet(isPresented: self.$isEditing) {
         ServerEditView(
           server: self.selected

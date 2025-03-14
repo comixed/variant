@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
                     serverLinkList,
                     onSaveServer = { server -> serverViewModel.saveServer(server) },
                     onDeleteServer = { server -> serverViewModel.deleteServer(server) },
-                    onLoadServerContents = { server, directory, reload ->
+                    onLoadServerContents = { server, directory, reload, onSuccess, onFailure ->
                         if (reload || !serverLinkViewModel.hasLinks(server, directory)) {
                             coroutineScope.launch {
                                 loadServerLinks(
@@ -90,12 +90,14 @@ class MainActivity : ComponentActivity() {
                                             links
                                         )
                                         serverLinkViewModel.loadLinks(server, directory)
+                                        onSuccess()
                                     },
                                     onFailure = {
                                         Logger.e(
                                             TAG,
                                             "Failed to download anything"
                                         )
+                                        onFailure()
                                     })
                             }
                         } else {
@@ -107,6 +109,7 @@ class MainActivity : ComponentActivity() {
                                 "Loading screen: ${route}"
                             )
                             serverLinkViewModel.loadLinks(server, directory)
+                            onSuccess()
                         }
                     })
             }

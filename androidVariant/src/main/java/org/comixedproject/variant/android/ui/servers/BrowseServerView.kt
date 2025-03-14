@@ -19,11 +19,16 @@
 package org.comixedproject.variant.android.ui.servers
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -31,8 +36,10 @@ import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneSca
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.SERVER_LINK_LIST
 import org.comixedproject.variant.android.model.SERVER_LIST
@@ -48,8 +55,9 @@ private val TAG = "BrowseServerView"
 fun BrowseServerView(
     server: Server,
     title: String,
+    parentServerLink: ServerLink?,
     serverLinkList: List<ServerLink>,
-    onLoadDirectory: (Server, ServerLink, Boolean) -> Unit
+    onLoadDirectory: (Server, String, Boolean) -> Unit
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
 
@@ -59,11 +67,33 @@ fun BrowseServerView(
         navigator = navigator,
         listPane = {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    title,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.headlineMedium
-                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    parentServerLink?.let { parentLink ->
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = stringResource(
+                                R.string.navigateBackLabel
+                            ),
+                            modifier = Modifier.clickable {
+                                Logger.d(
+                                    TAG,
+                                    "Going back to parent: ${parentLink.downloadLink}"
+                                )
+                                onLoadDirectory(
+                                    server,
+                                    parentLink.directory,
+                                    false
+                                )
+                            }
+                        )
+                    }
+
+                    Text(
+                        title,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                }
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -72,11 +102,11 @@ fun BrowseServerView(
                         itemContent = { serverLink ->
                             if (serverLink.linkType == ServerLinkType.NAVIGATION) {
                                 NavigationLinkView(serverLink, onLoadLink = { directory ->
-                                    onLoadDirectory(server, serverLink, false)
+                                    onLoadDirectory(server, serverLink.downloadLink, false)
                                 })
                             } else {
                                 PublicationLinkView(serverLink, onLoadLink = { directory ->
-                                    onLoadDirectory(server, serverLink, false)
+                                    onLoadDirectory(server, serverLink.downloadLink, false)
                                 })
                             }
                         }
@@ -92,11 +122,25 @@ fun BrowseServerView(
 
 @Composable
 @Preview
-fun BrowseServerPreview() {
+fun BrowseServerPreview_withParent() {
     VariantTheme {
         BrowseServerView(
             SERVER_LIST.get(0),
             SERVER_LIST.get(0).name,
+            SERVER_LINK_LIST.get(0),
+            SERVER_LINK_LIST,
+            onLoadDirectory = { _, _, _ -> })
+    }
+}
+
+@Composable
+@Preview
+fun BrowseServerPreview_withoutParent() {
+    VariantTheme {
+        BrowseServerView(
+            SERVER_LIST.get(0),
+            SERVER_LIST.get(0).name,
+            null,
             SERVER_LINK_LIST,
             onLoadDirectory = { _, _, _ -> })
     }
