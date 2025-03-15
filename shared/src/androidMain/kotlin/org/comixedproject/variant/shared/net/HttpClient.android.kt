@@ -1,6 +1,6 @@
 /*
  * Variant - A digital comic book reading application for the iPad and Android tablets.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.net
+package org.comixedproject.variant.shared.net
 
-import org.comixedproject.variant.shared.VARIANT_USER_AGENT
-import org.comixedproject.variant.shared.model.server.Server
-import org.readium.r2.shared.util.http.DefaultHttpClient
-import org.readium.r2.shared.util.http.HttpClient as OpdsHttpClient
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.okhttp.OkHttp
 
-/**
- * Returns a client object to connect to the specified server.
- *
- * @param server the server
- * @return an http client object
- */
-fun createOpdsHttpClient(server: Server): OpdsHttpClient {
-    return DefaultHttpClient(
-        userAgent = VARIANT_USER_AGENT,
-        callback = HttpCallback(server)
-    )
+actual fun getHttpClientEngineFactory(): HttpClientEngine {
+    return OkHttp.create()
 }

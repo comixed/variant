@@ -57,9 +57,6 @@ dependencies {
     implementation(libs.readium.opds)
     implementation(libs.readium.streamer)
     implementation(libs.readium.navigator)
-    implementation(libs.ktor.client.android)
-    implementation(libs.ktor.client.auth)
-    implementation(libs.ktor.client.cio)
 
     testImplementation(libs.bundles.unit.tests)
     androidTestImplementation(composeBom)
