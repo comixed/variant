@@ -63,6 +63,7 @@ fun HomeView(
     var currentServer by rememberSaveable { mutableStateOf<Server?>(null) }
     var currentDirectory by rememberSaveable { mutableStateOf("") }
     val navController = rememberNavController()
+    var isLoading by rememberSaveable { mutableStateOf(false) }
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -104,11 +105,15 @@ fun HomeView(
                         Logger.d(TAG, "Starting to browse server: name=${server.name}")
                         currentServer = server
                         currentDirectory = server.url
+                        isLoading = true
                         onLoadServerContents(
                             server, server.url, false, {
                                 navController.navigate(Screen.BrowseServerScreen.route)
                             },
-                            {})
+                            {
+                                isLoading = false
+
+                            })
                     })
             }
 
@@ -196,8 +201,10 @@ fun HomeView(
 
                     BrowseServerView(
                         server,
+                        directory,
+                        parentServerLink?.directory,
+                        isLoading,
                         title,
-                        parentServerLink,
                         serverLinkList
                             .filter { link -> link.serverId == server.serverId }
                             .filter { link -> link.directory == directory },
@@ -206,9 +213,11 @@ fun HomeView(
                                 TAG,
                                 "Loading directory on server: server=${server.name} directory=${directory} reload=${reload}"
                             )
+                            isLoading = true
                             onLoadServerContents(server, directory, reload, {
                                 currentDirectory = directory
-                            }, {})
+                                isLoading = false
+                            }, { isLoading = false })
                         }
                     )
                 }
