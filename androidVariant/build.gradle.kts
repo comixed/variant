@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.kover)
 }
 
 android {
@@ -14,6 +15,8 @@ android {
         versionCode = 1
         versionName = "0.1.0"
         multiDexEnabled = true
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
         compose = true
@@ -65,4 +68,8 @@ dependencies {
     debugImplementation(libs.bundles.compose.debug)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+}
+
+kover {
+
 }

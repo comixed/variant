@@ -122,7 +122,7 @@ val SERVER_LINK_LIST = listOf(
         linkType = ServerLinkType.PUBLICATION
     ),
     ServerLink(
-        serverLinkId = 111L,
+        serverLinkId = 112L,
         serverId = 1L,
         directory = "/",
         identifier = "foo",
@@ -132,7 +132,7 @@ val SERVER_LINK_LIST = listOf(
         linkType = ServerLinkType.PUBLICATION
     ),
     ServerLink(
-        serverLinkId = 111L,
+        serverLinkId = 113L,
         serverId = 1L,
         directory = "/",
         identifier = "foo",
@@ -142,7 +142,7 @@ val SERVER_LINK_LIST = listOf(
         linkType = ServerLinkType.PUBLICATION
     ),
     ServerLink(
-        serverLinkId = 111L,
+        serverLinkId = 114L,
         serverId = 1L,
         directory = "/",
         identifier = "foo",
@@ -152,7 +152,7 @@ val SERVER_LINK_LIST = listOf(
         linkType = ServerLinkType.PUBLICATION
     ),
     ServerLink(
-        serverLinkId = 111L,
+        serverLinkId = 115L,
         serverId = 1L,
         directory = "/",
         identifier = "foo",
