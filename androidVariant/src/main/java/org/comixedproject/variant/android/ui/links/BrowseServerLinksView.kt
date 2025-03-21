@@ -16,11 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.ui.servers
+package org.comixedproject.variant.android.ui.links
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -44,14 +42,13 @@ import org.comixedproject.variant.android.model.SERVER_LINK_LIST
 import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
-import org.comixedproject.variant.shared.model.server.ServerLinkType
 import org.comixedproject.variant.shared.platform.Logger
 
-private val TAG = "BrowseServerView"
+private val TAG = "BrowseServerLinksView"
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun BrowseServerView(
+fun BrowseServerLinksView(
     server: Server,
     directory: String,
     parentDirectory: String?,
@@ -96,22 +93,10 @@ fun BrowseServerView(
                     Logger.d(TAG, "Reloading directory: ${directory}")
                     onLoadDirectory(server, directory, true)
                 }, content = {
-                    LazyColumn {
-                        items(
-                            items = serverLinkList.sortedBy { link -> link.title },
-                            itemContent = { serverLink ->
-                                if (serverLink.linkType == ServerLinkType.NAVIGATION) {
-                                    NavigationLinkView(serverLink, onLoadLink = { directory ->
-                                        onLoadDirectory(server, serverLink.downloadLink, false)
-                                    })
-                                } else {
-                                    PublicationLinkView(serverLink, onLoadLink = { directory ->
-                                        onLoadDirectory(server, serverLink.downloadLink, false)
-                                    })
-                                }
-                            }
-                        )
-                    }
+                    ServerLinkListView(
+                        server,
+                        serverLinkList.sortedBy { link -> link.title },
+                        onLoadLink = { link -> onLoadDirectory(server, link.downloadLink, false) })
                 }
             )
         }
@@ -120,9 +105,9 @@ fun BrowseServerView(
 
 @Composable
 @Preview
-fun BrowseServerPreview_withoutParent() {
+fun BrowseServerLinksPreview_withoutParent() {
     VariantTheme {
-        BrowseServerView(
+        BrowseServerLinksView(
             SERVER_LIST.get(0),
             SERVER_LINK_LIST.get(0).directory,
             null,
@@ -135,9 +120,9 @@ fun BrowseServerPreview_withoutParent() {
 
 @Composable
 @Preview
-fun BrowseServerPreview_withParent() {
+fun BrowseServerLinksPreview_withParent() {
     VariantTheme {
-        BrowseServerView(
+        BrowseServerLinksView(
             SERVER_LIST.get(0),
             SERVER_LINK_LIST.get(0).directory,
             SERVER_LINK_LIST.get(0).directory,

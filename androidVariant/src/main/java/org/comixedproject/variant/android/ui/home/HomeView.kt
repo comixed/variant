@@ -41,7 +41,7 @@ import org.comixedproject.variant.android.ui.Screen
 import org.comixedproject.variant.android.ui.comics.ComicsView
 import org.comixedproject.variant.android.ui.getIconForScreen
 import org.comixedproject.variant.android.ui.getLabelForScreen
-import org.comixedproject.variant.android.ui.servers.BrowseServerView
+import org.comixedproject.variant.android.ui.links.BrowseServerLinksView
 import org.comixedproject.variant.android.ui.servers.ServerEditView
 import org.comixedproject.variant.android.ui.servers.ServerListView
 import org.comixedproject.variant.android.ui.setings.SettingsView
@@ -199,7 +199,7 @@ fun HomeView(
 
                     Logger.d(TAG, "Showing directory: server=${server.name} directory=${directory}")
 
-                    BrowseServerView(
+                    BrowseServerLinksView(
                         server,
                         directory,
                         parentServerLink?.directory,
