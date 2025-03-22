@@ -99,4 +99,8 @@ class DatabaseHelper(
     fun setStoredFilename(filename: String, serverLink: ServerLink) {
         database.tableQueries.setStoredFilename(filename, serverLink.serverLinkId!!)
     }
+
+    fun getServerLinkId(server: Server, directory: String): Long {
+        return database.tableQueries.getServerLinkId(server.serverId!!, directory).executeAsOne()
+    }
 }

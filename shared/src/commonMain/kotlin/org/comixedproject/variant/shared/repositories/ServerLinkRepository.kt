@@ -46,6 +46,10 @@ class ServerLinkRepository(
     fun setStoredFilename(filename: String, serverLink: ServerLink) {
         databaseHelper.setStoredFilename(filename, serverLink)
     }
+
+    fun getServerLinkId(server: Server, directory: String): Long {
+        return databaseHelper.getServerLinkId(server, directory)
+    }
 }
 
 fun ServerLinksDb.map() =

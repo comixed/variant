@@ -18,7 +18,6 @@
 
 package org.comixedproject.variant.android.ui
 
-import android.net.Uri
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Home
@@ -40,10 +39,7 @@ sealed class Screen(val route: String) {
     fun withArgs(vararg args: String): String {
         return buildString {
             append(route)
-            args.forEach { arg ->
-                val encoded = Uri.encode(arg)
-                append("/${encoded}")
-            }
+            args.forEach { arg -> append("/${arg}") }
         }
     }
 

@@ -26,6 +26,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,65 +51,76 @@ const val TAG_SERVER_LINK_TITLE = "server.link.title"
 const val TAG_NAVIGATION_ICON = "icon.link.navigation"
 const val TAG_PUBLICATION_ICON = "icon.link.publication"
 
-private val TAG = "ServerLinkItemView"
+private val TAG = "ServerLinkListItemView"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ServerLinkItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onShowInfo: () -> Unit) {
-    Row(
+fun ServerLinkListItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onShowInfo: () -> Unit) {
+    ElevatedCard(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                Logger.d(
-                    TAG,
-                    "Link clicked: type=${serverLink.linkType} downloadLink=${serverLink.downloadLink}"
-                )
+                Logger.d(TAG, "Loading link: ${serverLink.downloadLink}")
                 onLoadLink()
             }
-            .testTag(TAG_SERVER_LINK_ITEM),
-        verticalAlignment = Alignment.CenterVertically
+
     ) {
-        Text(
-            "${serverLink.title}",
-            style = MaterialTheme.typography.bodyLarge,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+        Row(
             modifier = Modifier
-                .weight(1f)
-                .padding(start = 8.dp)
-                .testTag(TAG_SERVER_LINK_TITLE)
-        )
-
-        Spacer(modifier = Modifier)
-
-        val icon = when (serverLink.linkType) {
-            ServerLinkType.NAVIGATION ->
-                IconButton(
-                    onClick = {
-                        Logger.d(TAG, "Navigation icon clicked")
-                        onLoadLink()
-                    },
-                    modifier = Modifier.testTag(TAG_NAVIGATION_ICON)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = serverLink.title
+                .fillMaxWidth()
+                .clickable {
+                    Logger.d(
+                        TAG,
+                        "Link clicked: type=${serverLink.linkType} downloadLink=${serverLink.downloadLink}"
                     )
+                    onLoadLink()
                 }
+                .testTag(TAG_SERVER_LINK_ITEM),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "${serverLink.title}",
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
+                    .testTag(TAG_SERVER_LINK_TITLE)
+            )
 
-            ServerLinkType.PUBLICATION ->
-                IconButton(
-                    onClick = {
-                        Logger.d(TAG, "Information icon clicked")
-                        onShowInfo()
-                    },
-                    modifier = Modifier.testTag(TAG_PUBLICATION_ICON)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Info,
-                        contentDescription = serverLink.title
-                    )
-                }
+            Spacer(modifier = Modifier)
+
+            when (serverLink.linkType) {
+                ServerLinkType.NAVIGATION ->
+                    IconButton(
+                        onClick = {
+                            Logger.d(TAG, "Navigation icon clicked")
+                            onLoadLink()
+                        },
+                        modifier = Modifier.testTag(TAG_NAVIGATION_ICON)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = serverLink.title
+                        )
+                    }
+
+                ServerLinkType.PUBLICATION ->
+                    IconButton(
+                        onClick = {
+                            Logger.d(TAG, "Information icon clicked")
+                            onShowInfo()
+                        },
+                        modifier = Modifier.testTag(TAG_PUBLICATION_ICON)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Info,
+                            contentDescription = serverLink.title
+                        )
+                    }
+            }
         }
     }
 }
@@ -116,7 +129,7 @@ fun ServerLinkItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onShowInf
 @Preview
 fun ServerLinkItemPreview_navigationLink() {
     VariantTheme {
-        ServerLinkItemView(
+        ServerLinkListItemView(
             SERVER_LINK_LIST.first { entry -> entry.linkType == ServerLinkType.NAVIGATION },
             onLoadLink = { },
             onShowInfo = { })
@@ -127,7 +140,7 @@ fun ServerLinkItemPreview_navigationLink() {
 @Preview
 fun ServerLinkItemPreview_publicationLink() {
     VariantTheme {
-        ServerLinkItemView(
+        ServerLinkListItemView(
             SERVER_LINK_LIST.first { entry -> entry.linkType == ServerLinkType.PUBLICATION },
             onLoadLink = { },
             onShowInfo = { })

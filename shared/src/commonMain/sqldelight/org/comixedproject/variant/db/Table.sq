@@ -50,3 +50,6 @@ SELECT * FROM ServerLinksDb;
 
 loadLinksForParent:
 SELECT * FROM ServerLinksDb WHERE serverId = ? AND directory = ?;
+
+getServerLinkId:
+SELECT serverLinkId FROM ServerLinksDb WHERE serverId = ? AND downloadLink = ?;

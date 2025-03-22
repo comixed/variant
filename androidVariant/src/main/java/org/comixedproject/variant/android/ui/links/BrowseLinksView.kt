@@ -44,11 +44,11 @@ import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.platform.Logger
 
-private val TAG = "BrowseServerLinksView"
+private val TAG = "BrowseLinksView"
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun BrowseServerLinksView(
+fun BrowseLinksView(
     server: Server,
     directory: String,
     parentDirectory: String?,
@@ -105,9 +105,9 @@ fun BrowseServerLinksView(
 
 @Composable
 @Preview
-fun BrowseServerLinksPreview_withoutParent() {
+fun BrowseLinksViewPreview_withoutParent() {
     VariantTheme {
-        BrowseServerLinksView(
+        BrowseLinksView(
             SERVER_LIST.get(0),
             SERVER_LINK_LIST.get(0).directory,
             null,
@@ -120,9 +120,9 @@ fun BrowseServerLinksPreview_withoutParent() {
 
 @Composable
 @Preview
-fun BrowseServerLinksPreview_withParent() {
+fun BrowseLinksViewPreview_withParent() {
     VariantTheme {
-        BrowseServerLinksView(
+        BrowseLinksView(
             SERVER_LIST.get(0),
             SERVER_LINK_LIST.get(0).directory,
             SERVER_LINK_LIST.get(0).directory,

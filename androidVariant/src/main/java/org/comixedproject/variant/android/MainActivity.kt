@@ -25,19 +25,12 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import kotlinx.coroutines.launch
-import org.comixedproject.variant.android.net.loadServerLinks
-import org.comixedproject.variant.android.ui.Screen
 import org.comixedproject.variant.android.ui.home.HomeView
 import org.comixedproject.variant.android.viewmodel.SplashScreenViewModel
-import org.comixedproject.variant.shared.platform.Logger
 import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
-import org.comixedproject.variant.shared.viewmodel.ServerViewModel
 import org.koin.androidx.compose.koinViewModel
 
 private const val TAG = "MainActivity"
@@ -61,10 +54,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val coroutineScope = rememberCoroutineScope()
-            var serverViewModel = koinViewModel<ServerViewModel>()
             var serverLinkViewModel = koinViewModel<ServerLinkViewModel>()
-            val serverList by serverViewModel.serverList.collectAsState()
-            val serverLinkList by serverLinkViewModel.serverLinkList.collectAsState()
 
             VariantTheme {
                 Surface(
@@ -72,46 +62,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                 }
-                HomeView(
-                    serverList,
-                    serverLinkList,
-                    onSaveServer = { server -> serverViewModel.saveServer(server) },
-                    onDeleteServer = { server -> serverViewModel.deleteServer(server) },
-                    onLoadServerContents = { server, directory, reload, onSuccess, onFailure ->
-                        if (reload || !serverLinkViewModel.hasLinks(server, directory)) {
-                            coroutineScope.launch {
-                                loadServerLinks(
-                                    server,
-                                    directory,
-                                    onSuccess = { links ->
-                                        serverLinkViewModel.saveLinks(
-                                            server,
-                                            directory,
-                                            links
-                                        )
-                                        serverLinkViewModel.loadLinks(server, directory)
-                                        onSuccess()
-                                    },
-                                    onFailure = {
-                                        Logger.e(
-                                            TAG,
-                                            "Failed to download anything"
-                                        )
-                                        onFailure()
-                                    })
-                            }
-                        } else {
-                            serverLinkViewModel.loadLinks(server, directory)
-                            val route =
-                                Screen.BrowseServerScreen.withArgs("${server.serverId}", directory)
-                            Logger.d(
-                                TAG,
-                                "Loading screen: ${route}"
-                            )
-                            serverLinkViewModel.loadLinks(server, directory)
-                            onSuccess()
-                        }
-                    })
+                HomeView()
             }
         }
     }
