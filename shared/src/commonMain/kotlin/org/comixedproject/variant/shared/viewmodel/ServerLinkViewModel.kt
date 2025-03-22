@@ -80,7 +80,11 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : Base
     fun saveLinks(server: Server, directory: String, links: List<ServerLink>) {
         Logger.d(TAG, "Saving ${links.size} server link(s)")
         this.serverLinkRepository.saveLinksForServer(server, directory, links)
-        _serverLinkListFlow.tryEmit(links)
-        onServerLinkListUpdated?.invoke(links)
+        _serverLinkListFlow.tryEmit(this.serverLinkRepository.serverLinks)
+        onServerLinkListUpdated?.invoke(this.serverLinkRepository.serverLinks)
+    }
+
+    fun getServerLinkId(server: Server, directory: String): Long {
+        return this.serverLinkRepository.getServerLinkId(server, directory)
     }
 }

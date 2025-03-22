@@ -51,7 +51,7 @@ fun ServerLinkListView(
         listPane = {
             LazyColumn {
                 items(serverLinkList, key = { it.serverLinkId!! }) { serverLink ->
-                    ServerLinkItemView(
+                    ServerLinkListItemView(
                         serverLink,
                         onLoadLink = { onLoadLink(serverLink) },
                         onShowInfo = {

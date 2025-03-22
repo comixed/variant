@@ -22,8 +22,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
@@ -33,32 +35,35 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.NavigationTarget
-import org.comixedproject.variant.android.model.SERVER_LINK_LIST
-import org.comixedproject.variant.android.model.SERVER_LIST
+import org.comixedproject.variant.android.net.loadDirectory
 import org.comixedproject.variant.android.ui.Screen
 import org.comixedproject.variant.android.ui.comics.ComicsView
 import org.comixedproject.variant.android.ui.getIconForScreen
 import org.comixedproject.variant.android.ui.getLabelForScreen
-import org.comixedproject.variant.android.ui.links.BrowseServerLinksView
+import org.comixedproject.variant.android.ui.links.BrowseLinksView
 import org.comixedproject.variant.android.ui.servers.ServerEditView
 import org.comixedproject.variant.android.ui.servers.ServerListView
 import org.comixedproject.variant.android.ui.setings.SettingsView
 import org.comixedproject.variant.shared.model.server.Server
-import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
+import org.comixedproject.variant.shared.viewmodel.ServerViewModel
+import org.koin.androidx.compose.koinViewModel
 
 private val TAG = "HomeView"
 
 @Composable
 fun HomeView(
-    serverList: List<Server>,
-    serverLinkList: List<ServerLink>,
-    onSaveServer: (Server) -> Unit,
-    onDeleteServer: (Server) -> Unit,
-    onLoadServerContents: (Server, String, Boolean, () -> Unit, () -> Unit) -> Unit
+    serverViewModel: ServerViewModel = koinViewModel(),
+    serverLinkViewModel: ServerLinkViewModel = koinViewModel()
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val serverList by serverViewModel.serverList.collectAsState()
+    val serverLinkList by serverLinkViewModel.serverLinkList.collectAsState()
+
     var currentTarget by rememberSaveable { mutableStateOf(NavigationTarget.SERVERS) }
     var currentServerId by rememberSaveable { mutableStateOf<Long?>(null) }
     var currentDirectory by rememberSaveable { mutableStateOf("") }
@@ -103,17 +108,29 @@ fun HomeView(
                     },
                     onBrowseServer = { server ->
                         Logger.d(TAG, "Starting to browse server: name=${server.name}")
-                        currentServerId = server.serverId
-                        currentDirectory = server.url
                         isLoading = true
-                        onLoadServerContents(
-                            server, server.url, false, {
-                                navController.navigate(Screen.BrowseServerScreen.route)
-                            },
-                            {
-                                isLoading = false
 
-                            })
+                        if (!serverLinkViewModel.hasLinks(server, server.url)) {
+                            coroutineScope.launch {
+                                loadDirectory(
+                                    serverLinkViewModel,
+                                    server,
+                                    server.url,
+                                    onSuccess = {
+                                        currentServerId = server.serverId
+                                        currentDirectory = server.url
+                                        isLoading = false
+                                        navController.navigate(Screen.BrowseServerScreen.route)
+                                    },
+                                    onFailure = { isLoading = false })
+                            }
+
+                        } else {
+                            currentServerId = server.serverId
+                            currentDirectory = server.url
+                            isLoading = false
+                            navController.navigate(Screen.BrowseServerScreen.route)
+                        }
                     })
             }
 
@@ -130,7 +147,7 @@ fun HomeView(
                     Server(null, "", "", "", ""),
                     onSave = { server ->
                         Logger.d(TAG, "Saving new server: name=${server.name} url=${server.url}")
-                        onSaveServer(server)
+                        serverViewModel.saveServer(server)
                         navController.navigate(Screen.ServersScreen.route)
                     },
                     onCancel = {
@@ -151,13 +168,13 @@ fun HomeView(
                 val server = serverList.filter { it.serverId == serverId!!.toLong() }.first()
 
                 ServerEditView(
-                    server!!,
+                    server,
                     onSave = { server ->
                         Logger.d(
                             TAG,
                             "Saving server changes: id=${server.serverId} name=${server.name} url=${server.url}"
                         )
-                        onSaveServer(server)
+                        serverViewModel.saveServer(server)
                         navController.navigate(Screen.ServersScreen.route)
                     },
                     onCancel = {
@@ -190,12 +207,12 @@ fun HomeView(
                         .firstOrNull()
                     val title = when (parentServerLink) {
                         null -> server.name
-                        else -> parentServerLink!!.title
+                        else -> parentServerLink.title
                     }
 
                     Logger.d(TAG, "Showing directory: server=${server.name} directory=${directory}")
 
-                    BrowseServerLinksView(
+                    BrowseLinksView(
                         server,
                         directory,
                         parentServerLink?.directory,
@@ -210,10 +227,29 @@ fun HomeView(
                                 "Loading directory on server: server=${server.name} directory=${directory} reload=${reload}"
                             )
                             isLoading = true
-                            onLoadServerContents(server, directory, reload, {
+
+                            if (reload || !serverLinkViewModel.hasLinks(server, directory)) {
+                                coroutineScope.launch {
+                                    loadDirectory(
+                                        serverLinkViewModel,
+                                        server,
+                                        directory,
+                                        onSuccess = {
+                                            currentServerId = server.serverId
+                                            currentDirectory = directory
+                                            isLoading = false
+                                            navController.navigate(Screen.BrowseServerScreen.route)
+                                        },
+                                        onFailure = {
+                                            isLoading = false
+                                        })
+                                }
+                            } else {
+                                currentServerId = server.serverId
                                 currentDirectory = directory
                                 isLoading = false
-                            }, { isLoading = false })
+                                navController.navigate(Screen.BrowseServerScreen.route)
+                            }
                         }
                     )
                 }
@@ -226,11 +262,6 @@ fun HomeView(
 @Preview
 fun HomePreview() {
     VariantTheme {
-        HomeView(
-            SERVER_LIST,
-            SERVER_LINK_LIST,
-            onSaveServer = { _ -> },
-            onDeleteServer = { _ -> },
-            onLoadServerContents = { _, _, _, _, _ -> })
+        HomeView()
     }
 }

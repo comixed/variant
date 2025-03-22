@@ -46,10 +46,10 @@ import org.comixedproject.variant.android.ui.DismissBackground
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Logger
 
-private val TAG = "ServerListItem"
+private val TAG = "ServerListItemView"
 
 @Composable
-fun ServerListItem(
+fun ServerListItemView(
     server: Server,
     onEditServer: (Server) -> Unit,
     onDeleteServer: (Server) -> Unit,
@@ -120,7 +120,7 @@ fun ServerListItem(
 @Preview
 fun ServerListItemPreview() {
     VariantTheme {
-        ServerListItem(
+        ServerListItemView(
             SERVER_LIST.get(0),
             onEditServer = { _ -> },
             onDeleteServer = { _ -> },

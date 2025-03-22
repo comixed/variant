@@ -76,7 +76,7 @@ fun ServerListView(
             items(
                 items = serverList,
                 itemContent = { server ->
-                    ServerListItem(
+                    ServerListItemView(
                         server,
                         onEditServer = onEditServer,
                         onDeleteServer = onDeleteServer,
