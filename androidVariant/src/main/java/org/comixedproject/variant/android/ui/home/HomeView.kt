@@ -60,7 +60,7 @@ fun HomeView(
     onLoadServerContents: (Server, String, Boolean, () -> Unit, () -> Unit) -> Unit
 ) {
     var currentTarget by rememberSaveable { mutableStateOf(NavigationTarget.SERVERS) }
-    var currentServer by rememberSaveable { mutableStateOf<Server?>(null) }
+    var currentServerId by rememberSaveable { mutableStateOf<Long?>(null) }
     var currentDirectory by rememberSaveable { mutableStateOf("") }
     val navController = rememberNavController()
     var isLoading by rememberSaveable { mutableStateOf(false) }
@@ -103,7 +103,7 @@ fun HomeView(
                     },
                     onBrowseServer = { server ->
                         Logger.d(TAG, "Starting to browse server: name=${server.name}")
-                        currentServer = server
+                        currentServerId = server.serverId
                         currentDirectory = server.url
                         isLoading = true
                         onLoadServerContents(
@@ -181,13 +181,9 @@ fun HomeView(
             }
 
             composable(route = Screen.BrowseServerScreen.route) { entry ->
-                currentServer?.let { server ->
+                currentServerId?.let { serverId ->
+                    val server = serverList.first { entry -> entry.serverId == serverId }
                     val directory = currentDirectory
-                    val currentServerLink =
-                        serverLinkList
-                            .filter { link -> link.serverId == server.serverId }
-                            .filter { link -> link.directory == directory }
-                            .firstOrNull()
                     val parentServerLink = serverLinkList
                         .filter { link -> link.serverId == server.serverId }
                         .filter { link -> link.downloadLink == directory }
