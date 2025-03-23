@@ -19,12 +19,20 @@
 package org.comixedproject.variant.shared.viewmodel
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Logger
 import org.comixedproject.variant.shared.repositories.ServerRepository
 
 private val TAG = "VariantViewModel"
+
+enum class ServerActivity {
+    LIST_SERVERS,
+    ADD_SERVER,
+    EDIT_SERVER,
+    BROWSE_SERVER
+}
 
 /**
  * <code>VariantViewModel</code> provides a single source for application state on Android devices.
@@ -41,10 +49,29 @@ class ServerViewModel(
     }
     val serverList = _serverListFlow.asStateFlow()
 
+    private var _currentServer = MutableStateFlow<Server?>(null)
+    val currentServer: StateFlow<Server?>
+        get() = _currentServer.asStateFlow()
+
+    private var _activity = MutableStateFlow(ServerActivity.LIST_SERVERS)
+    val activity: StateFlow<ServerActivity>
+        get() = _activity.asStateFlow()
+
     var onServerListUpdated: ((List<Server>) -> Unit)? = null
 
     fun getById(id: Long): Server? {
         return this.serverRepository.getById(id)
+    }
+
+    fun addServer() {
+        Logger.d(TAG, "Preparing to add a new server")
+        _activity.tryEmit(ServerActivity.ADD_SERVER)
+    }
+
+    fun editServer(server: Server) {
+        Logger.d(TAG, "Preparing to edit server: ${server.name}")
+        _currentServer.tryEmit(server)
+        _activity.tryEmit(ServerActivity.EDIT_SERVER)
     }
 
     /**
@@ -57,6 +84,17 @@ class ServerViewModel(
         serverRepository.save(server)
         _serverListFlow.tryEmit(serverRepository.servers)
         onServerListUpdated?.invoke(serverRepository.servers)
+        _activity.tryEmit(ServerActivity.LIST_SERVERS)
+    }
+
+    fun cancelEditingServer() {
+        Logger.d(TAG, "Canceling server editing")
+        _activity.tryEmit(ServerActivity.LIST_SERVERS)
+    }
+
+    fun confirmDeleteServer(server: Server) {
+        Logger.d(TAG, "Confirming server deletion: name=${server.name}")
+        _currentServer.tryEmit(server)
     }
 
     /**
@@ -73,5 +111,11 @@ class ServerViewModel(
                 onServerListUpdated?.invoke(serverRepository.servers)
             }
         }
+        _activity.tryEmit(ServerActivity.LIST_SERVERS)
+    }
+
+    fun browseServer(server: Server) {
+        _currentServer.tryEmit(server)
+        _activity.tryEmit(ServerActivity.BROWSE_SERVER)
     }
 }

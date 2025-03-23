@@ -59,7 +59,7 @@ private const val TAG = "ServerEditView"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ServerEditView(server: Server, onSave: (Server) -> Unit, onCancel: () -> Unit) {
+fun EditServerView(server: Server, onSave: (Server) -> Unit, onCancel: () -> Unit) {
     val context = LocalContext.current
     var serverName by rememberSaveable { mutableStateOf(server.name) }
     var serverUrl by rememberSaveable { mutableStateOf(server.url) }
@@ -187,18 +187,18 @@ fun validateServer(
 
 @Composable
 @Preview
-fun ServerEditPreview() {
+fun EditServerPreview() {
     VariantTheme {
-        ServerEditView(SERVER_LIST.get(0), onSave = { }, onCancel = {})
+        EditServerView(SERVER_LIST.get(0), onSave = { }, onCancel = {})
     }
 }
 
 @Composable
 @Preview
-fun ServerEditPreview_invalid() {
+fun EditServerPreview_invalid() {
     val server = SERVER_LIST.get(0)
     server.name = ""
     VariantTheme {
-        ServerEditView(server, onSave = { }, onCancel = {})
+        EditServerView(server, onSave = { }, onCancel = {})
     }
 }

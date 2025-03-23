@@ -18,7 +18,6 @@
 
 package org.comixedproject.variant.android.ui.servers
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,19 +53,16 @@ fun ServerListItemView(
     onDeleteServer: (Server) -> Unit,
     onBrowseServer: (Server) -> Unit
 ) {
-    val context = LocalContext.current
     val currentItem by rememberUpdatedState(server)
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
             when (it) {
                 SwipeToDismissBoxValue.StartToEnd -> {
                     onDeleteServer(currentItem)
-                    Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
                 }
 
                 SwipeToDismissBoxValue.EndToStart -> {
                     onEditServer(currentItem)
-                    Toast.makeText(context, "Item archived", Toast.LENGTH_SHORT).show()
                 }
 
                 SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false

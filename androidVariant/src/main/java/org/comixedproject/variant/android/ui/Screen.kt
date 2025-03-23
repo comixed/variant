@@ -30,26 +30,6 @@ sealed class Screen(val route: String) {
     object ServersScreen : Screen("servers_screen")
     object ComicsScreen : Screen("comics_screen")
     object SettingsScreen : Screen("settings_screen")
-
-    object AddServerScreen : Screen("add_server_screen")
-    object EditServerScreen : Screen("edit_server_screen")
-    object DeleteServerScreen : Screen("delete_server_screen")
-    object BrowseServerScreen : Screen("browse_server_screen")
-
-    fun withArgs(vararg args: String): String {
-        return buildString {
-            append(route)
-            args.forEach { arg -> append("/${arg}") }
-        }
-    }
-
-    override fun toString(): String {
-        return "Screen(route='$route')"
-    }
-
-    companion object {
-        val sidebarItems = listOf(ServersScreen, ComicsScreen, SettingsScreen)
-    }
 }
 
 fun getLabelForScreen(target: Screen): Int {
