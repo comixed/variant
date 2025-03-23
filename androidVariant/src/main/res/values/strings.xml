@@ -17,7 +17,7 @@
     <string name="saveButtonLabel">Save changes</string>
     <string name="cancelButtonLabel">Cancel action</string>
     <string name="editServerTitle">Edit Server</string>
-    <string name="deleteServer">Delete this server</string>
+    <string name="deleteServer">Are you sure you want to delete this server?</string>
     <string name="saveButton">Save</string>
     <string name="closeButton">Cancel</string>
     <string name="invalidServerName">The server name is invalid...</string>
@@ -28,4 +28,5 @@
     <string name="serverListTitle">Server List</string>
     <string name="navigateBackLabel">Go back to parent</string>
     <string name="unknownLabel">Unknown Item</string>
+    <string name="yesButton">Yes</string>
 </resources>

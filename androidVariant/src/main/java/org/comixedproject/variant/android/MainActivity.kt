@@ -25,13 +25,10 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import org.comixedproject.variant.android.ui.home.HomeView
 import org.comixedproject.variant.android.viewmodel.SplashScreenViewModel
-import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
-import org.koin.androidx.compose.koinViewModel
 
 private const val TAG = "MainActivity"
 
@@ -53,9 +50,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val coroutineScope = rememberCoroutineScope()
-            var serverLinkViewModel = koinViewModel<ServerLinkViewModel>()
-
             VariantTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),

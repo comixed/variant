@@ -31,20 +31,18 @@ private val TAG = "OpdsUtils"
  * @param server the server
  * @param directory the directory
  * @param onSuccess the callback for success
- * @param onFailure the callback for failure
  */
 suspend fun loadServerLinks(
     server: Server,
     directory: String,
-    onSuccess: (List<ServerLink>) -> Unit,
-    onFailure: () -> Unit
+    onSuccess: (List<ServerLink>) -> Unit
 ) {
 
     val httpClient = createOpdsHttpClient(server)
     val parser = OPDS1Parser.parseUrlString(directory, httpClient)
     val feed = parser.getOrNull()?.feed
     if (feed == null) {
-        onFailure()
+        onSuccess(emptyList())
     } else {
         val links: MutableList<ServerLink> = mutableListOf()
         if (!feed.navigation.isEmpty()) {

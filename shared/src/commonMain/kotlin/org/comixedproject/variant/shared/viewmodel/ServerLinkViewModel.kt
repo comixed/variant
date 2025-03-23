@@ -19,6 +19,7 @@
 package org.comixedproject.variant.shared.viewmodel
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
@@ -34,16 +35,14 @@ private val TAG = "ServerLinkViewModel"
  */
 class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : BaseViewModel() {
     private var currentServer: Server? = null
-    private var directory: String = ""
 
-    private val _serverLinkListFlow: MutableStateFlow<List<ServerLink>> by lazy {
-        MutableStateFlow(
-            serverLinkRepository.serverLinks
-        )
-    }
+    private val _serverLinkList = MutableStateFlow<List<ServerLink>>(emptyList())
 
-    val serverLinkList = _serverLinkListFlow.asStateFlow()
+    val serverLinkList = _serverLinkList.asStateFlow()
     var onServerLinkListUpdated: ((List<ServerLink>) -> Unit)? = null
+
+    private val _currentDirectory = MutableStateFlow<String>("")
+    val currentDirectory: StateFlow<String> = _currentDirectory.asStateFlow()
 
     /**
      * Checks if there are any links for the given server and directory.
@@ -53,8 +52,10 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : Base
      * @return true if there are links in the database, false otherwise
      */
     fun hasLinks(server: Server, directory: String): Boolean {
-        return serverLinkRepository.serverLinks.filter { link -> link.directory == directory }
-            .filter { link -> link.serverId == server.serverId }.isNotEmpty()
+        return serverLinkRepository.serverLinks
+            .filter { link -> link.serverId == server.serverId }
+            .filter { link -> link.directory == directory }
+            .isNotEmpty()
     }
 
     /**
@@ -65,9 +66,11 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : Base
      */
     fun loadLinks(server: Server, directory: String) {
         this.currentServer = server
-        this.directory = directory
-        _serverLinkListFlow.tryEmit(serverLinkRepository.serverLinks)
-        onServerLinkListUpdated?.invoke(serverLinkRepository.serverLinks)
+        val links = serverLinkRepository.serverLinks.filter { it.serverId == server.serverId }
+            .filter { it.directory == directory }
+        _currentDirectory.tryEmit(directory)
+        _serverLinkList.tryEmit(links)
+        onServerLinkListUpdated?.invoke(links)
     }
 
     /**
@@ -75,16 +78,20 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : Base
      *
      * @param server the server
      * @param directory the directory
-     * @param links the links
+     * @param serverLinks the links
      */
-    fun saveLinks(server: Server, directory: String, links: List<ServerLink>) {
-        Logger.d(TAG, "Saving ${links.size} server link(s)")
-        this.serverLinkRepository.saveLinksForServer(server, directory, links)
-        _serverLinkListFlow.tryEmit(this.serverLinkRepository.serverLinks)
-        onServerLinkListUpdated?.invoke(this.serverLinkRepository.serverLinks)
+    fun saveLinks(server: Server, directory: String, serverLinks: List<ServerLink>) {
+        Logger.d(TAG, "Saving ${serverLinks.size} server link(s)")
+        this.serverLinkRepository.saveLinksForServer(server, directory, serverLinks)
+        _currentDirectory.tryEmit(directory)
+        val links = serverLinkRepository.serverLinks.filter { it.serverId == server.serverId }
+            .filter { it.directory == directory }
+        _serverLinkList.tryEmit(links)
+        onServerLinkListUpdated?.invoke(links)
     }
 
-    fun getServerLinkId(server: Server, directory: String): Long {
-        return this.serverLinkRepository.getServerLinkId(server, directory)
+    fun getParentLink(): ServerLink? {
+        return serverLinkRepository.serverLinks.filter { it.serverId == currentServer?.serverId }
+            .filter { it.downloadLink == currentDirectory.value }.firstOrNull()
     }
 }
