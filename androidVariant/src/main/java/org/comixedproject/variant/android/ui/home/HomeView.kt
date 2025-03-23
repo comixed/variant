@@ -37,17 +37,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.model.NavigationTarget
+import org.comixedproject.variant.android.model.RootNavigationTargets
 import org.comixedproject.variant.android.net.loadDirectory
 import org.comixedproject.variant.android.ui.Screen
 import org.comixedproject.variant.android.ui.comics.ComicsView
 import org.comixedproject.variant.android.ui.getIconForScreen
 import org.comixedproject.variant.android.ui.getLabelForScreen
 import org.comixedproject.variant.android.ui.links.BrowseLinksView
-import org.comixedproject.variant.android.ui.servers.ServerEditView
-import org.comixedproject.variant.android.ui.servers.ServerListView
+import org.comixedproject.variant.android.ui.servers.ServersView
 import org.comixedproject.variant.android.ui.setings.SettingsView
-import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Logger
 import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.shared.viewmodel.ServerViewModel
@@ -64,7 +62,7 @@ fun HomeView(
     val serverList by serverViewModel.serverList.collectAsState()
     val serverLinkList by serverLinkViewModel.serverLinkList.collectAsState()
 
-    var currentTarget by rememberSaveable { mutableStateOf(NavigationTarget.SERVERS) }
+    var currentTarget by rememberSaveable { mutableStateOf(RootNavigationTargets.SERVERS) }
     var currentServerId by rememberSaveable { mutableStateOf<Long?>(null) }
     var currentDirectory by rememberSaveable { mutableStateOf("") }
     val navController = rememberNavController()
@@ -72,7 +70,7 @@ fun HomeView(
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
-            NavigationTarget.entries.forEach { target ->
+            RootNavigationTargets.entries.forEach { target ->
                 Logger.d(TAG, "target=${target}")
                 item(
                     icon = {
@@ -92,46 +90,17 @@ fun HomeView(
     ) {
         NavHost(navController = navController, startDestination = Screen.ServersScreen.route) {
             composable(route = Screen.ServersScreen.route) {
-                ServerListView(
-                    serverList,
-                    onAddServer = {
-                        Logger.d(TAG, "Add a new server")
-                        navController.navigate(Screen.AddServerScreen.route)
-                    },
-                    onEditServer = { server ->
-                        Logger.d(TAG, "Editing server: name=${server.name}")
-                        navController.navigate(Screen.EditServerScreen.withArgs("${server.serverId}"))
-                    },
-                    onDeleteServer = { server ->
-                        Logger.d(TAG, "Deleting server: name=${server.name}")
-                        navController.navigate(Screen.DeleteServerScreen.withArgs("${server.serverId}"))
-                    },
-                    onBrowseServer = { server ->
-                        Logger.d(TAG, "Starting to browse server: name=${server.name}")
-                        isLoading = true
-
-                        if (!serverLinkViewModel.hasLinks(server, server.url)) {
-                            coroutineScope.launch {
-                                loadDirectory(
-                                    serverLinkViewModel,
-                                    server,
-                                    server.url,
-                                    onSuccess = {
-                                        currentServerId = server.serverId
-                                        currentDirectory = server.url
-                                        isLoading = false
-                                        navController.navigate(Screen.BrowseServerScreen.route)
-                                    },
-                                    onFailure = { isLoading = false })
-                            }
-
-                        } else {
-                            currentServerId = server.serverId
-                            currentDirectory = server.url
-                            isLoading = false
-                            navController.navigate(Screen.BrowseServerScreen.route)
-                        }
-                    })
+                ServersView(onBrowseServerLinks = { server ->
+                    Logger.d(TAG, "Beginning to browse server: [${server.serverId}] ${server.name}")
+                    currentServerId = server.serverId
+                    currentDirectory = server.url
+                    navController.navigate(
+                        Screen.BrowseServerLinksScreen.withArgs(
+                            "${server.serverId}",
+                            "0"
+                        )
+                    )
+                })
             }
 
             composable(route = Screen.ComicsScreen.route) {
@@ -142,62 +111,18 @@ fun HomeView(
                 SettingsView()
             }
 
-            composable(route = Screen.AddServerScreen.route) {
-                ServerEditView(
-                    Server(null, "", "", "", ""),
-                    onSave = { server ->
-                        Logger.d(TAG, "Saving new server: name=${server.name} url=${server.url}")
-                        serverViewModel.saveServer(server)
-                        navController.navigate(Screen.ServersScreen.route)
-                    },
-                    onCancel = {
-                        Logger.d(TAG, "Cancelling new server")
-                        navController.navigate(Screen.ServersScreen.route)
-                    })
-            }
-
             composable(
-                route = "${Screen.EditServerScreen.route}/{serverId}",
+                route = "${Screen.BrowseServerLinksScreen.route}/{serverId}/{serverLinkId}",
                 arguments = listOf(
                     navArgument("serverId") {
                         type = NavType.StringType
                         nullable = false
-                    }
-                )) { entry ->
-                val serverId = entry.arguments?.getString("serverId")
-                val server = serverList.filter { it.serverId == serverId!!.toLong() }.first()
-
-                ServerEditView(
-                    server,
-                    onSave = { server ->
-                        Logger.d(
-                            TAG,
-                            "Saving server changes: id=${server.serverId} name=${server.name} url=${server.url}"
-                        )
-                        serverViewModel.saveServer(server)
-                        navController.navigate(Screen.ServersScreen.route)
                     },
-                    onCancel = {
-                        Logger.d(TAG, "Canceling changes to server")
-                        navController.navigate(Screen.ServersScreen.route)
-                    })
-            }
-
-            composable(
-                route = "${Screen.DeleteServerScreen.route}/{serverId}",
-                arguments = listOf(
-                    navArgument("serverId") {
+                    navArgument("serverLinkId") {
                         type = NavType.StringType
                         nullable = false
                     }
                 )) { entry ->
-                val serverId = entry.arguments?.getString("serverId")
-                val server = serverList.filter { it.serverId == serverId!!.toLong() }.first()
-
-                Text("Delete Server Screen!")
-            }
-
-            composable(route = Screen.BrowseServerScreen.route) { entry ->
                 currentServerId?.let { serverId ->
                     val server = serverList.first { entry -> entry.serverId == serverId }
                     val directory = currentDirectory
@@ -238,7 +163,12 @@ fun HomeView(
                                             currentServerId = server.serverId
                                             currentDirectory = directory
                                             isLoading = false
-                                            navController.navigate(Screen.BrowseServerScreen.route)
+                                            navController.navigate(
+                                                Screen.BrowseServerLinksScreen.withArgs(
+                                                    "${server.serverId}",
+                                                    "0"
+                                                )
+                                            )
                                         },
                                         onFailure = {
                                             isLoading = false
@@ -248,7 +178,12 @@ fun HomeView(
                                 currentServerId = server.serverId
                                 currentDirectory = directory
                                 isLoading = false
-                                navController.navigate(Screen.BrowseServerScreen.route)
+                                navController.navigate(
+                                    Screen.BrowseServerLinksScreen.withArgs(
+                                        "${server.serverId}",
+                                        "0"
+                                    )
+                                )
                             }
                         }
                     )

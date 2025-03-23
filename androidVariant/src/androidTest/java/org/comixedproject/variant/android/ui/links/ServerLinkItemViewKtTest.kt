@@ -39,7 +39,7 @@ class ServerLinkItemViewKtTest {
         SERVER_LINK_LIST.filter { entry -> entry.linkType == ServerLinkType.PUBLICATION }.first()
 
     @Test
-    fun navigationLink_showsNavigationIcon() {
+    fun serverLinkItemView_navigationLink_showsNavigationIcon() {
         composeTestRule.setContent {
             ServerLinkListItemView(navigationServerLink, onLoadLink = {}, onShowInfo = {})
         }
@@ -49,7 +49,7 @@ class ServerLinkItemViewKtTest {
     }
 
     @Test
-    fun navigationLink_showsTitle() {
+    fun serverLinkItemView_navigationLink_showsTitle() {
         composeTestRule.setContent {
             ServerLinkListItemView(navigationServerLink, onLoadLink = {}, onShowInfo = {})
         }
@@ -62,7 +62,7 @@ class ServerLinkItemViewKtTest {
     }
 
     @Test
-    fun navigationLink_icon_onClick_callsLoadLink() {
+    fun serverLinkItemView_navigationLink_icon_onClick_callsLoadLink() {
         var clicked = false
         composeTestRule.setContent {
             ServerLinkListItemView(
@@ -76,7 +76,7 @@ class ServerLinkItemViewKtTest {
     }
 
     @Test
-    fun navigationLink_onClick_callsLoadLink() {
+    fun serverLinkItemView_navigationLink_onClick_callsLoadLink() {
         var clicked = false
         composeTestRule.setContent {
             ServerLinkListItemView(
@@ -90,7 +90,7 @@ class ServerLinkItemViewKtTest {
     }
 
     @Test
-    fun publicationLink_showsPublicationIcon() {
+    fun serverLinkItemView_publicationLink_showsPublicationIcon() {
         composeTestRule.setContent {
             ServerLinkListItemView(publicationServerLink, onLoadLink = {}, onShowInfo = {})
         }
@@ -100,7 +100,7 @@ class ServerLinkItemViewKtTest {
     }
 
     @Test
-    fun publicationLink_showsTitle() {
+    fun serverLinkItemView_publicationLink_showsTitle() {
         composeTestRule.setContent {
             ServerLinkListItemView(publicationServerLink, onLoadLink = {}, onShowInfo = {})
         }
@@ -113,7 +113,7 @@ class ServerLinkItemViewKtTest {
     }
 
     @Test
-    fun publicationLink_icon_onClick_callsShowInfo() {
+    fun serverLinkItemView_publicationLink_icon_onClick_callsShowInfo() {
         var clicked = false
         composeTestRule.setContent {
             ServerLinkListItemView(
@@ -127,7 +127,7 @@ class ServerLinkItemViewKtTest {
     }
 
     @Test
-    fun publicationLink_onClick_callsLoadLink() {
+    fun serverLinkItemView_publicationLink_onClick_callsLoadLink() {
         var clicked = false
         composeTestRule.setContent {
             ServerLinkListItemView(

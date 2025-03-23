@@ -31,10 +31,12 @@ sealed class Screen(val route: String) {
     object ComicsScreen : Screen("comics_screen")
     object SettingsScreen : Screen("settings_screen")
 
+    object ListServersScreen : Screen("list_servers_screen")
     object AddServerScreen : Screen("add_server_screen")
     object EditServerScreen : Screen("edit_server_screen")
     object DeleteServerScreen : Screen("delete_server_screen")
-    object BrowseServerScreen : Screen("browse_server_screen")
+
+    object BrowseServerLinksScreen : Screen("browse_server_links_screen")
 
     fun withArgs(vararg args: String): String {
         return buildString {

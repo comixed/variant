@@ -20,8 +20,14 @@ package org.comixedproject.variant.android.model
 
 import org.comixedproject.variant.android.ui.Screen
 
-enum class NavigationTarget(val screen: Screen) {
+enum class RootNavigationTargets(val screen: Screen) {
     SERVERS(Screen.ServersScreen),
     COMICS(Screen.ComicsScreen),
     SETTINGS(Screen.SettingsScreen)
+}
+
+enum class ServerNavigationTargets(val screen: Screen) {
+    ADD(Screen.AddServerScreen),
+    EDIT(Screen.EditServerScreen),
+    DELETE(Screen.DeleteServerScreen)
 }

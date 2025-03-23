@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.R
@@ -41,6 +42,8 @@ import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 
 private val TAG = "ServersView"
+
+val TAG_ADD_BUTTON = "button.add-server"
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -61,7 +64,10 @@ fun ServerListView(
             })
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddServer) {
+            FloatingActionButton(
+                onClick = onAddServer,
+                modifier = Modifier.testTag(TAG_ADD_BUTTON)
+            ) {
                 Icon(
                     Icons.Default.Add,
                     contentDescription = stringResource(R.string.serverAddButton)
