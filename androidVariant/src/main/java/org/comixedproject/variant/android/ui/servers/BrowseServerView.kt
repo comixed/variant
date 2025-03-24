@@ -32,6 +32,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +45,10 @@ import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.platform.Logger
 
-private val TAG = "BrowseServerView"
+private const val TAG = "BrowseServerView"
+
+const val TAG_BACK_NAVIGATION_BUTTON = "back-navigation"
+const val TAG_REFRESH = "refresh-box"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +57,7 @@ fun BrowseServerView(
     currentDirectory: String,
     parentDirectory: String,
     title: String,
+    isLoading: Boolean,
     serverLinkList: List<ServerLink>,
     onLoadDirectory: (String, Boolean) -> Unit
 ) {
@@ -70,21 +75,28 @@ fun BrowseServerView(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        Logger.d(TAG, "Going back to parent: ${parentDirectory}")
-                        onLoadDirectory(parentDirectory, false)
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.navigateBackLabel)
-                        )
+                    if (parentDirectory != currentDirectory) {
+                        IconButton(
+                            onClick = {
+                                Logger.d(TAG, "Going back to parent: ${parentDirectory}")
+                                onLoadDirectory(parentDirectory, false)
+                            },
+                            modifier = Modifier.testTag(TAG_BACK_NAVIGATION_BUTTON)
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                                contentDescription = stringResource(R.string.navigateBackLabel)
+                            )
+                        }
                     }
                 })
         },
         content = { padding ->
             PullToRefreshBox(
-                modifier = Modifier.padding(padding),
-                isRefreshing = false, // isLoading,
+                modifier = Modifier
+                    .padding(padding)
+                    .testTag(TAG_REFRESH),
+                isRefreshing = isLoading,
                 state = pullToRefreshState,
                 onRefresh = {
                     Logger.d(
@@ -112,6 +124,7 @@ fun BrowseServerPreview() {
             SERVER_LINK_LIST.get(0).downloadLink,
             SERVER_LINK_LIST.get(0).directory,
             SERVER_LIST.get(0).name,
+            false,
             SERVER_LINK_LIST,
             onLoadDirectory = { _, _ -> })
     }

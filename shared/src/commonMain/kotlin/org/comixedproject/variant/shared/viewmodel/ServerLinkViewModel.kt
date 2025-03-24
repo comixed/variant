@@ -91,7 +91,16 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : Base
     }
 
     fun getParentLink(): ServerLink? {
+        currentDirectory?.let { dir ->
+            findLink(dir.value)?.let { link ->
+                return findLink(link.directory)
+            }
+        }
+        return null
+    }
+
+    private fun findLink(directory: String): ServerLink? {
         return serverLinkRepository.serverLinks.filter { it.serverId == currentServer?.serverId }
-            .filter { it.downloadLink == currentDirectory.value }.firstOrNull()
+            .filter { it.downloadLink == directory }.firstOrNull()
     }
 }
