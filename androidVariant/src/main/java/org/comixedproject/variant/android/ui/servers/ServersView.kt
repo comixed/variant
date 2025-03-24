@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.net.loadServerLinks
 import org.comixedproject.variant.shared.model.server.Server
@@ -44,19 +45,20 @@ fun ServersView(
     val serverList by serverViewModel.serverList.collectAsState()
     val serverActivity by serverViewModel.activity.collectAsState()
     val currentServer by serverViewModel.currentServer.collectAsState()
-    val confirmDeletion = rememberSaveable { mutableStateOf(false) }
+    var confirmDeletion by rememberSaveable { mutableStateOf(false) }
     val currentDirectory by serverLinkViewModel.currentDirectory.collectAsState()
     val serverLinkList by serverLinkViewModel.serverLinkList.collectAsState()
+    var isLoading by rememberSaveable { mutableStateOf(false) }
 
-    if (confirmDeletion.value) {
+    if (confirmDeletion) {
         currentServer?.let { server ->
             DeleteServerView(server, onConfirm = {
                 Logger.d(TAG, "Deleting server: name=${server.name}")
                 serverViewModel.deleteServer(server)
-                confirmDeletion.value = false
+                confirmDeletion = false
             }, onCancel = {
                 Logger.d(TAG, "Cancelled deleteing server")
-                confirmDeletion.value = false
+                confirmDeletion = false
             })
         }
     } else {
@@ -67,12 +69,13 @@ fun ServersView(
                 onEditServer = { server -> serverViewModel.editServer(server) },
                 onDeleteServer = { server ->
                     serverViewModel.confirmDeleteServer(server)
-                    confirmDeletion.value = true
+                    confirmDeletion = true
                 },
                 onBrowseServer = { server ->
                     serverViewModel.browseServer(server)
                     serverLinkViewModel.loadLinks(server, server.url)
                     if (!serverLinkViewModel.hasLinks(server, server.url)) {
+                        isLoading = true
                         coroutineScope.launch {
                             loadServerLinks(
                                 server,
@@ -83,6 +86,7 @@ fun ServersView(
                                         server.url,
                                         links
                                     )
+                                    isLoading = false
                                 })
                         }
                     } else {
@@ -118,9 +122,11 @@ fun ServersView(
                     currentDirectory,
                     parentDirectory,
                     title,
+                    isLoading,
                     serverLinkList,
                     onLoadDirectory = { directory, reload ->
                         if (reload || !serverLinkViewModel.hasLinks(server, directory)) {
+                            isLoading = true
                             coroutineScope.launch {
                                 loadServerLinks(
                                     server,
@@ -131,6 +137,7 @@ fun ServersView(
                                             directory,
                                             links
                                         )
+                                        isLoading = false
                                     })
                             }
                         } else {
