@@ -27,13 +27,6 @@ import org.comixedproject.variant.shared.repositories.ServerRepository
 
 private val TAG = "VariantViewModel"
 
-enum class ServerActivity {
-    LIST_SERVERS,
-    ADD_SERVER,
-    EDIT_SERVER,
-    BROWSE_SERVER
-}
-
 /**
  * <code>VariantViewModel</code> provides a single source for application state on Android devices.
  *
