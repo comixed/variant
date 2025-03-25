@@ -28,21 +28,29 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.SERVER_LINK_LIST
 import org.comixedproject.variant.android.model.SERVER_LIST
+import org.comixedproject.variant.android.ui.links.ServerLinkDetailView
 import org.comixedproject.variant.android.ui.links.ServerLinkListView
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
+import org.comixedproject.variant.shared.model.server.ServerLinkType
 import org.comixedproject.variant.shared.platform.Logger
 
 private const val TAG = "BrowseServerView"
@@ -50,7 +58,7 @@ private const val TAG = "BrowseServerView"
 const val TAG_BACK_NAVIGATION_BUTTON = "back-navigation"
 const val TAG_REFRESH = "refresh-box"
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun BrowseServerView(
     server: Server,
@@ -62,6 +70,8 @@ fun BrowseServerView(
     onLoadDirectory: (String, Boolean) -> Unit
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
+    val scaffoldNavigator = rememberListDetailPaneScaffoldNavigator<Any>()
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -92,23 +102,55 @@ fun BrowseServerView(
                 })
         },
         content = { padding ->
-            PullToRefreshBox(
-                modifier = Modifier
-                    .padding(padding)
-                    .testTag(TAG_REFRESH),
-                isRefreshing = isLoading,
-                state = pullToRefreshState,
-                onRefresh = {
-                    Logger.d(
-                        TAG,
-                        "Reloading directory: ${parentDirectory}"
+            NavigableListDetailPaneScaffold(
+                navigator = scaffoldNavigator,
+                listPane = {
+                    PullToRefreshBox(
+                        modifier = Modifier
+                            .padding(padding)
+                            .testTag(TAG_REFRESH),
+                        isRefreshing = isLoading,
+                        state = pullToRefreshState,
+                        onRefresh = {
+                            Logger.d(
+                                TAG,
+                                "Reloading directory: ${parentDirectory}"
+                            )
+                            onLoadDirectory(currentDirectory, true)
+                        }, content = {
+                            ServerLinkListView(
+                                server,
+                                serverLinkList.sortedBy { link -> link.title },
+                                onLoadLink = { link ->
+                                    when (link.linkType) {
+                                        ServerLinkType.NAVIGATION -> onLoadDirectory(
+                                            link.downloadLink,
+                                            false
+                                        )
+
+                                        ServerLinkType.PUBLICATION ->
+                                            scope.launch {
+                                                Logger.d(
+                                                    TAG,
+                                                    "Showing link details: ${link.downloadLink}"
+                                                )
+                                                scaffoldNavigator.navigateTo(
+                                                    ListDetailPaneScaffoldRole.Detail,
+                                                    link
+                                                )
+                                            }
+                                    }
+                                })
+                        }
                     )
-                    onLoadDirectory(currentDirectory, true)
-                }, content = {
-                    ServerLinkListView(
-                        server,
-                        serverLinkList.sortedBy { link -> link.title },
-                        onLoadLink = { link -> onLoadDirectory(link.downloadLink, false) })
+                },
+                detailPane = {
+                    scaffoldNavigator.currentDestination?.content?.let { link ->
+                        ServerLinkDetailView(
+                            server,
+                            link as ServerLink,
+                            onClose = { scaffoldNavigator.navigateBack() })
+                    }
                 }
             )
         }
