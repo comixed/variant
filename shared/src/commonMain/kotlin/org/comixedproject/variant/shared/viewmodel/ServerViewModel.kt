@@ -18,8 +18,8 @@
 
 package org.comixedproject.variant.shared.viewmodel
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.rickclephas.kmp.observableviewmodel.MutableStateFlow
+import com.rickclephas.kmp.observableviewmodel.ViewModel
 import kotlinx.coroutines.flow.asStateFlow
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Logger
@@ -34,21 +34,16 @@ private val TAG = "VariantViewModel"
  */
 class ServerViewModel(
     val serverRepository: ServerRepository
-) : BaseViewModel() {
-    private val _serverListFlow: MutableStateFlow<List<Server>> by lazy {
-        MutableStateFlow(
-            serverRepository.servers
-        )
-    }
+) : ViewModel() {
+    private val _serverListFlow =
+        MutableStateFlow<List<Server>>(viewModelScope, serverRepository.servers)
     val serverList = _serverListFlow.asStateFlow()
 
-    private var _currentServer = MutableStateFlow<Server?>(null)
-    val currentServer: StateFlow<Server?>
-        get() = _currentServer.asStateFlow()
+    private var _currentServer = MutableStateFlow<Server?>(viewModelScope, null)
+    val currentServer = _currentServer.asStateFlow()
 
-    private var _activity = MutableStateFlow(ServerActivity.LIST_SERVERS)
-    val activity: StateFlow<ServerActivity>
-        get() = _activity.asStateFlow()
+    private var _activity = MutableStateFlow(viewModelScope, ServerActivity.LIST_SERVERS)
+    val activity = _activity.asStateFlow()
 
     var onServerListUpdated: ((List<Server>) -> Unit)? = null
 
