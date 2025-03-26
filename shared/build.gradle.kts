@@ -26,6 +26,9 @@ kotlin {
     }
 
     sourceSets {
+        all {
+            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
+        }
         androidMain.dependencies {
             implementation(libs.lifecycle.viewmodel.android)
             implementation(libs.sqldelight.driver.android)
@@ -45,6 +48,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.auth)
             implementation(libs.korio)
+            api(libs.kmp.viewmodel.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -61,16 +61,14 @@ class ServerRepository(
      */
     fun save(server: Server) {
         server.serverId.let { id ->
+            var password = when (server.password.isEmpty()) {
+                true -> "[NONE]"
+                else -> server.password.get(0) + "****"
+            }
             if (id == null) {
-                var password = when (server.password.isEmpty()) {
-                    true -> "[NONE]"
-                    else -> server.password.get(0) + "****"
-                }
                 Logger.d(
                     TAG,
-                    "Creating server: name=${server.name} url=${server.url} username=${server.username} password=${
-                        password
-                    }"
+                    "Creating server: name=${server.name} url=${server.url} username=${server.username} password=${password}"
                 )
                 databaseHelper.createServer(
                     server.name,
@@ -81,11 +79,7 @@ class ServerRepository(
             } else {
                 Logger.d(
                     TAG,
-                    "Updating server: id=${id} name=${server.name} url=${server.url} username=${server.username} password=${
-                        server.password.get(
-                            0
-                        ) + "****"
-                    }"
+                    "Updating server: id=${id} name=${server.name} url=${server.url} username=${server.username} password=${password}"
                 )
                 databaseHelper.updateServer(
                     id,

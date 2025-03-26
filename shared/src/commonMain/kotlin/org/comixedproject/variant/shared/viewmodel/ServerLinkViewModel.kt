@@ -18,8 +18,8 @@
 
 package org.comixedproject.variant.shared.viewmodel
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.rickclephas.kmp.observableviewmodel.MutableStateFlow
+import com.rickclephas.kmp.observableviewmodel.ViewModel
 import kotlinx.coroutines.flow.asStateFlow
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
@@ -31,18 +31,16 @@ private val TAG = "ServerLinkViewModel"
 /**
  * <code>ServerLinkViewModel</code> provides a shared view model for working with instances of {@link ServerLink}.
  *
- * @author Darrl L. Pierce
+ * @author Darryl L. Pierce
  */
-class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : BaseViewModel() {
-    private var currentServer: Server? = null
-
-    private val _serverLinkList = MutableStateFlow<List<ServerLink>>(emptyList())
-
+class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : ViewModel() {
+    private val _serverLinkList = MutableStateFlow<List<ServerLink>>(viewModelScope, emptyList())
     val serverLinkList = _serverLinkList.asStateFlow()
-    var onServerLinkListUpdated: ((List<ServerLink>) -> Unit)? = null
 
-    private val _currentDirectory = MutableStateFlow<String>("")
-    val currentDirectory: StateFlow<String> = _currentDirectory.asStateFlow()
+    private val _currentDirectory = MutableStateFlow<String>(viewModelScope, "")
+    val currentDirectory = _currentDirectory.asStateFlow()
+
+    private var currentServer: Server? = null
 
     /**
      * Checks if there are any links for the given server and directory.
@@ -70,7 +68,6 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : Base
             .filter { it.directory == directory }
         _currentDirectory.tryEmit(directory)
         _serverLinkList.tryEmit(links)
-        onServerLinkListUpdated?.invoke(links)
     }
 
     /**
@@ -87,7 +84,6 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : Base
         val links = serverLinkRepository.serverLinks.filter { it.serverId == server.serverId }
             .filter { it.directory == directory }
         _serverLinkList.tryEmit(links)
-        onServerLinkListUpdated?.invoke(links)
     }
 
     fun getParentLink(): ServerLink? {

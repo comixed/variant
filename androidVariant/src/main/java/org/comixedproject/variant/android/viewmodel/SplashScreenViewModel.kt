@@ -18,19 +18,19 @@
 
 package org.comixedproject.variant.android.viewmodel
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.comixedproject.variant.shared.viewmodel.BaseViewModel
 
 /**
  * <code>SplashScreenViewModel</code> provides a view model for the splash screen on startup.
  *
  * @author Darryl L. Pierce
  */
-class SplashScreenViewModel : BaseViewModel() {
+class SplashScreenViewModel : ViewModel() {
     private val splashShowFlow = MutableStateFlow(true)
     val isSplashShow = splashShowFlow.asStateFlow()
 
