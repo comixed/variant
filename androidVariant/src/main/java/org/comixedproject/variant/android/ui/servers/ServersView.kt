@@ -143,7 +143,8 @@ fun ServersView(
                         } else {
                             serverLinkViewModel.loadLinks(server, directory)
                         }
-                    })
+                    },
+                    onStopBrowsing = { serverViewModel.stopBrowsingServer() })
             }
         }
     }

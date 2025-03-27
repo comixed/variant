@@ -21,6 +21,7 @@ package org.comixedproject.variant.android.ui.servers
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -56,6 +57,7 @@ import org.comixedproject.variant.shared.platform.Logger
 private const val TAG = "BrowseServerView"
 
 const val TAG_BACK_NAVIGATION_BUTTON = "back-navigation"
+const val TAG_STOP_NAVIGATING_BUTTON = "stop-navigating"
 const val TAG_REFRESH = "refresh-box"
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
@@ -67,7 +69,8 @@ fun BrowseServerView(
     title: String,
     isLoading: Boolean,
     serverLinkList: List<ServerLink>,
-    onLoadDirectory: (String, Boolean) -> Unit
+    onLoadDirectory: (String, Boolean) -> Unit,
+    onStopBrowsing: () -> Unit
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
     val scaffoldNavigator = rememberListDetailPaneScaffoldNavigator<Any>()
@@ -98,6 +101,20 @@ fun BrowseServerView(
                                 contentDescription = stringResource(R.string.navigateBackLabel)
                             )
                         }
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            Logger.d(TAG, "Stopping browsing")
+                            onStopBrowsing()
+                        },
+                        modifier = Modifier.testTag(TAG_STOP_NAVIGATING_BUTTON)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = stringResource(R.string.stopBrowsingLabel)
+                        )
                     }
                 })
         },
@@ -168,6 +185,7 @@ fun BrowseServerPreview() {
             SERVER_LIST.get(0).name,
             false,
             SERVER_LINK_LIST,
-            onLoadDirectory = { _, _ -> })
+            onLoadDirectory = { _, _ -> },
+            onStopBrowsing = { })
     }
 }

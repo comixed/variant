@@ -106,4 +106,8 @@ class ServerViewModel(
         _currentServer.tryEmit(server)
         _activity.tryEmit(ServerActivity.BROWSE_SERVER)
     }
+
+    fun stopBrowsingServer() {
+        _activity.tryEmit(ServerActivity.LIST_SERVERS)
+    }
 }
