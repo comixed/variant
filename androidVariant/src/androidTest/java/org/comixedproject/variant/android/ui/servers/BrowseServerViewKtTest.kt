@@ -20,6 +20,10 @@ package org.comixedproject.variant.android.ui.servers
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import org.comixedproject.variant.android.model.SERVER_LINK_LIST
 import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.ServerLinkType
@@ -34,7 +38,7 @@ class BrowseServerViewKtTest {
     val serverLink = SERVER_LINK_LIST.filter { it.linkType == ServerLinkType.NAVIGATION }.first()
 
     @Test
-    fun browseServerView_rootDirectory_hasBackNavigation() {
+    fun browseServerView_withoutParent_rootDirectory_backNavigation_exists() {
         composeTestRule.setContent {
             BrowseServerView(
                 server,
@@ -43,14 +47,15 @@ class BrowseServerViewKtTest {
                 serverLink.title,
                 false,
                 SERVER_LINK_LIST,
-                onLoadDirectory = { _, _ -> })
+                onLoadDirectory = { _, _ -> },
+                onStopBrowsing = { })
         }
 
         composeTestRule.onNodeWithTag(TAG_BACK_NAVIGATION_BUTTON).assertDoesNotExist()
     }
 
     @Test
-    fun browseServerView_childDirectory_hasBackNavigation() {
+    fun browseServerView_withParent_rootDirectory_backNavigation_exists() {
         composeTestRule.setContent {
             BrowseServerView(
                 server,
@@ -59,9 +64,76 @@ class BrowseServerViewKtTest {
                 serverLink.title,
                 false,
                 SERVER_LINK_LIST,
-                onLoadDirectory = { _, _ -> })
+                onLoadDirectory = { _, _ -> },
+                onStopBrowsing = { })
         }
 
         composeTestRule.onNodeWithTag(TAG_BACK_NAVIGATION_BUTTON).assertExists()
+    }
+
+    @Test
+    fun browseServerView_with_parent_rootDirectory_backNavigation_clicked() {
+        var clicked = false
+        var directory = ""
+        var reload = true
+
+
+        composeTestRule.setContent {
+            BrowseServerView(
+                server,
+                serverLink.downloadLink,
+                serverLink.directory,
+                serverLink.title,
+                false,
+                SERVER_LINK_LIST,
+                onLoadDirectory = { dir, rel ->
+                    clicked = true
+                    directory = dir
+                    reload = rel
+                },
+                onStopBrowsing = { })
+        }
+
+        composeTestRule.onNodeWithTag(TAG_BACK_NAVIGATION_BUTTON).performClick()
+        assertTrue(clicked)
+        assertEquals(serverLink.directory, directory)
+        assertFalse(reload)
+    }
+
+    @Test
+    fun browseServerView_childDirectory_stopNavigating_exists() {
+        composeTestRule.setContent {
+            BrowseServerView(
+                server,
+                serverLink.downloadLink,
+                serverLink.directory,
+                serverLink.title,
+                false,
+                SERVER_LINK_LIST,
+                onLoadDirectory = { _, _ -> },
+                onStopBrowsing = { })
+        }
+
+        composeTestRule.onNodeWithTag(TAG_STOP_NAVIGATING_BUTTON).assertExists()
+    }
+
+    @Test
+    fun browseServerView_childDirectory_stopNavigating_clicked() {
+        var clicked = false
+
+        composeTestRule.setContent {
+            BrowseServerView(
+                server,
+                serverLink.downloadLink,
+                serverLink.downloadLink,
+                serverLink.title,
+                false,
+                SERVER_LINK_LIST,
+                onLoadDirectory = { _, _ -> },
+                onStopBrowsing = { clicked = true })
+        }
+
+        composeTestRule.onNodeWithTag(TAG_STOP_NAVIGATING_BUTTON).performClick()
+        assertTrue(clicked)
     }
 }
