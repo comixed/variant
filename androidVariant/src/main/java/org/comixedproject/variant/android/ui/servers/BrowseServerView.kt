@@ -42,7 +42,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.SERVER_LINK_LIST
@@ -74,7 +76,7 @@ fun BrowseServerView(
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
     val scaffoldNavigator = rememberListDetailPaneScaffoldNavigator<Any>()
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -146,15 +148,17 @@ fun BrowseServerView(
                                         )
 
                                         ServerLinkType.PUBLICATION ->
-                                            scope.launch {
-                                                Logger.d(
-                                                    TAG,
-                                                    "Showing link details: ${link.downloadLink}"
-                                                )
-                                                scaffoldNavigator.navigateTo(
-                                                    ListDetailPaneScaffoldRole.Detail,
-                                                    link
-                                                )
+                                            coroutineScope.launch {
+                                                withContext(Dispatchers.IO) {
+                                                    Logger.d(
+                                                        TAG,
+                                                        "Showing link details: ${link.downloadLink}"
+                                                    )
+                                                    scaffoldNavigator.navigateTo(
+                                                        ListDetailPaneScaffoldRole.Detail,
+                                                        link
+                                                    )
+                                                }
                                             }
                                     }
                                 })

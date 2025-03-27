@@ -25,7 +25,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.comixedproject.variant.android.net.loadServerLinks
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Logger
@@ -77,17 +79,19 @@ fun ServersView(
                     if (!serverLinkViewModel.hasLinks(server, server.url)) {
                         isLoading = true
                         coroutineScope.launch {
-                            loadServerLinks(
-                                server,
-                                server.url,
-                                onSuccess = { links ->
-                                    serverLinkViewModel.saveLinks(
-                                        server,
-                                        server.url,
-                                        links
-                                    )
-                                    isLoading = false
-                                })
+                            withContext(Dispatchers.IO) {
+                                loadServerLinks(
+                                    server,
+                                    server.url,
+                                    onSuccess = { links ->
+                                        serverLinkViewModel.saveLinks(
+                                            server,
+                                            server.url,
+                                            links
+                                        )
+                                        isLoading = false
+                                    })
+                            }
                         }
                     } else {
                         serverLinkViewModel.loadLinks(server, server.url)
@@ -128,17 +132,19 @@ fun ServersView(
                         if (reload || !serverLinkViewModel.hasLinks(server, directory)) {
                             isLoading = true
                             coroutineScope.launch {
-                                loadServerLinks(
-                                    server,
-                                    directory,
-                                    onSuccess = { links ->
-                                        serverLinkViewModel.saveLinks(
-                                            server,
-                                            directory,
-                                            links
-                                        )
-                                        isLoading = false
-                                    })
+                                withContext(Dispatchers.IO) {
+                                    loadServerLinks(
+                                        server,
+                                        directory,
+                                        onSuccess = { links ->
+                                            serverLinkViewModel.saveLinks(
+                                                server,
+                                                directory,
+                                                links
+                                            )
+                                            isLoading = false
+                                        })
+                                }
                             }
                         } else {
                             serverLinkViewModel.loadLinks(server, directory)
