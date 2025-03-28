@@ -36,12 +36,8 @@ object Modules {
 
     val repositories =
         module {
-            factory {
-                ServerRepository(get())
-            }
-            factory {
-                ServerLinkRepository(get(), get())
-            }
+            factory { ServerRepository(get()) }
+            factory { ServerLinkRepository(get()) }
         }
 
     val viewModels = module {

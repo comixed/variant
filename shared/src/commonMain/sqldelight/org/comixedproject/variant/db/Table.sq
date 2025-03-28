@@ -1,7 +1,7 @@
 -- The initial database migration
 
 CREATE TABLE ServersDb (
-  serverId INTEGER PRIMARY KEY AUTOINCREMENT,
+  server_id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL UNIQUE,
   url TEXT NOT NULL,
   username TEXT NOT NULL DEFAULT "",
@@ -15,41 +15,34 @@ createServer:
 INSERT OR IGNORE INTO ServersDb(name, url, username, password) VALUES (?, ?, ?, ?);
 
 loadServer:
-SELECT * FROM ServersDb WHERE serverId = ?;
+SELECT * FROM ServersDb WHERE server_id = ?;
 
 updateServer:
-UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE serverId = ?;
+UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE server_id = ?;
 
 deleteServer:
-DELETE FROM ServersDb WHERE serverId = ?;
+DELETE FROM ServersDb WHERE server_id = ?;
 
 CREATE TABLE ServerLinksDb (
-  serverLinkId INTEGER PRIMARY KEY AUTOINCREMENT,
-  serverId INTEGER NOT NULL,
+  server_link_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  server_id INTEGER NOT NULL,
   directory TEXT NOT NULL,
   identifier TEXT NOT NULL,
-  linkType TEXT NOT NULL,
-  coverUrl TEXT NOT NULL,
-  downloadLink TEXT NOT NULL,
+  link_type TEXT NOT NULL,
+  cover_url TEXT NOT NULL,
+  download_link TEXT NOT NULL,
   title TEXT NOT NULL,
-  storedFilename TEXT,
-  FOREIGN KEY(serverId) REFERENCES ServersDb(serverId)
+  FOREIGN KEY(server_id) REFERENCES ServersDb(server_id)
 );
 
 createLink:
-INSERT OR IGNORE INTO ServerLinksDb(serverId, directory, identifier, title, coverUrl, downloadLink, linkType) VALUES(?, ?,?, ?, ?, ?, ?);
-
-setStoredFilename:
-UPDATE ServerLinksDb SET storedFilename = ? WHERE serverLinkId = ?;
+INSERT OR IGNORE INTO ServerLinksDb(server_id, directory, identifier, title, cover_url, download_link, link_type) VALUES(?, ?,?, ?, ?, ?, ?);
 
 deleteExistingLink:
-DELETE FROM ServerLinksDb WHERE serverLinkId = ?;
+DELETE FROM ServerLinksDb WHERE server_link_id = ?;
 
 loadAllLinks:
 SELECT * FROM ServerLinksDb;
 
 loadLinksForParent:
-SELECT * FROM ServerLinksDb WHERE serverId = ? AND directory = ?;
-
-getServerLinkId:
-SELECT serverLinkId FROM ServerLinksDb WHERE serverId = ? AND downloadLink = ?;
+SELECT * FROM ServerLinksDb WHERE server_id = ? AND directory = ?;

@@ -44,7 +44,7 @@ class ServerRepository(
         Log.debug(TAG, "Loading server: id=${id}")
         databaseHelper.loadServer(id).let { record ->
             return Server(
-                serverId = record.serverId,
+                serverId = record.server_id,
                 name = record.name,
                 url = record.url,
                 username = record.username,
@@ -105,7 +105,7 @@ class ServerRepository(
 
 fun ServersDb.map() =
     Server(
-        serverId = this.serverId,
+        serverId = this.server_id,
         name = this.name,
         url = this.url,
         username = this.username,
