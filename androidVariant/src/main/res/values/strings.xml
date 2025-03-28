@@ -29,4 +29,5 @@
     <string name="navigateBackLabel">Go back to parent</string>
     <string name="unknownLabel">Unknown Item</string>
     <string name="yesButton">Yes</string>
+    <string name="serverAccessedDateText">Last Accessed: %1$s</string>
 </resources>

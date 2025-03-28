@@ -18,6 +18,7 @@
 
 package org.comixedproject.variant.shared.repositories
 
+import kotlinx.datetime.Instant
 import org.comixedproject.variant.db.ServerLinksDb
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
@@ -39,6 +40,12 @@ class ServerLinkRepository(private val databaseHelper: DatabaseHelper) {
     ) {
         databaseHelper.saveLinksForServer(server, directory, serverLinks)
     }
+
+    fun markParentLinkAsAccessed(server: Server, directory: String) {
+        server.serverId?.let { serverId ->
+            databaseHelper.markParentLinkAsAccessed(serverId, directory)
+        }
+    }
 }
 
 fun ServerLinksDb.map() =
@@ -51,5 +58,9 @@ fun ServerLinksDb.map() =
         coverUrl = this.cover_url,
         downloadLink = this.download_link,
         linkType = ServerLinkType.valueOf(this.link_type),
-        downloaded = false
+        downloaded = false,
+        downloadedDate = when (this.downloaded_date) {
+            null -> null
+            else -> Instant.fromEpochMilliseconds(this.downloaded_date.toLong())
+        }
     )

@@ -18,6 +18,7 @@
 
 package org.comixedproject.variant.shared.repositories
 
+import kotlinx.datetime.Instant
 import org.comixedproject.variant.db.ServersDb
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Log
@@ -36,25 +37,6 @@ class ServerRepository(
         get() = databaseHelper.loadServers().map(ServersDb::map)
 
     /**
-     * Retrieves a single server by id.
-     *
-     * @param id the server id
-     */
-    fun getById(id: Long): Server? {
-        Log.debug(TAG, "Loading server: id=${id}")
-        databaseHelper.loadServer(id).let { record ->
-            return Server(
-                serverId = record.server_id,
-                name = record.name,
-                url = record.url,
-                username = record.username,
-                password = record.password
-            )
-        }
-        return null
-    }
-
-    /**
      * Creates or updates the provided server.
      *
      * @param server the server
@@ -66,7 +48,7 @@ class ServerRepository(
                 else -> server.password.get(0) + "****"
             }
             if (id == null) {
-                Log.info(
+                Log.debug(
                     TAG,
                     "Creating server: name=${server.name} url=${server.url} username=${server.username} password=${password}"
                 )
@@ -77,7 +59,7 @@ class ServerRepository(
                     server.password
                 )
             } else {
-                Log.info(
+                Log.debug(
                     TAG,
                     "Updating server: id=${id} name=${server.name} url=${server.url} username=${server.username} password=${password}"
                 )
@@ -98,8 +80,15 @@ class ServerRepository(
      * @param id the server id
      */
     fun deleteServer(id: Long) {
-        Log.info(TAG, "Deleting server: id=${id}")
+        Log.debug(TAG, "Deleting server: id=${id}")
         databaseHelper.deleteServer(id)
+    }
+
+    fun markServerAsAccessed(server: Server) {
+        server.serverId?.let { serverId ->
+            Log.debug(TAG, "Marking server as accessed: ${server.serverId}")
+            databaseHelper.markServerAsAccessed(serverId)
+        }
     }
 }
 
@@ -110,4 +99,8 @@ fun ServersDb.map() =
         url = this.url,
         username = this.username,
         password = this.password,
+        accessedDate = when (this.accessed_date) {
+            null -> null
+            else -> Instant.fromEpochMilliseconds(this.accessed_date)
+        }
     )

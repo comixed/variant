@@ -16,11 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.model
+package org.comixedproject.variant.shared.model
 
+import kotlinx.datetime.Clock
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
+import kotlin.time.Duration.Companion.days
 
 val SERVER_LIST = listOf(
     Server(
@@ -28,35 +30,40 @@ val SERVER_LIST = listOf(
         name = "Server 1",
         url = "http://www.comixedproject.org:7171/opds/root.xml",
         username = "admin@comixedproject.org",
-        password = "test4echo"
+        password = "test4echo",
+        accessedDate = Clock.System.now()
     ),
     Server(
         serverId = 2L,
         name = "Server 2",
         url = "http://www.comixedproject.org:7171/opds/root.xml",
         username = "admin@comixedproject.org",
-        password = "test4echo"
+        password = "test4echo",
+        accessedDate = Clock.System.now().minus(1.days)
     ),
     Server(
         serverId = 3L,
         name = "Server 3",
         url = "http://www.comixedproject.org:7171/opds/root.xml",
         username = "admin@comixedproject.org",
-        password = "test4echo"
+        password = "test4echo",
+        accessedDate = Clock.System.now().minus(2.days)
     ),
     Server(
         serverId = 4L,
         name = "Server 4",
         url = "http://www.comixedproject.org:7171/opds/root.xml",
         username = "admin@comixedproject.org",
-        password = "test4echo"
+        password = "test4echo",
+        accessedDate = Clock.System.now().minus(3.days)
     ),
     Server(
         serverId = 5L,
         name = "Server 5",
         url = "http://www.comixedproject.org:7171/opds/root.xml",
         username = "admin@comixedproject.org",
-        password = "test4echo"
+        password = "test4echo",
+        accessedDate = Clock.System.now().minus(4.days)
     ),
 );
 
@@ -69,7 +76,8 @@ val SERVER_LINK_LIST = listOf(
         title = "Captain America",
         coverUrl = "http://www.comixedproject.org/cover.png",
         downloadLink = "http://www.comixedproject.org:7171/opds/",
-        linkType = ServerLinkType.NAVIGATION
+        linkType = ServerLinkType.NAVIGATION,
+        downloadedDate = Clock.System.now()
     ),
     ServerLink(
         serverLinkId = 102L,
@@ -79,7 +87,8 @@ val SERVER_LINK_LIST = listOf(
         title = "Daredevil",
         coverUrl = "http://www.comixedproject.org/cover.png",
         downloadLink = "http://www.comixedproject.org:7171/opds/",
-        linkType = ServerLinkType.NAVIGATION
+        linkType = ServerLinkType.NAVIGATION,
+        downloadedDate = Clock.System.now().minus(14.days)
     ),
     ServerLink(
         serverLinkId = 103L,
@@ -89,7 +98,8 @@ val SERVER_LINK_LIST = listOf(
         title = "The Avengers",
         coverUrl = "http://www.comixedproject.org/cover.png",
         downloadLink = "http://www.comixedproject.org:7171/opds/",
-        linkType = ServerLinkType.NAVIGATION
+        linkType = ServerLinkType.NAVIGATION,
+        downloadedDate = Clock.System.now().minus(14.days)
     ),
     ServerLink(
         serverLinkId = 104L,
@@ -99,7 +109,8 @@ val SERVER_LINK_LIST = listOf(
         title = "JSA",
         coverUrl = "http://www.comixedproject.org/cover.png",
         downloadLink = "http://www.comixedproject.org:7171/opds/",
-        linkType = ServerLinkType.NAVIGATION
+        linkType = ServerLinkType.NAVIGATION,
+        downloadedDate = Clock.System.now().minus(14.days)
     ),
     ServerLink(
         serverLinkId = 105L,
@@ -109,7 +120,8 @@ val SERVER_LINK_LIST = listOf(
         title = "The Green Lantern Corps",
         coverUrl = "http://www.comixedproject.org/cover.png",
         downloadLink = "http://www.comixedproject.org:7171/opds/",
-        linkType = ServerLinkType.NAVIGATION
+        linkType = ServerLinkType.NAVIGATION,
+        downloadedDate = Clock.System.now().minus(14.days)
     ),
     ServerLink(
         serverLinkId = 111L,
@@ -119,7 +131,8 @@ val SERVER_LINK_LIST = listOf(
         title = "Detective Comics #27",
         coverUrl = "http://www.comixedproject.org/cover.png",
         downloadLink = "http://www.comixedproject.org:7171/opds/",
-        linkType = ServerLinkType.PUBLICATION
+        linkType = ServerLinkType.PUBLICATION,
+        downloadedDate = Clock.System.now().minus(14.days)
     ),
     ServerLink(
         serverLinkId = 112L,

@@ -41,9 +41,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.model.SERVER_LINK_LIST
-import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.shared.VARIANT_USER_AGENT
+import org.comixedproject.variant.shared.model.SERVER_LINK_LIST
+import org.comixedproject.variant.shared.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
