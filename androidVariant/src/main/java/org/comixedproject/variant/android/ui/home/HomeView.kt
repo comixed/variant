@@ -39,7 +39,7 @@ import org.comixedproject.variant.android.ui.getIconForScreen
 import org.comixedproject.variant.android.ui.getLabelForScreen
 import org.comixedproject.variant.android.ui.servers.ServersView
 import org.comixedproject.variant.android.ui.setings.SettingsView
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.shared.viewmodel.ServerViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -57,7 +57,7 @@ fun HomeView(
     NavigationSuiteScaffold(
         navigationSuiteItems = {
             NavigationTarget.entries.forEach { target ->
-                Logger.d(TAG, "target=${target}")
+                Log.debug(TAG, "target=${target}")
                 item(
                     icon = {
                         Icon(

@@ -26,9 +26,6 @@ class ServerLinkManager: ObservableObject {
   @Published var serverLinkList: [ServerLink] = []
 
   init() {
-    self.viewModel.onServerLinkListUpdated = { [weak self] serverLinks in
-      self?.serverLinkList = serverLinks
-    }
     self.serverLinkList = self.viewModel.serverLinkList.value as! [ServerLink]
   }
 
@@ -53,7 +50,7 @@ class ServerLinkManager: ObservableObject {
   }
 
   func saveLinks(server: Server, directory: String, links: [ServerLink]) {
-    self.viewModel.saveLinks(server: server, directory: directory, links: links)
+    self.viewModel.saveLinks(server: server, directory: directory, serverLinks: links)
   }
 
   func loadLinks(server: Server, directory: String) {

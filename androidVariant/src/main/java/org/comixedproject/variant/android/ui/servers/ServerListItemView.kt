@@ -42,7 +42,7 @@ import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.android.ui.DismissBackground
 import org.comixedproject.variant.shared.model.server.Server
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 
 private val TAG = "ServerListItemView"
 
@@ -81,7 +81,7 @@ fun ServerListItemView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        Logger.d(TAG, "Browsing server: ${server.name}")
+                        Log.info(TAG, "Browsing server: ${server.name}")
                         onBrowseServer(server)
                     }
 

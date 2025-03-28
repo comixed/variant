@@ -48,7 +48,7 @@ import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
 import org.comixedproject.variant.shared.net.encodeCredentials
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 
 private val TAG = "ServerLinkDetailView"
 
@@ -62,7 +62,7 @@ fun ServerLinkDetailView(server: Server, serverLink: ServerLink, onClose: () -> 
         floatingActionButton = {
             IconButton(
                 onClick = {
-                    Logger.d(TAG, "Closing details view")
+                    Log.info(TAG, "Closing details view")
                     onClose()
                 },
                 modifier = Modifier.testTag(TAG_CLOSE_BUTTON)

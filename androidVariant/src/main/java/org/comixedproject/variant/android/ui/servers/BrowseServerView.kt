@@ -54,7 +54,7 @@ import org.comixedproject.variant.android.ui.links.ServerLinkListView
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 
 private const val TAG = "BrowseServerView"
 
@@ -93,7 +93,7 @@ fun BrowseServerView(
                     if (parentDirectory != currentDirectory) {
                         IconButton(
                             onClick = {
-                                Logger.d(TAG, "Going back to parent: ${parentDirectory}")
+                                Log.debug(TAG, "Going back to parent: ${parentDirectory}")
                                 onLoadDirectory(parentDirectory, false)
                             },
                             modifier = Modifier.testTag(TAG_BACK_NAVIGATION_BUTTON)
@@ -108,7 +108,7 @@ fun BrowseServerView(
                 actions = {
                     IconButton(
                         onClick = {
-                            Logger.d(TAG, "Stopping browsing")
+                            Log.info(TAG, "Stopping browsing")
                             onStopBrowsing()
                         },
                         modifier = Modifier.testTag(TAG_STOP_NAVIGATING_BUTTON)
@@ -131,7 +131,7 @@ fun BrowseServerView(
                         isRefreshing = isLoading,
                         state = pullToRefreshState,
                         onRefresh = {
-                            Logger.d(
+                            Log.info(
                                 TAG,
                                 "Reloading directory: ${parentDirectory}"
                             )
@@ -150,7 +150,7 @@ fun BrowseServerView(
                                         ServerLinkType.PUBLICATION ->
                                             coroutineScope.launch {
                                                 withContext(Dispatchers.IO) {
-                                                    Logger.d(
+                                                    Log.info(
                                                         TAG,
                                                         "Showing link details: ${link.downloadLink}"
                                                     )

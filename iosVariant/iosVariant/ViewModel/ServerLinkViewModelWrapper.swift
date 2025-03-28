@@ -29,9 +29,6 @@ final class ServerLinkViewModelWrapper {
   private(set) var serverLinkList: [ServerLink] = []
 
   init() {
-    viewModel.onServerLinkListUpdated = { [weak self] links in
-      self?.serverLinkList = links
-    }
     self.serverLinkList = self.viewModel.serverLinkList.value as! [ServerLink]
   }
 
@@ -40,7 +37,7 @@ final class ServerLinkViewModelWrapper {
   }
 
   func saveLinks(server: Server, directory: String, links: [ServerLink]) {
-    self.viewModel.saveLinks(server: server, directory: directory, links: links)
+    self.viewModel.saveLinks(server: server, directory: directory, serverLinks: links)
   }
 
   func loadLinks(server: Server, directory: String) {

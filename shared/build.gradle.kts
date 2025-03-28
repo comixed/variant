@@ -41,6 +41,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(libs.koin.core)
+            implementation(libs.kermit.logging)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.serialization)
             implementation(libs.ktor.client.content.negotiation)

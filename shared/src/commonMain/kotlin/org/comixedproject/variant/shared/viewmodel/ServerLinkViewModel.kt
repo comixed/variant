@@ -23,7 +23,7 @@ import com.rickclephas.kmp.observableviewmodel.ViewModel
 import kotlinx.coroutines.flow.asStateFlow
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 import org.comixedproject.variant.shared.repositories.ServerLinkRepository
 
 private val TAG = "ServerLinkViewModel"
@@ -78,7 +78,7 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : View
      * @param serverLinks the links
      */
     fun saveLinks(server: Server, directory: String, serverLinks: List<ServerLink>) {
-        Logger.d(TAG, "Saving ${serverLinks.size} server link(s)")
+        Log.debug(TAG, "Saving ${serverLinks.size} server link(s)")
         this.serverLinkRepository.saveLinksForServer(server, directory, serverLinks)
         _currentDirectory.tryEmit(directory)
         val links = serverLinkRepository.serverLinks.filter { it.serverId == server.serverId }
