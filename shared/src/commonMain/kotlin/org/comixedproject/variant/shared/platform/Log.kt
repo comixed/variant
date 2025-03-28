@@ -18,44 +18,22 @@
 
 package org.comixedproject.variant.shared.platform
 
-internal expect class Log() {
-    fun debug(
-        tag: String,
-        message: String,
-    )
+import co.touchlab.kermit.Logger
 
-    fun warn(
-        tag: String,
-        message: String,
-    )
-
-    fun error(
-        tag: String,
-        message: String,
-    )
-}
-
-public object Logger {
-    private val logger = Log()
-
-    public fun d(
-        tag: String,
-        message: String,
-    ) {
-        logger.debug(tag, message)
+public object Log {
+    public fun info(tag: String, message: String) {
+        Logger.withTag(tag).i(message)
     }
 
-    public fun w(
-        tag: String,
-        message: String,
-    ) {
-        logger.warn(tag, message)
+    public fun debug(tag: String, message: String) {
+        Logger.withTag(tag).d(message)
     }
 
-    public fun e(
-        tag: String,
-        message: String,
-    ) {
-        logger.error(tag, message)
+    public fun warning(tag: String, message: String) {
+        Logger.withTag(tag).w(message)
+    }
+
+    public fun error(tag: String, message: String) {
+        Logger.withTag(tag).e(message)
     }
 }

@@ -73,7 +73,7 @@ struct ServerEditView: View {
           server.url = self.url
           server.username = username
           server.password = password
-          Logger().d(tag: TAG, message: "id=\(server.serverId)")
+          Log().debug(tag: TAG, message: "id=\(server.serverId)")
           onSaveChanges(server)
         }
         Button("Cancel") {

@@ -32,7 +32,7 @@ import org.comixedproject.variant.android.model.SERVER_LINK_LIST
 import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 
 private val TAG = "ServerLinkListView"
 
@@ -55,7 +55,7 @@ fun ServerLinkListView(
                         serverLink,
                         onLoadLink = { onLoadLink(serverLink) },
                         onShowInfo = {
-                            Logger.d(TAG, "Showing details for link: ${serverLink.title}")
+                            Log.info(TAG, "Showing details for link: ${serverLink.title}")
                             navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, serverLink)
                         }
                     )
@@ -65,7 +65,7 @@ fun ServerLinkListView(
         detailPane = {
             navigator.currentDestination?.content?.let { serverLink ->
                 ServerLinkDetailView(server, serverLink, onClose = {
-                    Logger.d(TAG, "Closing server link details")
+                    Log.info(TAG, "Closing server link details")
                     navigator.navigateTo(ListDetailPaneScaffoldRole.List)
                 })
             }

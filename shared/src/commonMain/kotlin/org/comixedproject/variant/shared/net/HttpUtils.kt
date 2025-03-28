@@ -57,7 +57,7 @@ fun createHttpClientFor(server: Server, url: String): HttpClient {
             level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) {
-                    org.comixedproject.variant.shared.platform.Logger.d(TAG, message)
+                    org.comixedproject.variant.shared.platform.Log.debug(TAG, message)
                 }
             }
         }

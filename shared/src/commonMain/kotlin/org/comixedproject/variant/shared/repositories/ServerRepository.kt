@@ -20,7 +20,7 @@ package org.comixedproject.variant.shared.repositories
 
 import org.comixedproject.variant.db.ServersDb
 import org.comixedproject.variant.shared.model.server.Server
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 
 private val TAG = "ServerRepository"
 
@@ -41,7 +41,7 @@ class ServerRepository(
      * @param id the server id
      */
     fun getById(id: Long): Server? {
-        Logger.d(TAG, "Loading server: id=${id}")
+        Log.debug(TAG, "Loading server: id=${id}")
         databaseHelper.loadServer(id).let { record ->
             return Server(
                 serverId = record.serverId,
@@ -66,7 +66,7 @@ class ServerRepository(
                 else -> server.password.get(0) + "****"
             }
             if (id == null) {
-                Logger.d(
+                Log.info(
                     TAG,
                     "Creating server: name=${server.name} url=${server.url} username=${server.username} password=${password}"
                 )
@@ -77,7 +77,7 @@ class ServerRepository(
                     server.password
                 )
             } else {
-                Logger.d(
+                Log.info(
                     TAG,
                     "Updating server: id=${id} name=${server.name} url=${server.url} username=${server.username} password=${password}"
                 )
@@ -98,7 +98,7 @@ class ServerRepository(
      * @param id the server id
      */
     fun deleteServer(id: Long) {
-        Logger.d(TAG, "Deleting server: id=${id}")
+        Log.info(TAG, "Deleting server: id=${id}")
         databaseHelper.deleteServer(id)
     }
 }

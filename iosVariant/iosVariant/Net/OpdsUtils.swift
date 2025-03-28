@@ -25,13 +25,13 @@ func loadServerLinks(
   server: Server, directory: String, onSuccess: @escaping ([ServerLink]) -> Void,
   onFailure: @escaping () -> Void
 ) async {
-  Logger().d(
+  Log().debug(
     tag: TAG, message: "Loading directory from server: server=\(server.name) directory=\(directory)"
   )
   let url = URL(string: directory, relativeTo: URL(string: server.url))
   var request = URLRequest(url: url!)
   if server.username.isEmpty == false && server.password.isEmpty == false {
-    Logger().d(
+    Log().debug(
       tag: TAG,
       message:
         "Setting authentication heading: username=\(server.username) password=\(server.password.masked)"
@@ -40,10 +40,10 @@ func loadServerLinks(
       username: server.username, password: server.password)
     request.setValue("Basic \(authorization)", forHTTPHeaderField: "Authorization")
   }
-  Logger().d(tag: TAG, message: "Fetching url: \(String(describing: request.url))")
+  Log().debug(tag: TAG, message: "Fetching url: \(String(describing: request.url))")
   let task = URLSession.shared.dataTask(with: request) { data, response, error in
     guard let data = data, let response = response else {
-      Logger().e(tag: TAG, message: "Unable to download feed")
+      Log().error(tag: TAG, message: "Unable to download feed")
       onFailure()
       return
     }
@@ -51,7 +51,7 @@ func loadServerLinks(
     if let parseData = try? OPDS1Parser.parse(xmlData: data, url: url!, response: response) {
       var linkList: [ServerLink] = []
       if let navigations = parseData.feed?.navigation {
-        Logger().d(tag: TAG, message: "Processing \(navigations.count) links")
+        Log().debug(tag: TAG, message: "Processing \(navigations.count) links")
         for navigation in navigations {
           if let title = navigation.title {
             linkList.append(
@@ -67,7 +67,7 @@ func loadServerLinks(
       }
 
       if let publications = parseData.feed?.publications {
-        Logger().d(tag: TAG, message: "Processing \(publications.count) publications)")
+        Log().debug(tag: TAG, message: "Processing \(publications.count) publications)")
         for publication in publications {
           let identifier = publication.metadata.identifier ?? ""
           let title = publication.metadata.title ?? ""
@@ -89,7 +89,7 @@ func loadServerLinks(
       onSuccess(linkList)
     }
   }
-  Logger().d(tag: TAG, message: "Initiating OPDS request")
+  Log().debug(tag: TAG, message: "Initiating OPDS request")
   task.resume()
 }
 

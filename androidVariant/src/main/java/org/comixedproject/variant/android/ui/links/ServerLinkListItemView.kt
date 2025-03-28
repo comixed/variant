@@ -44,7 +44,7 @@ import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.SERVER_LINK_LIST
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 
 const val TAG_SERVER_LINK_ITEM = "server.link.item"
 const val TAG_SERVER_LINK_TITLE = "server.link.title"
@@ -61,7 +61,7 @@ fun ServerLinkListItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onSho
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                Logger.d(TAG, "Loading link: ${serverLink.downloadLink}")
+                Log.info(TAG, "Loading link: ${serverLink.downloadLink}")
                 onLoadLink()
             }
 
@@ -70,7 +70,7 @@ fun ServerLinkListItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onSho
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    Logger.d(
+                    Log.debug(
                         TAG,
                         "Link clicked: type=${serverLink.linkType} downloadLink=${serverLink.downloadLink}"
                     )
@@ -96,7 +96,7 @@ fun ServerLinkListItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onSho
                 ServerLinkType.NAVIGATION ->
                     IconButton(
                         onClick = {
-                            Logger.d(TAG, "Navigation icon clicked")
+                            Log.debug(TAG, "Navigation icon clicked")
                             onLoadLink()
                         },
                         modifier = Modifier.testTag(TAG_NAVIGATION_ICON)
@@ -110,7 +110,7 @@ fun ServerLinkListItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onSho
                 ServerLinkType.PUBLICATION ->
                     IconButton(
                         onClick = {
-                            Logger.d(TAG, "Information icon clicked")
+                            Log.debug(TAG, "Information icon clicked")
                             onShowInfo()
                         },
                         modifier = Modifier.testTag(TAG_PUBLICATION_ICON)

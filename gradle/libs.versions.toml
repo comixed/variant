@@ -53,6 +53,7 @@ desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", ver
 coil-compose-android = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 android-splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.1" }
 kmp-viewmodel-core = { group = "com.rickclephas.kmp", name = "kmp-observableviewmodel-core", version = "1.0.0-BETA-7" }
+kermit-logging = { group = "co.touchlab", name = "kermit", version = "2.0.4" }
 
 # koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }

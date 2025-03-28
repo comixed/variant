@@ -24,7 +24,7 @@ import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsChannel
 import io.ktor.util.toByteArray
 import org.comixedproject.variant.shared.model.server.Server
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 
 private val TAG = "OpdsUtils"
 
@@ -59,12 +59,12 @@ suspend fun loadServerDirectory(
                 val content = response.bodyAsChannel()
                 onSuccess(content.toByteArray())
             } else {
-                Logger.e(TAG, "Failed to download directory")
+                Log.error(TAG, "Failed to download directory")
                 onFailure()
             }
         }
     } catch (error: Throwable) {
-        Logger.e(TAG, "Exception while downloading directory: ${error}")
+        Log.error(TAG, "Exception while downloading directory: ${error}")
         onFailure()
     }
 }

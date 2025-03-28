@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.comixedproject.variant.android.net.loadServerLinks
 import org.comixedproject.variant.shared.model.server.Server
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 import org.comixedproject.variant.shared.viewmodel.ServerActivity
 import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.shared.viewmodel.ServerViewModel
@@ -55,11 +55,11 @@ fun ServersView(
     if (confirmDeletion) {
         currentServer?.let { server ->
             DeleteServerView(server, onConfirm = {
-                Logger.d(TAG, "Deleting server: name=${server.name}")
+                Log.info(TAG, "Deleting server: name=${server.name}")
                 serverViewModel.deleteServer(server)
                 confirmDeletion = false
             }, onCancel = {
-                Logger.d(TAG, "Cancelled deleteing server")
+                Log.debug(TAG, "Canceled deleting server")
                 confirmDeletion = false
             })
         }

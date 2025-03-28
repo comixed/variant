@@ -22,7 +22,7 @@ import com.rickclephas.kmp.observableviewmodel.MutableStateFlow
 import com.rickclephas.kmp.observableviewmodel.ViewModel
 import kotlinx.coroutines.flow.asStateFlow
 import org.comixedproject.variant.shared.model.server.Server
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 import org.comixedproject.variant.shared.repositories.ServerRepository
 
 private val TAG = "VariantViewModel"
@@ -52,12 +52,12 @@ class ServerViewModel(
     }
 
     fun addServer() {
-        Logger.d(TAG, "Preparing to add a new server")
+        Log.debug(TAG, "Preparing to add a new server")
         _activity.tryEmit(ServerActivity.ADD_SERVER)
     }
 
     fun editServer(server: Server) {
-        Logger.d(TAG, "Preparing to edit server: ${server.name}")
+        Log.debug(TAG, "Preparing to edit server: ${server.name}")
         _currentServer.tryEmit(server)
         _activity.tryEmit(ServerActivity.EDIT_SERVER)
     }
@@ -68,7 +68,7 @@ class ServerViewModel(
      * @param server the server
      */
     fun saveServer(server: Server) {
-        Logger.d(TAG, "Saving server: name=${server.name}")
+        Log.debug(TAG, "Saving server: name=${server.name}")
         serverRepository.save(server)
         _serverListFlow.tryEmit(serverRepository.servers)
         onServerListUpdated?.invoke(serverRepository.servers)
@@ -76,12 +76,12 @@ class ServerViewModel(
     }
 
     fun cancelEditingServer() {
-        Logger.d(TAG, "Canceling server editing")
+        Log.debug(TAG, "Canceling server editing")
         _activity.tryEmit(ServerActivity.LIST_SERVERS)
     }
 
     fun confirmDeleteServer(server: Server) {
-        Logger.d(TAG, "Confirming server deletion: name=${server.name}")
+        Log.debug(TAG, "Confirming server deletion: name=${server.name}")
         _currentServer.tryEmit(server)
     }
 
@@ -93,7 +93,7 @@ class ServerViewModel(
     fun deleteServer(server: Server) {
         server.serverId.let { serverId ->
             if (serverId != null) {
-                Logger.d(TAG, "Deleting server: name=${server.name}")
+                Log.debug(TAG, "Deleting server: name=${server.name}")
                 serverRepository.deleteServer(serverId)
                 _serverListFlow.tryEmit(serverRepository.servers)
                 onServerListUpdated?.invoke(serverRepository.servers)

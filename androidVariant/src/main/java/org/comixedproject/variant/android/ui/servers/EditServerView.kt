@@ -53,7 +53,7 @@ import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
-import org.comixedproject.variant.shared.platform.Logger
+import org.comixedproject.variant.shared.platform.Log
 
 private const val TAG = "ServerEditView"
 
@@ -135,7 +135,7 @@ fun EditServerView(server: Server, onSave: (Server) -> Unit, onCancel: () -> Uni
         Row {
             val valid = validateServer(serverName, serverUrl, username, password)
             Button(enabled = valid, onClick = {
-                Logger.d(
+                Log.info(
                     TAG,
                     "Updating server: name=${serverName} url=${serverUrl} username=${username} password=${password}"
                 )
@@ -152,7 +152,7 @@ fun EditServerView(server: Server, onSave: (Server) -> Unit, onCancel: () -> Uni
             }
 
             Button(onClick = {
-                Logger.d(
+                Log.debug(
                     TAG,
                     "Canceling server edit"
                 )
@@ -174,11 +174,11 @@ fun validateServer(
     password: String,
 ): Boolean {
     if (name.isEmpty()) {
-        Logger.d(TAG, "Server name cannot be empty")
+        Log.debug(TAG, "Server name cannot be empty")
         return false
     }
     if (url.isEmpty() || !URLUtil.isValidUrl(url)) {
-        Logger.d(TAG, "Server url is invalid")
+        Log.debug(TAG, "Server url is invalid")
         return false
     }
 
