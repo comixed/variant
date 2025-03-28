@@ -28,10 +28,7 @@ import org.comixedproject.variant.shared.model.server.ServerLinkType
  *
  * @author Darryl L. Pierce
  */
-class ServerLinkRepository(
-    private val databaseHelper: DatabaseHelper,
-    private val serverRepository: ServerRepository
-) {
+class ServerLinkRepository(private val databaseHelper: DatabaseHelper) {
     val serverLinks: List<ServerLink>
         get() = databaseHelper.loadAllLinks().map(ServerLinksDb::map)
 
@@ -42,25 +39,17 @@ class ServerLinkRepository(
     ) {
         databaseHelper.saveLinksForServer(server, directory, serverLinks)
     }
-
-    fun setStoredFilename(filename: String, serverLink: ServerLink) {
-        databaseHelper.setStoredFilename(filename, serverLink)
-    }
-
-    fun getServerLinkId(server: Server, directory: String): Long {
-        return databaseHelper.getServerLinkId(server, directory)
-    }
 }
 
 fun ServerLinksDb.map() =
     ServerLink(
-        serverLinkId = this.serverLinkId,
-        serverId = this.serverId,
+        serverLinkId = this.server_link_id,
+        serverId = this.server_id,
         directory = this.directory,
         identifier = this.identifier,
         title = this.title,
-        coverUrl = this.coverUrl,
-        downloadLink = this.downloadLink,
-        linkType = ServerLinkType.valueOf(this.linkType),
+        coverUrl = this.cover_url,
+        downloadLink = this.download_link,
+        linkType = ServerLinkType.valueOf(this.link_type),
         downloaded = false
     )

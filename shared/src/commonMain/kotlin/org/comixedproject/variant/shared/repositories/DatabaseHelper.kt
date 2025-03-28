@@ -62,14 +62,6 @@ class DatabaseHelper(
 
     fun loadAllLinks(): List<ServerLinksDb> = database.tableQueries.loadAllLinks().executeAsList()
 
-    fun loadLinks(
-        serverId: Long,
-        directory: String,
-    ): List<ServerLinksDb> =
-        database.tableQueries
-            .loadLinksForParent(serverId, directory)
-            .executeAsList()
-
     fun saveLinksForServer(
         server: Server,
         directory: String,
@@ -80,9 +72,9 @@ class DatabaseHelper(
         val existingLinks =
             database.tableQueries.loadLinksForParent(serverId, directory).executeAsList()
         existingLinks
-            .filter { link -> !incomingPaths.contains(link.downloadLink) }
-            .forEach { link -> database.tableQueries.deleteExistingLink(link.serverLinkId) }
-        val existingPaths = existingLinks.map { it.downloadLink }
+            .filter { link -> !incomingPaths.contains(link.download_link) }
+            .forEach { link -> database.tableQueries.deleteExistingLink(link.server_link_id) }
+        val existingPaths = existingLinks.map { it.download_link }
         serverLinks.filter { !existingPaths.contains(it.downloadLink) }.forEach { link ->
             database.tableQueries.createLink(
                 serverId,
@@ -94,13 +86,5 @@ class DatabaseHelper(
                 link.linkType.name,
             )
         }
-    }
-
-    fun setStoredFilename(filename: String, serverLink: ServerLink) {
-        database.tableQueries.setStoredFilename(filename, serverLink.serverLinkId!!)
-    }
-
-    fun getServerLinkId(server: Server, directory: String): Long {
-        return database.tableQueries.getServerLinkId(server.serverId!!, directory).executeAsOne()
     }
 }
