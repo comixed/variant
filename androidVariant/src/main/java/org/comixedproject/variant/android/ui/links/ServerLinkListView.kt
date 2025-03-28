@@ -28,8 +28,8 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.model.SERVER_LINK_LIST
-import org.comixedproject.variant.android.model.SERVER_LIST
+import org.comixedproject.variant.shared.model.SERVER_LINK_LIST
+import org.comixedproject.variant.shared.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.platform.Log

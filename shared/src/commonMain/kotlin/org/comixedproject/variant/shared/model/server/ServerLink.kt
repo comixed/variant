@@ -18,6 +18,8 @@
 
 package org.comixedproject.variant.shared.model.server
 
+import kotlinx.datetime.Instant
+
 /**
  * <code>ServerLink</code> represents a link to content within a specific server. The link type determines if the link is to a piece of content or to a directory on the server.
  *
@@ -34,5 +36,6 @@ data class ServerLink(
     val coverUrl: String,
     val downloadLink: String,
     val linkType: ServerLinkType,
-    var downloaded: Boolean = false
+    var downloaded: Boolean = false,
+    val downloadedDate: Instant? = null
 )

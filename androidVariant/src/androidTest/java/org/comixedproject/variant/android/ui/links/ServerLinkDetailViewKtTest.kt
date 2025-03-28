@@ -24,8 +24,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import junit.framework.TestCase.assertTrue
-import org.comixedproject.variant.android.model.SERVER_LINK_LIST
-import org.comixedproject.variant.android.model.SERVER_LIST
+import org.comixedproject.variant.shared.model.SERVER_LINK_LIST
+import org.comixedproject.variant.shared.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.ServerLinkType
 import org.junit.Rule
 import org.junit.Test

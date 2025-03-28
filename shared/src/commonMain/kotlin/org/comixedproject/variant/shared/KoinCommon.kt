@@ -42,7 +42,7 @@ object Modules {
 
     val viewModels = module {
         factory { ServerViewModel(get()) }
-        factory { ServerLinkViewModel(get()) }
+        factory { ServerLinkViewModel(get(), get()) }
     }
 }
 

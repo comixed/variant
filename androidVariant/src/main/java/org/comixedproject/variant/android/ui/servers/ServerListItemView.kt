@@ -33,14 +33,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
+import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.android.ui.DismissBackground
+import org.comixedproject.variant.shared.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Log
 
@@ -91,14 +97,40 @@ fun ServerListItemView(
                         .padding(16.dp)
                         .fillMaxWidth()
                 ) {
+
                     Text(
                         text = "${server.name}",
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Left
                     )
+                    server.accessedDate?.let { date ->
+                        val formatter = LocalDateTime.Format {
+                            monthNumber()
+                            char('-')
+                            dayOfMonth()
+                            char('-')
+                            year()
+
+                            char('@')
+
+                            amPmHour()
+                            char(':')
+                            minute()
+                            char(' ')
+                            amPmMarker("AM", "PM")
+                        }
+
+                        val formattedDate =
+                            formatter.format(date.toLocalDateTime(TimeZone.currentSystemDefault()))
+                        Text(
+                            text = stringResource(R.string.serverAccessedDateText, formattedDate),
+                            style = MaterialTheme.typography.bodySmall,
+                            maxLines = 1, overflow = TextOverflow.Ellipsis
+                        )
+                    }
                     Text(
-                        text = "${server.url}", style = MaterialTheme.typography.bodyMedium,
+                        text = "${server.url}", style = MaterialTheme.typography.bodySmall,
                         textAlign = TextAlign.Left,
                         maxLines = 1, overflow = TextOverflow.Ellipsis
                     )

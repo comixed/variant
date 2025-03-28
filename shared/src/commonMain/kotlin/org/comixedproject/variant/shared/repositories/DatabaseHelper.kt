@@ -19,6 +19,7 @@
 package org.comixedproject.variant.shared.repositories
 
 import app.cash.sqldelight.db.SqlDriver
+import kotlinx.datetime.Clock
 import org.comixedproject.variant.database.VariantDb
 import org.comixedproject.variant.db.ServerLinksDb
 import org.comixedproject.variant.db.ServersDb
@@ -41,7 +42,7 @@ class DatabaseHelper(
         name,
         url,
         username,
-        password,
+        password
     )
 
     fun loadServer(serverId: Long) = database.tableQueries.loadServer(serverId).executeAsOne()
@@ -52,12 +53,27 @@ class DatabaseHelper(
         url: String,
         username: String,
         password: String,
+        accessedDate: Long? = null,
     ) {
-        database.tableQueries.updateServer(name, url, username, password, serverId)
+        database.tableQueries.updateServer(
+            name,
+            url,
+            username,
+            password,
+            accessedDate,
+            serverId
+        )
     }
 
     fun deleteServer(serverId: Long) {
         database.tableQueries.deleteServer(serverId)
+    }
+
+    fun markServerAsAccessed(serverId: Long) {
+        database.tableQueries.markServerAsAccessed(
+            Clock.System.now().toEpochMilliseconds(),
+            serverId
+        )
     }
 
     fun loadAllLinks(): List<ServerLinksDb> = database.tableQueries.loadAllLinks().executeAsList()
@@ -67,15 +83,11 @@ class DatabaseHelper(
         directory: String,
         serverLinks: List<ServerLink>,
     ) {
-        val incomingPaths = serverLinks.map { it.downloadLink }
         val serverId = server.serverId!!
         val existingLinks =
             database.tableQueries.loadLinksForParent(serverId, directory).executeAsList()
-        existingLinks
-            .filter { link -> !incomingPaths.contains(link.download_link) }
-            .forEach { link -> database.tableQueries.deleteExistingLink(link.server_link_id) }
-        val existingPaths = existingLinks.map { it.download_link }
-        serverLinks.filter { !existingPaths.contains(it.downloadLink) }.forEach { link ->
+        existingLinks.forEach { link -> database.tableQueries.deleteExistingLink(link.server_link_id) }
+        serverLinks.forEach { link ->
             database.tableQueries.createLink(
                 serverId,
                 link.directory,
@@ -83,8 +95,16 @@ class DatabaseHelper(
                 link.title,
                 link.coverUrl,
                 link.downloadLink,
-                link.linkType.name,
+                link.linkType.name
             )
         }
+    }
+
+    fun markParentLinkAsAccessed(serverId: Long, directory: String) {
+        database.tableQueries.markParentLinkAsAccessed(
+            Clock.System.now().toEpochMilliseconds(),
+            serverId,
+            directory
+        )
     }
 }
