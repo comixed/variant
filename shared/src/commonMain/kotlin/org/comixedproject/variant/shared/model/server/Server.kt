@@ -18,6 +18,8 @@
 
 package org.comixedproject.variant.shared.model.server
 
+import kotlinx.datetime.Instant
+
 /**
  * <code>Server</code> represents an OPDS enabled server.
  *
@@ -29,4 +31,5 @@ data class Server(
     var url: String,
     var username: String,
     var password: String,
+    val accessedDate: Instant? = null
 )

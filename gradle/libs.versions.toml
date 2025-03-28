@@ -54,6 +54,7 @@ coil-compose-android = { group = "io.coil-kt", name = "coil-compose", version.re
 android-splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.1" }
 kmp-viewmodel-core = { group = "com.rickclephas.kmp", name = "kmp-observableviewmodel-core", version = "1.0.0-BETA-7" }
 kermit-logging = { group = "co.touchlab", name = "kermit", version = "2.0.4" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.6.2"}
 
 # koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }

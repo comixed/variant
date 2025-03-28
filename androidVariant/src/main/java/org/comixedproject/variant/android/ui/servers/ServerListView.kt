@@ -37,7 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.model.SERVER_LIST
+import org.comixedproject.variant.shared.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 
 private val TAG = "ServersView"

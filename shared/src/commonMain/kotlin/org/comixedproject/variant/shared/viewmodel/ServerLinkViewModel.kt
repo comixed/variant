@@ -33,7 +33,10 @@ private val TAG = "ServerLinkViewModel"
  *
  * @author Darryl L. Pierce
  */
-class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : ViewModel() {
+class ServerLinkViewModel(
+    val serverLinkRepository: ServerLinkRepository,
+    val serverViewModel: ServerViewModel
+) : ViewModel() {
     private val _serverLinkList = MutableStateFlow<List<ServerLink>>(viewModelScope, emptyList())
     val serverLinkList = _serverLinkList.asStateFlow()
 
@@ -78,6 +81,13 @@ class ServerLinkViewModel(val serverLinkRepository: ServerLinkRepository) : View
      * @param serverLinks the links
      */
     fun saveLinks(server: Server, directory: String, serverLinks: List<ServerLink>) {
+        Log.debug(TAG, "Marking server as accessed: ${server.name}")
+        this.serverViewModel.markServerAsAccessed(server)
+        Log.debug(
+            TAG,
+            "Marking parent link as accessed: server=${server.serverId} directory=${directory}"
+        )
+        this.serverLinkRepository.markParentLinkAsAccessed(server, directory)
         Log.debug(TAG, "Saving ${serverLinks.size} server link(s)")
         this.serverLinkRepository.saveLinksForServer(server, directory, serverLinks)
         _currentDirectory.tryEmit(directory)

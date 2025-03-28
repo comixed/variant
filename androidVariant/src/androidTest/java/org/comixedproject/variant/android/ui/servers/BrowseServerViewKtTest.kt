@@ -24,8 +24,8 @@ import androidx.compose.ui.test.performClick
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
-import org.comixedproject.variant.android.model.SERVER_LINK_LIST
-import org.comixedproject.variant.android.model.SERVER_LIST
+import org.comixedproject.variant.shared.model.SERVER_LINK_LIST
+import org.comixedproject.variant.shared.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.ServerLinkType
 import org.junit.Rule
 import org.junit.Test

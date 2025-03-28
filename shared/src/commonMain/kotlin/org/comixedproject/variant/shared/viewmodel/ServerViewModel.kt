@@ -47,10 +47,6 @@ class ServerViewModel(
 
     var onServerListUpdated: ((List<Server>) -> Unit)? = null
 
-    fun getById(id: Long): Server? {
-        return this.serverRepository.getById(id)
-    }
-
     fun addServer() {
         Log.debug(TAG, "Preparing to add a new server")
         _activity.tryEmit(ServerActivity.ADD_SERVER)
@@ -109,5 +105,11 @@ class ServerViewModel(
 
     fun stopBrowsingServer() {
         _activity.tryEmit(ServerActivity.LIST_SERVERS)
+    }
+
+    fun markServerAsAccessed(server: Server) {
+        Log.debug(TAG, "Marking server as accessed: ${server.name}")
+        serverRepository.markServerAsAccessed(server)
+        _serverListFlow.tryEmit(serverRepository.servers)
     }
 }

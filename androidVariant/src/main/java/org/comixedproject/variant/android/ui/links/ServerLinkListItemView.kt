@@ -41,7 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.model.SERVER_LINK_LIST
+import org.comixedproject.variant.shared.model.SERVER_LINK_LIST
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
 import org.comixedproject.variant.shared.platform.Log
@@ -64,19 +64,10 @@ fun ServerLinkListItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onSho
                 Log.info(TAG, "Loading link: ${serverLink.downloadLink}")
                 onLoadLink()
             }
-
+            .testTag(TAG_SERVER_LINK_ITEM),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    Log.debug(
-                        TAG,
-                        "Link clicked: type=${serverLink.linkType} downloadLink=${serverLink.downloadLink}"
-                    )
-                    onLoadLink()
-                }
-                .testTag(TAG_SERVER_LINK_ITEM),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

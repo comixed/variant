@@ -5,7 +5,8 @@ CREATE TABLE ServersDb (
   name TEXT NOT NULL UNIQUE,
   url TEXT NOT NULL,
   username TEXT NOT NULL DEFAULT "",
-  password TEXT NOT NULL DEFAULT ""
+  password TEXT NOT NULL DEFAULT "",
+  accessed_date INTEGER
 );
 
 loadAllServers:
@@ -18,7 +19,10 @@ loadServer:
 SELECT * FROM ServersDb WHERE server_id = ?;
 
 updateServer:
-UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE server_id = ?;
+UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ?, accessed_date = ? WHERE server_id = ?;
+
+markServerAsAccessed:
+UPDATE ServersDb SET accessed_date = ? WHERE server_id = ?;
 
 deleteServer:
 DELETE FROM ServersDb WHERE server_id = ?;
@@ -32,11 +36,15 @@ CREATE TABLE ServerLinksDb (
   cover_url TEXT NOT NULL,
   download_link TEXT NOT NULL,
   title TEXT NOT NULL,
+  downloaded_date INTEGER,
   FOREIGN KEY(server_id) REFERENCES ServersDb(server_id)
 );
 
 createLink:
 INSERT OR IGNORE INTO ServerLinksDb(server_id, directory, identifier, title, cover_url, download_link, link_type) VALUES(?, ?,?, ?, ?, ?, ?);
+
+markParentLinkAsAccessed:
+UPDATE ServerLinksDb SET downloaded_date = ? WHERE server_id = ? AND download_link = ?;
 
 deleteExistingLink:
 DELETE FROM ServerLinksDb WHERE server_link_id = ?;

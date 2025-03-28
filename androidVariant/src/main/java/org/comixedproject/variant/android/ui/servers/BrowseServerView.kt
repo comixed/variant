@@ -47,10 +47,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.model.SERVER_LINK_LIST
-import org.comixedproject.variant.android.model.SERVER_LIST
 import org.comixedproject.variant.android.ui.links.ServerLinkDetailView
 import org.comixedproject.variant.android.ui.links.ServerLinkListView
+import org.comixedproject.variant.shared.model.SERVER_LINK_LIST
+import org.comixedproject.variant.shared.model.SERVER_LIST
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType

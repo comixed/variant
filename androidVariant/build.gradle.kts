@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.kotlinx.datetime)
+
     implementation(libs.coil.compose.android)
     implementation(libs.readium.shared)
     implementation(libs.readium.opds)
