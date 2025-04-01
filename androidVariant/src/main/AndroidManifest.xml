@@ -8,6 +8,7 @@
         android:name=".VariantApp"
         android:allowBackup="false"
         android:label="Variant"
+        android:icon="@drawable/ic_launcher_foreground"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config"
