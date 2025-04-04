@@ -50,6 +50,8 @@ kotlin {
             implementation(libs.ktor.client.auth)
             implementation(libs.korio)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.kfswatch)
+            implementation(libs.kotlinx.io)
             api(libs.kmp.viewmodel.core)
         }
         commonTest.dependencies {
@@ -66,7 +68,7 @@ android {
     namespace = "org.comixedproject.variant"
     compileSdk = 34
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -21,6 +21,7 @@ package org.comixedproject.variant.shared
 import org.comixedproject.variant.shared.repositories.DatabaseHelper
 import org.comixedproject.variant.shared.repositories.ServerLinkRepository
 import org.comixedproject.variant.shared.repositories.ServerRepository
+import org.comixedproject.variant.shared.viewmodel.ComicBookViewModel
 import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.shared.viewmodel.ServerViewModel
 import org.koin.core.KoinApplication
@@ -43,6 +44,7 @@ object Modules {
     val viewModels = module {
         factory { ServerViewModel(get()) }
         factory { ServerLinkViewModel(get(), get()) }
+        factory { ComicBookViewModel() }
     }
 }
 
