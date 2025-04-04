@@ -16,22 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.ui.comics
+package org.comixedproject.variant.shared.adaptors
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.shared.viewmodel.ComicBookViewModel
-import org.koin.androidx.compose.koinViewModel
-
-@Composable
-fun ComicsView(comicBookViewModel: ComicBookViewModel = koinViewModel()) {
-    Text("Comics!")
+class AndroidArchiveAdaptor : ArchiveAdaptor {
+    override fun isArchive(path: String): Boolean {
+        return true
+    }
 }
 
-@Composable
-@Preview
-fun ComicsPreview() {
-    VariantTheme { ComicsView() }
-}
+actual fun getArchiveAdaptor(): ArchiveAdaptor = AndroidArchiveAdaptor()
