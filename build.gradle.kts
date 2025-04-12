@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.sqldelight).apply(false)
     alias(libs.plugins.compose.compiler).apply(false)
     alias(libs.plugins.sonarqube)
-    alias(libs.plugins.kotlinter)
 }
 
 sonar {
@@ -16,10 +15,4 @@ sonar {
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.gradle.skipCompile", true)
     }
-}
-
-kotlinter {
-    failBuildWhenCannotAutoFormat = false
-    ignoreFailures = false
-    reporters = arrayOf("checkstyle", "plain")
 }
