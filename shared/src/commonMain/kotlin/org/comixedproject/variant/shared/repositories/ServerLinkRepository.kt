@@ -46,6 +46,17 @@ class ServerLinkRepository(private val databaseHelper: DatabaseHelper) {
             databaseHelper.markParentLinkAsAccessed(serverId, directory)
         }
     }
+
+    fun loadLinksForDirectory(server: Server, directory: String): List<ServerLink> =
+        databaseHelper.loadLinksForDirectory(server.serverId!!, directory).map(ServerLinksDb::map)
+
+    fun loadParentLink(server: Server, directory: String): ServerLink? {
+        server.serverId?.let { serverId ->
+            databaseHelper.loadLink(serverId, directory)?.let { child -> return child.map() }
+        }
+
+        return null
+    }
 }
 
 fun ServerLinksDb.map() =

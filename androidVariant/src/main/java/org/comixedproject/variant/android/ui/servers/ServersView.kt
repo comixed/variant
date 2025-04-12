@@ -48,6 +48,7 @@ fun ServersView(
     val serverActivity by serverViewModel.activity.collectAsState()
     val currentServer by serverViewModel.currentServer.collectAsState()
     var confirmDeletion by rememberSaveable { mutableStateOf(false) }
+    val parentLink by serverLinkViewModel.parentLink.collectAsState()
     val currentDirectory by serverLinkViewModel.currentDirectory.collectAsState()
     val serverLinkList by serverLinkViewModel.serverLinkList.collectAsState()
     var isLoading by rememberSaveable { mutableStateOf(false) }
@@ -75,7 +76,6 @@ fun ServersView(
                 },
                 onBrowseServer = { server ->
                     serverViewModel.browseServer(server)
-                    serverLinkViewModel.loadLinks(server, server.url)
                     if (!serverLinkViewModel.hasLinks(server, server.url)) {
                         isLoading = true
                         coroutineScope.launch {
@@ -111,14 +111,13 @@ fun ServersView(
             }
 
             ServerActivity.BROWSE_SERVER -> currentServer?.let { server ->
-                val parentLink = serverLinkViewModel.getParentLink()
                 val parentDirectory = when (parentLink == null) {
                     true -> server.url
-                    false -> parentLink.downloadLink
+                    false -> parentLink!!.directory
                 }
                 val title = when (parentLink == null) {
                     true -> server.name
-                    false -> parentLink.title
+                    false -> parentLink!!.title
                 }
 
                 BrowseServerView(

@@ -40,8 +40,12 @@ class ServerLinkViewModel(
     private val _serverLinkList = MutableStateFlow<List<ServerLink>>(viewModelScope, emptyList())
     val serverLinkList = _serverLinkList.asStateFlow()
 
+    private val _parentLink = MutableStateFlow<ServerLink?>(viewModelScope, null)
+    val parentLink = _parentLink.asStateFlow()
+
     private val _currentDirectory = MutableStateFlow<String>(viewModelScope, "")
     val currentDirectory = _currentDirectory.asStateFlow()
+    val currentServerLink: ServerLink? = null
 
     private var currentServer: Server? = null
 
@@ -67,8 +71,9 @@ class ServerLinkViewModel(
      */
     fun loadLinks(server: Server, directory: String) {
         this.currentServer = server
-        val links = serverLinkRepository.serverLinks.filter { it.serverId == server.serverId }
-            .filter { it.directory == directory }
+        val links = serverLinkRepository.loadLinksForDirectory(server, directory)
+        var parent = serverLinkRepository.loadParentLink(server, directory)
+        _parentLink.tryEmit(parent)
         _currentDirectory.tryEmit(directory)
         _serverLinkList.tryEmit(links)
     }
@@ -90,23 +95,11 @@ class ServerLinkViewModel(
         this.serverLinkRepository.markParentLinkAsAccessed(server, directory)
         Log.debug(TAG, "Saving ${serverLinks.size} server link(s)")
         this.serverLinkRepository.saveLinksForServer(server, directory, serverLinks)
-        _currentDirectory.tryEmit(directory)
-        val links = serverLinkRepository.serverLinks.filter { it.serverId == server.serverId }
-            .filter { it.directory == directory }
-        _serverLinkList.tryEmit(links)
+        loadLinks(server, directory)
     }
 
-    fun getParentLink(): ServerLink? {
-        currentDirectory?.let { dir ->
-            findLink(dir.value)?.let { link ->
-                return findLink(link.directory)
-            }
-        }
-        return null
-    }
-
-    private fun findLink(directory: String): ServerLink? {
-        return serverLinkRepository.serverLinks.filter { it.serverId == currentServer?.serverId }
+    private fun findLink(server: Server, directory: String): ServerLink? {
+        return serverLinkRepository.serverLinks.filter { it.serverId == server.serverId }
             .filter { it.downloadLink == directory }.firstOrNull()
     }
 }
