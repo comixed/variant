@@ -18,4 +18,12 @@
 
 package org.comixedproject.variant.shared.model.comics
 
-data class ComicBook(val filename: String)
+import org.comixedproject.variant.shared.model.metadata.ComicMetadata
+
+data class ComicBook(
+    val filename: String, val entries: MutableList<String> = mutableListOf(),
+    var coverFilename: String = "",
+    var coverContent: ByteArray? = null,
+    val metadata: ComicMetadata = ComicMetadata(),
+    var read: Boolean = false
+)

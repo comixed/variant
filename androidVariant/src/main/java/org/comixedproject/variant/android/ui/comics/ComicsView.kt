@@ -18,20 +18,19 @@
 
 package org.comixedproject.variant.android.ui.comics
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import org.comixedproject.variant.android.VariantTheme
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import org.comixedproject.variant.shared.viewmodel.ComicBookViewModel
 import org.koin.androidx.compose.koinViewModel
 
-@Composable
-fun ComicsView(comicBookViewModel: ComicBookViewModel = koinViewModel()) {
-    Text("Comics!")
-}
+private val TAG = "ComicsView"
 
 @Composable
-@Preview
-fun ComicsPreview() {
-    VariantTheme { ComicsView() }
+fun ComicsView(
+    comicBookViewModel: ComicBookViewModel = koinViewModel()
+) {
+    val comicBooks by comicBookViewModel.comicBookList.collectAsState()
+
+    ComicListView(comicBooks)
 }

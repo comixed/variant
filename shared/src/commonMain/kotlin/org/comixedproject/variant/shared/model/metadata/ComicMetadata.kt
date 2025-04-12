@@ -16,10 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared.adaptors
+package org.comixedproject.variant.shared.model.metadata
 
-interface ArchiveAdaptor {
-    fun isArchive(path: String): Boolean
-}
+import kotlinx.serialization.Serializable
 
-expect fun getArchiveAdaptor(): ArchiveAdaptor
+@Serializable
+data class ComicMetadata(
+    var publisher: String = "",
+    var series: String = "",
+    var volume: String = "",
+    var issueNumber: String = "",
+    var title: String = "",
+    var summary: String = "",
+    var notes: String = "",
+    var year: Int = 0,
+    var month: Int = 0,
+)

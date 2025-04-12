@@ -40,6 +40,7 @@ import org.comixedproject.variant.android.ui.getLabelForScreen
 import org.comixedproject.variant.android.ui.servers.ServersView
 import org.comixedproject.variant.android.ui.setings.SettingsView
 import org.comixedproject.variant.shared.platform.Log
+import org.comixedproject.variant.shared.viewmodel.ComicBookViewModel
 import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.shared.viewmodel.ServerViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -49,7 +50,8 @@ private val TAG = "HomeView"
 @Composable
 fun HomeView(
     serverViewModel: ServerViewModel = koinViewModel(),
-    serverLinkViewModel: ServerLinkViewModel = koinViewModel()
+    serverLinkViewModel: ServerLinkViewModel = koinViewModel(),
+    comicBookViewModel: ComicBookViewModel = koinViewModel()
 ) {
     var currentTarget by rememberSaveable { mutableStateOf(NavigationTarget.SERVERS) }
     val navController = rememberNavController()
@@ -80,7 +82,7 @@ fun HomeView(
             }
 
             composable(route = Screen.ComicsScreen.route) {
-                ComicsView()
+                ComicsView(comicBookViewModel)
             }
 
             composable(route = Screen.SettingsScreen.route) {

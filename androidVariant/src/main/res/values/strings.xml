@@ -30,4 +30,5 @@
     <string name="unknownLabel">Unknown Item</string>
     <string name="yesButton">Yes</string>
     <string name="serverAccessedDateText">Last Accessed: %1$s</string>
+    <string name="comicListTitle">Comic Books (%1$s)</string>
 </resources>

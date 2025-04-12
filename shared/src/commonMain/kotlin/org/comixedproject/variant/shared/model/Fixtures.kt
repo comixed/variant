@@ -19,6 +19,7 @@
 package org.comixedproject.variant.shared.model
 
 import kotlinx.datetime.Clock
+import org.comixedproject.variant.shared.model.comics.ComicBook
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
@@ -174,4 +175,8 @@ val SERVER_LINK_LIST = listOf(
         downloadLink = "http://www.comixedproject.org:7171/opds/",
         linkType = ServerLinkType.PUBLICATION
     ),
+)
+
+val COMIC_BOOK_LIST = listOf(
+    ComicBook(filename = "/book1.cbz")
 )
