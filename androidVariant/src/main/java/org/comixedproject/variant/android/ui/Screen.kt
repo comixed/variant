@@ -37,7 +37,6 @@ fun getLabelForScreen(target: Screen): Int {
         Screen.ComicsScreen -> R.string.comicsButtonLabel
         Screen.ServersScreen -> R.string.serverButtonLabel
         Screen.SettingsScreen -> R.string.settingsButtonLabel
-        else -> R.string.unknownLabel
     }
 }
 
@@ -46,6 +45,5 @@ fun getIconForScreen(target: Screen): ImageVector {
         Screen.ComicsScreen -> Icons.Rounded.Home
         Screen.ServersScreen -> Icons.Rounded.AccountCircle
         Screen.SettingsScreen -> Icons.Rounded.Settings
-        else -> Icons.Rounded.Warning
     }
 }
