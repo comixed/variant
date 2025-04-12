@@ -18,6 +18,7 @@
 
 package org.comixedproject.variant.shared.viewmodel
 
+import com.oldguy.common.io.File
 import com.rickclephas.kmp.observableviewmodel.MutableStateFlow
 import com.rickclephas.kmp.observableviewmodel.ViewModel
 import com.rickclephas.kmp.observableviewmodel.coroutineScope
@@ -29,9 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
-import org.comixedproject.variant.shared.adaptors.getArchiveAdaptor
+import org.comixedproject.variant.shared.archives.ArchiveAdaptor
 import org.comixedproject.variant.shared.model.comics.ComicBook
 import org.comixedproject.variant.shared.platform.Log
 
@@ -43,9 +42,10 @@ private val TAG = "ComicBookViewModel"
  * @author Darryl L. Pierce
  */
 class ComicBookViewModel() : ViewModel() {
-    val archiveAdaptor = getArchiveAdaptor()
-    private var _files = MutableStateFlow<List<ComicBook>>(viewModelScope, emptyList())
-    val files = _files.asStateFlow()
+    private val archiveAdaptor = ArchiveAdaptor()
+
+    private var _comicBookList = MutableStateFlow<List<ComicBook>>(viewModelScope, emptyList())
+    val comicBookList = _comicBookList.asStateFlow()
 
     lateinit var watcher: KfsDirectoryWatcher
 
@@ -77,17 +77,16 @@ class ComicBookViewModel() : ViewModel() {
         }
     }
 
-    private fun doLoadDirectory(rootDirectory: String) {
+    private suspend fun doLoadDirectory(rootDirectory: String) {
         Log.debug(TAG, "Loading contents of directory: ${rootDirectory}")
         val contents = mutableListOf<ComicBook>()
 
-        val path = Path(rootDirectory)
-        SystemFileSystem.list(path).forEach { entry ->
-            if (archiveAdaptor.isArchive(entry.name)) {
-                Log.debug(TAG, "Found file: ${entry.name}")
-                contents.add(ComicBook(entry.name))
+        val path = File(rootDirectory)
+        path.listFiles.forEach { entry ->
+            archiveAdaptor.loadComicBook(entry.fullPath)?.let { comicBook ->
+                contents.add(comicBook)
             }
         }
-        _files.tryEmit(contents)
+        _comicBookList.tryEmit(contents)
     }
 }

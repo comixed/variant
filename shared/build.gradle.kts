@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.library)
     alias(libs.plugins.sqldelight)
 }
@@ -51,7 +52,9 @@ kotlin {
             implementation(libs.korio)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kfswatch)
-            implementation(libs.kotlinx.io)
+            implementation(libs.kmp.io)
+            implementation(libs.xml.util)
+            implementation(libs.xml.util.serialization)
             api(libs.kmp.viewmodel.core)
         }
         commonTest.dependencies {

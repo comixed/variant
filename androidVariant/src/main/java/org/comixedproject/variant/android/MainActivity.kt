@@ -31,6 +31,7 @@ import org.comixedproject.variant.android.ui.home.HomeView
 import org.comixedproject.variant.android.viewmodel.SplashScreenViewModel
 import org.comixedproject.variant.shared.platform.Log
 import org.comixedproject.variant.shared.viewmodel.ComicBookViewModel
+import org.koin.androidx.compose.koinViewModel
 
 private const val TAG = "MainActivity"
 
@@ -41,7 +42,6 @@ private const val TAG = "MainActivity"
  */
 class MainActivity : ComponentActivity() {
     private val screenViewModel: SplashScreenViewModel by viewModels()
-    private val comicBookViewModel: ComicBookViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
@@ -52,11 +52,13 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        Log.debug(TAG, "Initializing comic book view model")
-        val directory = applicationContext.filesDir.path
-        comicBookViewModel.watchDirectory(directory)
-
         setContent {
+            val comicBookViewModel: ComicBookViewModel = koinViewModel()
+
+            Log.debug(TAG, "Initializing comic book view model")
+            val directory = applicationContext.filesDir.path
+            comicBookViewModel.watchDirectory(directory)
+
             VariantTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
