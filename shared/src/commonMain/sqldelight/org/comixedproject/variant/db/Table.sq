@@ -52,5 +52,8 @@ DELETE FROM ServerLinksDb WHERE server_link_id = ?;
 loadAllLinks:
 SELECT * FROM ServerLinksDb;
 
-loadLinksForParent:
+loadLinksForDirectory:
 SELECT * FROM ServerLinksDb WHERE server_id = ? AND directory = ?;
+
+loadLink:
+SELECT * FROM ServerLinksDb WHERE server_id = ? AND download_link = ?;

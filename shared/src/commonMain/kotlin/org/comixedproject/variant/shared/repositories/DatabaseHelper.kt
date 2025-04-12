@@ -85,7 +85,7 @@ class DatabaseHelper(
     ) {
         val serverId = server.serverId!!
         val existingLinks =
-            database.tableQueries.loadLinksForParent(serverId, directory).executeAsList()
+            database.tableQueries.loadLinksForDirectory(serverId, directory).executeAsList()
         existingLinks.forEach { link -> database.tableQueries.deleteExistingLink(link.server_link_id) }
         serverLinks.forEach { link ->
             database.tableQueries.createLink(
@@ -107,4 +107,10 @@ class DatabaseHelper(
             directory
         )
     }
+
+    fun loadLinksForDirectory(serverId: Long, directory: String) =
+        database.tableQueries.loadLinksForDirectory(serverId, directory).executeAsList()
+
+    fun loadLink(serverId: Long, directory: String) =
+        database.tableQueries.loadLink(serverId, directory).executeAsOneOrNull()
 }
