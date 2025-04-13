@@ -31,17 +31,18 @@ import kotlinx.coroutines.withContext
 import org.comixedproject.variant.android.net.loadServerLinks
 import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.platform.Log
+import org.comixedproject.variant.shared.viewmodel.ComicBookViewModel
 import org.comixedproject.variant.shared.viewmodel.ServerActivity
 import org.comixedproject.variant.shared.viewmodel.ServerLinkViewModel
 import org.comixedproject.variant.shared.viewmodel.ServerViewModel
-import org.koin.androidx.compose.koinViewModel
 
 private val TAG = "ServersView"
 
 @Composable
 fun ServersView(
-    serverViewModel: ServerViewModel = koinViewModel(),
-    serverLinkViewModel: ServerLinkViewModel = koinViewModel()
+    serverViewModel: ServerViewModel,
+    serverLinkViewModel: ServerLinkViewModel,
+    comicBookViewModel: ComicBookViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
     val serverList by serverViewModel.serverList.collectAsState()
@@ -52,6 +53,7 @@ fun ServersView(
     val currentDirectory by serverLinkViewModel.currentDirectory.collectAsState()
     val serverLinkList by serverLinkViewModel.serverLinkList.collectAsState()
     var isLoading by rememberSaveable { mutableStateOf(false) }
+    val currentDownloads by comicBookViewModel.currentDownloads.collectAsState()
 
     if (confirmDeletion) {
         currentServer?.let { server ->
@@ -127,6 +129,7 @@ fun ServersView(
                     title,
                     isLoading,
                     serverLinkList,
+                    currentDownloads,
                     onLoadDirectory = { directory, reload ->
                         if (reload || !serverLinkViewModel.hasLinks(server, directory)) {
                             isLoading = true
@@ -149,7 +152,9 @@ fun ServersView(
                             serverLinkViewModel.loadLinks(server, directory)
                         }
                     },
-                    onStopBrowsing = { serverViewModel.stopBrowsingServer() })
+                    onDownload = { serverLink -> comicBookViewModel.download(server, serverLink) },
+                    onStopBrowsing = { serverViewModel.stopBrowsingServer() }
+                )
             }
         }
     }

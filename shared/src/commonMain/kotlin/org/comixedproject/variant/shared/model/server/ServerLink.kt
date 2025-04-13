@@ -18,6 +18,7 @@
 
 package org.comixedproject.variant.shared.model.server
 
+import korlibs.io.lang.substr
 import kotlinx.datetime.Instant
 
 /**
@@ -38,4 +39,10 @@ data class ServerLink(
     val linkType: ServerLinkType,
     var downloaded: Boolean = false,
     val downloadedDate: Instant? = null
-)
+) {
+    val filename: String
+        get() {
+            val index = downloadLink.lastIndexOf("/")
+            return downloadLink.substr(index + 1)
+        }
+}

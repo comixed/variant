@@ -78,7 +78,7 @@ fun HomeView(
     ) {
         NavHost(navController = navController, startDestination = Screen.ServersScreen.route) {
             composable(route = Screen.ServersScreen.route) {
-                ServersView(serverViewModel, serverLinkViewModel)
+                ServersView(serverViewModel, serverLinkViewModel, comicBookViewModel)
             }
 
             composable(route = Screen.ComicsScreen.route) {

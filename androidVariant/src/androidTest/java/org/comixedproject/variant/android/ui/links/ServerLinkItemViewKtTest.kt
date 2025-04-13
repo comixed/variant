@@ -33,6 +33,8 @@ class ServerLinkItemViewKtTest {
     @get:Rule(order = 0)
     val composeTestRule = createComposeRule()
 
+    val TEST_PROGRESS = 0.75
+
     val navigationServerLink =
         SERVER_LINK_LIST.filter { entry -> entry.linkType == ServerLinkType.NAVIGATION }.first()
     val publicationServerLink =
@@ -41,7 +43,7 @@ class ServerLinkItemViewKtTest {
     @Test
     fun navigationLink_showsNavigationIcon() {
         composeTestRule.setContent {
-            ServerLinkListItemView(navigationServerLink, onLoadLink = {}, onShowInfo = {})
+            ServerLinkListItemView(navigationServerLink, TEST_PROGRESS, onLoadLink = {})
         }
 
         composeTestRule.onNodeWithTag(TAG_NAVIGATION_ICON).assertExists()
@@ -51,7 +53,7 @@ class ServerLinkItemViewKtTest {
     @Test
     fun navigationLink_showsTitle() {
         composeTestRule.setContent {
-            ServerLinkListItemView(navigationServerLink, onLoadLink = {}, onShowInfo = {})
+            ServerLinkListItemView(navigationServerLink, TEST_PROGRESS, onLoadLink = {})
         }
 
         composeTestRule.onNodeWithTag(TAG_SERVER_LINK_TITLE, useUnmergedTree = true).assertExists()
@@ -67,8 +69,8 @@ class ServerLinkItemViewKtTest {
         composeTestRule.setContent {
             ServerLinkListItemView(
                 navigationServerLink,
-                onLoadLink = { clicked = true },
-                onShowInfo = {})
+                TEST_PROGRESS,
+                onLoadLink = { clicked = true })
         }
 
         composeTestRule.onNodeWithTag(TAG_NAVIGATION_ICON).performClick()
@@ -80,9 +82,8 @@ class ServerLinkItemViewKtTest {
         var clicked = false
         composeTestRule.setContent {
             ServerLinkListItemView(
-                navigationServerLink,
-                onLoadLink = { clicked = true },
-                onShowInfo = {})
+                navigationServerLink, TEST_PROGRESS,
+                onLoadLink = { clicked = true })
         }
 
         composeTestRule.onNodeWithTag(TAG_SERVER_LINK_ITEM).performClick()
@@ -92,7 +93,7 @@ class ServerLinkItemViewKtTest {
     @Test
     fun publicationLink_showsPublicationIcon() {
         composeTestRule.setContent {
-            ServerLinkListItemView(publicationServerLink, onLoadLink = {}, onShowInfo = {})
+            ServerLinkListItemView(publicationServerLink, TEST_PROGRESS, onLoadLink = {})
         }
 
         composeTestRule.onNodeWithTag(TAG_PUBLICATION_ICON).assertExists()
@@ -102,7 +103,7 @@ class ServerLinkItemViewKtTest {
     @Test
     fun publicationLink_showsTitle() {
         composeTestRule.setContent {
-            ServerLinkListItemView(publicationServerLink, onLoadLink = {}, onShowInfo = {})
+            ServerLinkListItemView(publicationServerLink, TEST_PROGRESS, onLoadLink = {})
         }
 
         composeTestRule.onNodeWithTag(TAG_SERVER_LINK_TITLE, useUnmergedTree = true).assertExists()
@@ -113,27 +114,12 @@ class ServerLinkItemViewKtTest {
     }
 
     @Test
-    fun publicationLink_icon_onClick_callsShowInfo() {
-        var clicked = false
-        composeTestRule.setContent {
-            ServerLinkListItemView(
-                publicationServerLink,
-                onLoadLink = { },
-                onShowInfo = { clicked = true })
-        }
-
-        composeTestRule.onNodeWithTag(TAG_PUBLICATION_ICON).performClick()
-        assertTrue(clicked)
-    }
-
-    @Test
     fun publicationLink_onClick_callsLoadLink() {
         var clicked = false
         composeTestRule.setContent {
             ServerLinkListItemView(
-                publicationServerLink,
-                onLoadLink = { clicked = true },
-                onShowInfo = {})
+                publicationServerLink, TEST_PROGRESS,
+                onLoadLink = { clicked = true })
         }
 
         composeTestRule.onNodeWithTag(TAG_SERVER_LINK_ITEM).performClick()
