@@ -30,24 +30,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
-import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
-import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.ui.links.ServerLinkDetailView
 import org.comixedproject.variant.android.ui.links.ServerLinkListView
 import org.comixedproject.variant.shared.model.SERVER_LINK_LIST
 import org.comixedproject.variant.shared.model.SERVER_LIST
@@ -55,6 +47,7 @@ import org.comixedproject.variant.shared.model.server.Server
 import org.comixedproject.variant.shared.model.server.ServerLink
 import org.comixedproject.variant.shared.model.server.ServerLinkType
 import org.comixedproject.variant.shared.platform.Log
+import org.comixedproject.variant.shared.viewmodel.DownloadEntry
 
 private const val TAG = "BrowseServerView"
 
@@ -71,12 +64,14 @@ fun BrowseServerView(
     title: String,
     isLoading: Boolean,
     serverLinkList: List<ServerLink>,
+    currentDownloads: List<DownloadEntry>,
     onLoadDirectory: (String, Boolean) -> Unit,
-    onStopBrowsing: () -> Unit
+    onStopBrowsing: () -> Unit,
+    onDownload: (ServerLink) -> Unit
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
-    val scaffoldNavigator = rememberListDetailPaneScaffoldNavigator<Any>()
-    val coroutineScope = rememberCoroutineScope()
+
+    Log.info(TAG, "There are ${currentDownloads.size} download(s) currently...")
 
     Scaffold(
         topBar = {
@@ -121,57 +116,39 @@ fun BrowseServerView(
                 })
         },
         content = { padding ->
-            NavigableListDetailPaneScaffold(
-                navigator = scaffoldNavigator,
-                listPane = {
-                    PullToRefreshBox(
-                        modifier = Modifier
-                            .padding(padding)
-                            .testTag(TAG_REFRESH),
-                        isRefreshing = isLoading,
-                        state = pullToRefreshState,
-                        onRefresh = {
-                            Log.info(
-                                TAG,
-                                "Reloading directory: ${parentDirectory}"
-                            )
-                            onLoadDirectory(currentDirectory, true)
-                        }, content = {
-                            ServerLinkListView(
-                                server,
-                                serverLinkList.sortedBy { link -> link.title },
-                                onLoadLink = { link ->
-                                    when (link.linkType) {
-                                        ServerLinkType.NAVIGATION -> onLoadDirectory(
-                                            link.downloadLink,
-                                            false
-                                        )
+            PullToRefreshBox(
+                modifier = Modifier
+                    .padding(padding)
+                    .testTag(TAG_REFRESH),
+                isRefreshing = isLoading,
+                state = pullToRefreshState,
+                onRefresh = {
+                    Log.info(
+                        TAG,
+                        "Reloading directory: ${parentDirectory}"
+                    )
+                    onLoadDirectory(currentDirectory, true)
+                }, content = {
+                    ServerLinkListView(
+                        serverLinkList.sortedBy { link -> link.title },
+                        currentDownloads,
+                        onLoadLink = { link ->
+                            when (link.linkType) {
+                                ServerLinkType.NAVIGATION -> onLoadDirectory(
+                                    link.downloadLink,
+                                    false
+                                )
 
-                                        ServerLinkType.PUBLICATION ->
-                                            coroutineScope.launch {
-                                                withContext(Dispatchers.IO) {
-                                                    Log.info(
-                                                        TAG,
-                                                        "Showing link details: ${link.downloadLink}"
-                                                    )
-                                                    scaffoldNavigator.navigateTo(
-                                                        ListDetailPaneScaffoldRole.Detail,
-                                                        link
-                                                    )
-                                                }
-                                            }
-                                    }
-                                })
+                                ServerLinkType.PUBLICATION -> {
+                                    Log.info(
+                                        TAG,
+                                        "Showing link details: ${link.downloadLink}"
+                                    )
+                                    onDownload(link)
+                                }
+                            }
                         }
                     )
-                },
-                detailPane = {
-                    scaffoldNavigator.currentDestination?.content?.let { link ->
-                        ServerLinkDetailView(
-                            server,
-                            link as ServerLink,
-                            onClose = { scaffoldNavigator.navigateBack() })
-                    }
                 }
             )
         }
@@ -189,7 +166,10 @@ fun BrowseServerPreview() {
             SERVER_LIST.get(0).name,
             false,
             SERVER_LINK_LIST,
+            emptyList(),
             onLoadDirectory = { _, _ -> },
-            onStopBrowsing = { })
+            onDownload = { _ -> },
+            onStopBrowsing = { }
+        )
     }
 }

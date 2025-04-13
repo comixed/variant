@@ -29,23 +29,22 @@ import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.onDownload
 import io.ktor.client.request.header
+import io.ktor.client.request.prepareGet
+import io.ktor.client.request.url
+import io.ktor.client.statement.bodyAsChannel
 import io.ktor.http.HttpHeaders
+import io.ktor.util.toByteArray
 import org.comixedproject.variant.shared.VARIANT_USER_AGENT
 import org.comixedproject.variant.shared.model.server.Server
-
-expect fun getHttpClientEngineFactory(): HttpClientEngine
+import org.comixedproject.variant.shared.platform.Log
 
 private val TAG = "HttpUtils"
 
-/**
- * Creates a HTTP client to be used with the given server.
- *
- * @param server the server
- * @param url the url
- * @return the client
- */
-fun createHttpClientFor(server: Server, url: String): HttpClient {
+expect fun getHttpClientEngineFactory(): HttpClientEngine
+
+fun createHttpClient(server: Server, downloadLink: String): HttpClient {
     return HttpClient(getHttpClientEngineFactory()) {
         install(HttpTimeout) {
             socketTimeoutMillis = 60_000
@@ -57,7 +56,7 @@ fun createHttpClientFor(server: Server, url: String): HttpClient {
             level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) {
-                    org.comixedproject.variant.shared.platform.Log.debug(TAG, message)
+                    Log.debug(TAG, message)
                 }
             }
         }
@@ -71,9 +70,47 @@ fun createHttpClientFor(server: Server, url: String): HttpClient {
                 }
             }
         }
+
         defaultRequest {
             header(HttpHeaders.UserAgent, "$VARIANT_USER_AGENT")
-            url(url)
+            url(downloadLink)
         }
     }
+}
+
+suspend fun performGet(
+    server: Server, downloadLink: String,
+    onProgress: (Long, Long) -> Unit,
+    onSuccess: (ByteArray) -> Unit,
+    onFailure: () -> Unit
+) {
+    try {
+        createHttpClient(server, downloadLink).prepareGet {
+            url(downloadLink)
+            onDownload { progress, total -> onProgress(progress, total) }
+        }
+            .execute { response ->
+                if (response.status.value in 200..299) {
+                    val content = response.bodyAsChannel()
+                    onSuccess(content.toByteArray())
+                } else {
+                    Log.error(TAG, "Failed to download content")
+                    onFailure()
+                }
+            }
+    } catch (error: Throwable) {
+        Log.error(TAG, "Failed to download file: ${error}")
+        onFailure()
+    }
+}
+
+suspend fun downloadFile(
+    server: Server,
+    url: String,
+    onProgress: (Long, Long) -> Unit,
+    onCompletion: (ByteArray) -> Unit
+) {
+    performGet(server, url, onProgress = onProgress, onSuccess = onCompletion, onFailure = {
+        Log.error(TAG, "Failed to download ${url}")
+    })
 }

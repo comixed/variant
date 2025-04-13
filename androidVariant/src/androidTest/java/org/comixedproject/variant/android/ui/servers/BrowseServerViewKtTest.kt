@@ -47,8 +47,10 @@ class BrowseServerViewKtTest {
                 serverLink.title,
                 false,
                 SERVER_LINK_LIST,
+                listOf(),
                 onLoadDirectory = { _, _ -> },
-                onStopBrowsing = { })
+                onStopBrowsing = { },
+                onDownload = { })
         }
 
         composeTestRule.onNodeWithTag(TAG_BACK_NAVIGATION_BUTTON).assertDoesNotExist()
@@ -64,8 +66,10 @@ class BrowseServerViewKtTest {
                 serverLink.title,
                 false,
                 SERVER_LINK_LIST,
+                listOf(),
                 onLoadDirectory = { _, _ -> },
-                onStopBrowsing = { })
+                onStopBrowsing = { },
+                onDownload = { })
         }
 
         composeTestRule.onNodeWithTag(TAG_BACK_NAVIGATION_BUTTON).assertExists()
@@ -86,12 +90,14 @@ class BrowseServerViewKtTest {
                 serverLink.title,
                 false,
                 SERVER_LINK_LIST,
+                listOf(),
                 onLoadDirectory = { dir, rel ->
                     clicked = true
                     directory = dir
                     reload = rel
                 },
-                onStopBrowsing = { })
+                onStopBrowsing = { },
+                onDownload = { })
         }
 
         composeTestRule.onNodeWithTag(TAG_BACK_NAVIGATION_BUTTON).performClick()
@@ -110,8 +116,10 @@ class BrowseServerViewKtTest {
                 serverLink.title,
                 false,
                 SERVER_LINK_LIST,
+                listOf(),
                 onLoadDirectory = { _, _ -> },
-                onStopBrowsing = { })
+                onStopBrowsing = { },
+                onDownload = { })
         }
 
         composeTestRule.onNodeWithTag(TAG_STOP_NAVIGATING_BUTTON).assertExists()
@@ -129,8 +137,10 @@ class BrowseServerViewKtTest {
                 serverLink.title,
                 false,
                 SERVER_LINK_LIST,
+                listOf(),
                 onLoadDirectory = { _, _ -> },
-                onStopBrowsing = { clicked = true })
+                onStopBrowsing = { clicked = true },
+                onDownload = { })
         }
 
         composeTestRule.onNodeWithTag(TAG_STOP_NAVIGATING_BUTTON).performClick()

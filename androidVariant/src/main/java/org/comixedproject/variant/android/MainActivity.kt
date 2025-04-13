@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
 
             Log.debug(TAG, "Initializing comic book view model")
             val directory = applicationContext.filesDir.path
+            comicBookViewModel.setLibraryDirectory(directory)
             comicBookViewModel.watchDirectory(directory)
 
             VariantTheme {

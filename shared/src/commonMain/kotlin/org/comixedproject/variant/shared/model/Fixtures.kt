@@ -131,7 +131,7 @@ val SERVER_LINK_LIST = listOf(
         identifier = "foo",
         title = "Detective Comics #27",
         coverUrl = "http://www.comixedproject.org/cover.png",
-        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        downloadLink = "http://www.comixedproject.org:7171/opds/one.cbz",
         linkType = ServerLinkType.PUBLICATION,
         downloadedDate = Clock.System.now().minus(14.days)
     ),
@@ -142,7 +142,7 @@ val SERVER_LINK_LIST = listOf(
         identifier = "foo",
         title = "Detective Comics #28",
         coverUrl = "http://www.comixedproject.org/cover.png",
-        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        downloadLink = "http://www.comixedproject.org:7171/opds/two.cbz",
         linkType = ServerLinkType.PUBLICATION
     ),
     ServerLink(
@@ -152,7 +152,7 @@ val SERVER_LINK_LIST = listOf(
         identifier = "foo",
         title = "Detective Comics #29",
         coverUrl = "http://www.comixedproject.org/cover.png",
-        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        downloadLink = "http://www.comixedproject.org:7171/opds/three.cbz",
         linkType = ServerLinkType.PUBLICATION
     ),
     ServerLink(
@@ -162,7 +162,7 @@ val SERVER_LINK_LIST = listOf(
         identifier = "foo",
         title = "Detective Comics #30",
         coverUrl = "http://www.comixedproject.org/cover.png",
-        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        downloadLink = "http://www.comixedproject.org:7171/opds/four.cbz",
         linkType = ServerLinkType.PUBLICATION
     ),
     ServerLink(
@@ -172,7 +172,7 @@ val SERVER_LINK_LIST = listOf(
         identifier = "foo",
         title = "Detective Comics #31",
         coverUrl = "http://www.comixedproject.org/cover.png",
-        downloadLink = "http://www.comixedproject.org:7171/opds/",
+        downloadLink = "http://www.comixedproject.org:7171/opds/five.cbz",
         linkType = ServerLinkType.PUBLICATION
     ),
 )

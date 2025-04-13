@@ -19,6 +19,7 @@
 package org.comixedproject.variant.android.ui.links
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,7 +57,11 @@ private val TAG = "ServerLinkListItemView"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ServerLinkListItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onShowInfo: () -> Unit) {
+fun ServerLinkListItemView(
+    serverLink: ServerLink,
+    progress: Double?,
+    onLoadLink: () -> Unit
+) {
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
@@ -66,51 +72,61 @@ fun ServerLinkListItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onSho
             }
             .testTag(TAG_SERVER_LINK_ITEM),
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                "${serverLink.title}",
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp)
-                    .testTag(TAG_SERVER_LINK_TITLE)
-            )
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "${serverLink.title}",
+                    style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
+                        .testTag(TAG_SERVER_LINK_TITLE)
+                )
 
-            Spacer(modifier = Modifier)
+                Spacer(modifier = Modifier)
 
-            when (serverLink.linkType) {
-                ServerLinkType.NAVIGATION ->
-                    IconButton(
-                        onClick = {
-                            Log.debug(TAG, "Navigation icon clicked")
-                            onLoadLink()
-                        },
-                        modifier = Modifier.testTag(TAG_NAVIGATION_ICON)
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = serverLink.title
-                        )
-                    }
+                when (serverLink.linkType) {
+                    ServerLinkType.NAVIGATION ->
+                        IconButton(
+                            onClick = {
+                                Log.debug(TAG, "Navigation icon clicked")
+                                onLoadLink()
+                            },
+                            modifier = Modifier.testTag(TAG_NAVIGATION_ICON)
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = serverLink.title
+                            )
+                        }
 
-                ServerLinkType.PUBLICATION ->
-                    IconButton(
-                        onClick = {
-                            Log.debug(TAG, "Information icon clicked")
-                            onShowInfo()
-                        },
-                        modifier = Modifier.testTag(TAG_PUBLICATION_ICON)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Info,
-                            contentDescription = serverLink.title
-                        )
-                    }
+                    ServerLinkType.PUBLICATION ->
+                        IconButton(
+                            onClick = {
+                                Log.debug(TAG, "Information icon clicked")
+                                onLoadLink()
+                            },
+                            modifier = Modifier.testTag(TAG_PUBLICATION_ICON)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Info,
+                                contentDescription = serverLink.title
+                            )
+                        }
+                }
+            }
+            progress?.let {
+                LinearProgressIndicator(
+                    progress = { it.toFloat() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
             }
         }
     }
@@ -121,9 +137,8 @@ fun ServerLinkListItemView(serverLink: ServerLink, onLoadLink: () -> Unit, onSho
 fun ServerLinkItemPreview_navigationLink() {
     VariantTheme {
         ServerLinkListItemView(
-            SERVER_LINK_LIST.first { entry -> entry.linkType == ServerLinkType.NAVIGATION },
-            onLoadLink = { },
-            onShowInfo = { })
+            SERVER_LINK_LIST.first { entry -> entry.linkType == ServerLinkType.NAVIGATION }, null,
+            onLoadLink = { })
     }
 }
 
@@ -132,8 +147,17 @@ fun ServerLinkItemPreview_navigationLink() {
 fun ServerLinkItemPreview_publicationLink() {
     VariantTheme {
         ServerLinkListItemView(
-            SERVER_LINK_LIST.first { entry -> entry.linkType == ServerLinkType.PUBLICATION },
-            onLoadLink = { },
-            onShowInfo = { })
+            SERVER_LINK_LIST.first { entry -> entry.linkType == ServerLinkType.PUBLICATION }, null,
+            onLoadLink = { })
+    }
+}
+
+@Composable
+@Preview
+fun ServerLinkItemPreview_publicationLink_downloading() {
+    VariantTheme {
+        ServerLinkListItemView(
+            SERVER_LINK_LIST.first { entry -> entry.linkType == ServerLinkType.PUBLICATION }, 0.5,
+            onLoadLink = { })
     }
 }

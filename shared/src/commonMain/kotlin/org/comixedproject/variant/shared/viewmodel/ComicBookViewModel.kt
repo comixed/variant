@@ -18,8 +18,10 @@
 
 package org.comixedproject.variant.shared.viewmodel
 
+import com.oldguy.common.io.ByteBuffer
 import com.oldguy.common.io.File
-import com.rickclephas.kmp.observableviewmodel.MutableStateFlow
+import com.oldguy.common.io.FileMode
+import com.oldguy.common.io.RawFile
 import com.rickclephas.kmp.observableviewmodel.ViewModel
 import com.rickclephas.kmp.observableviewmodel.coroutineScope
 import com.rickclephas.kmp.observableviewmodel.launch
@@ -28,13 +30,22 @@ import io.github.irgaly.kfswatch.KfsDirectoryWatcherEvent
 import io.github.irgaly.kfswatch.KfsLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.comixedproject.variant.shared.archives.ArchiveAdaptor
 import org.comixedproject.variant.shared.model.comics.ComicBook
+import org.comixedproject.variant.shared.model.server.Server
+import org.comixedproject.variant.shared.model.server.ServerLink
+import org.comixedproject.variant.shared.net.downloadFile
 import org.comixedproject.variant.shared.platform.Log
 
 private val TAG = "ComicBookViewModel"
+
+data class DownloadEntry(
+    val downloadLink: String,
+    var progress: Double
+)
 
 /**
  * <code>ComicBookViewModel</code> provides a view model for working with locally stored comic files.
@@ -44,10 +55,22 @@ private val TAG = "ComicBookViewModel"
 class ComicBookViewModel() : ViewModel() {
     private val archiveAdaptor = ArchiveAdaptor()
 
-    private var _comicBookList = MutableStateFlow<List<ComicBook>>(viewModelScope, emptyList())
+    private var _libraryDirectory = MutableStateFlow<String>("")
+    val libraryDirectory = _libraryDirectory.asStateFlow()
+
+    private var _comicBookList = MutableStateFlow<List<ComicBook>>(emptyList())
     val comicBookList = _comicBookList.asStateFlow()
 
+    private var _currentDownloads =
+        MutableStateFlow<MutableList<DownloadEntry>>(mutableListOf())
+    val currentDownloads = _currentDownloads.asStateFlow()
+
     lateinit var watcher: KfsDirectoryWatcher
+
+    fun setLibraryDirectory(directory: String) {
+        Log.debug(TAG, "Setting library directory: ${directory}")
+        _libraryDirectory.tryEmit(directory)
+    }
 
     fun watchDirectory(path: String) {
         viewModelScope.launch {
@@ -88,5 +111,60 @@ class ComicBookViewModel() : ViewModel() {
             }
         }
         _comicBookList.tryEmit(contents)
+    }
+
+    fun download(server: Server, serverLink: ServerLink) {
+        viewModelScope.launch {
+            Log.info(TAG, "Downloading ${serverLink.downloadLink} => ${serverLink.filename}")
+            doAddDownload(serverLink.downloadLink)
+            val filename = "${libraryDirectory.value}/${serverLink.filename}"
+            downloadFile(
+                server,
+                serverLink.downloadLink,
+                onProgress = { current, total ->
+                    Log.debug(
+                        TAG,
+                        "Downloaded ${current} of ${total} for ${filename}"
+                    )
+                    doUpdateDownload(serverLink.downloadLink, current, total)
+                },
+                onCompletion = { bytes ->
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val file = File(filename)
+                        val output = RawFile(file, FileMode.Write)
+                        output.write(ByteBuffer(bytes = bytes))
+                        output.close()
+                    }
+                })
+            doRemoveDownload(serverLink.downloadLink)
+        }
+    }
+
+    private fun doAddDownload(downloadLink: String) {
+        val currentDownloads = _currentDownloads.value
+        currentDownloads.add(DownloadEntry(downloadLink, 0.0))
+        _currentDownloads.tryEmit(currentDownloads)
+    }
+
+    private fun doUpdateDownload(downloadLink: String, current: Long, total: Long) {
+        val currentDownloads =
+            _currentDownloads.value.filter { it.downloadLink != downloadLink }.toMutableList()
+        val progress = when (total) {
+            0L -> 0.0
+            else -> current.toDouble() / total
+        }
+        Log.debug(TAG, "Progress was calculated to ${progress} from ${current} and ${total}")
+        _currentDownloads.tryEmit(
+            (currentDownloads + DownloadEntry(
+                downloadLink,
+                progress
+            )).toMutableList()
+        )
+    }
+
+    private fun doRemoveDownload(downloadLink: String) {
+        val currentDownloads =
+            _currentDownloads.value.filter { it.downloadLink != downloadLink }.toMutableList()
+        _currentDownloads.tryEmit(currentDownloads)
     }
 }
