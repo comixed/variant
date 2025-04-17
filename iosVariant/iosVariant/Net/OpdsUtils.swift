@@ -60,7 +60,7 @@ func loadServerLinks(
                 directory: directory,
                 identifier: "",
                 title: title, coverUrl: "", downloadLink: navigation.href,
-                linkType: ServerLinkType.navigation, downloaded: false)
+                linkType: ServerLinkType.navigation, downloaded: false, downloadedDate: nil)
             )
           }
         }
@@ -82,7 +82,7 @@ func loadServerLinks(
               directory: directory,
               identifier: identifier,
               title: title, coverUrl: coverUrl, downloadLink: downloadLink,
-              linkType: ServerLinkType.publication, downloaded: false
+              linkType: ServerLinkType.publication, downloaded: false, downloadedDate: nil
             ))
         }
       }

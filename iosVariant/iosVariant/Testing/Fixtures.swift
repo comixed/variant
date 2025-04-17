@@ -22,19 +22,19 @@ import Variant
 var SERVER_LIST = [
   Server(
     serverId: 1, name: "Server 1", url: "http://www.comixedproject.org:7171/opds/root.xml",
-    username: "reader@comixedproject.org", password: "the!password"),
+    username: "reader@comixedproject.org", password: "the!password", accessedDate: nil),
   Server(
     serverId: 2, name: "Server 2", url: "http://www.comixedproject.org:7171/opds/root.xml",
-    username: "reader@comixedproject.org", password: "the!password"),
+    username: "reader@comixedproject.org", password: "the!password", accessedDate: nil),
   Server(
     serverId: 3, name: "Server 3", url: "http://www.comixedproject.org:7171/opds/root.xml",
-    username: "reader@comixedproject.org", password: "the!password"),
+    username: "reader@comixedproject.org", password: "the!password", accessedDate: nil),
   Server(
     serverId: 4, name: "Server 4", url: "http://www.comixedproject.org:7171/opds/root.xml",
-    username: "reader@comixedproject.org", password: "the!password"),
+    username: "reader@comixedproject.org", password: "the!password", accessedDate: nil),
   Server(
     serverId: 5, name: "Server 5", url: "http://www.comixedproject.org:7171/opds/root.xml",
-    username: "reader@comixedproject.org", password: "the!password"),
+    username: "reader@comixedproject.org", password: "the!password", accessedDate: nil),
 ]
 
 var SERVER_LINK_LIST = [
@@ -42,25 +42,25 @@ var SERVER_LINK_LIST = [
     serverLinkId: 101, serverId: 1, directory: "/", identifier: "foo", title: "Captain America",
     coverUrl: "http://www.comixedproject.org/cover.png",
     downloadLink: "http://www.comixedproject.org:7171/opds/", linkType: ServerLinkType.navigation,
-    downloaded: false),
+    downloaded: false, downloadedDate: nil),
   ServerLink(
     serverLinkId: 102, serverId: 1, directory: "/", identifier: "foo", title: "Captain America",
     coverUrl: "http://www.comixedproject.org/cover.png",
     downloadLink: "http://www.comixedproject.org:7171/opds/", linkType: ServerLinkType.navigation,
-    downloaded: false),
+    downloaded: false, downloadedDate: nil),
   ServerLink(
     serverLinkId: 103, serverId: 1, directory: "/", identifier: "foo", title: "Captain America",
     coverUrl: "http://www.comixedproject.org/cover.png",
     downloadLink: "http://www.comixedproject.org:7171/opds/", linkType: ServerLinkType.publication,
-    downloaded: false),
+    downloaded: false, downloadedDate: nil),
   ServerLink(
     serverLinkId: 104, serverId: 1, directory: "/", identifier: "foo", title: "Captain America",
     coverUrl: "http://www.comixedproject.org/cover.png",
     downloadLink: "http://www.comixedproject.org:7171/opds/", linkType: ServerLinkType.publication,
-    downloaded: false),
+    downloaded: false, downloadedDate: nil),
   ServerLink(
     serverLinkId: 105, serverId: 1, directory: "/", identifier: "foo", title: "Captain America",
     coverUrl: "http://www.comixedproject.org/cover.png",
     downloadLink: "http://www.comixedproject.org:7171/opds/", linkType: ServerLinkType.publication,
-    downloaded: false),
+    downloaded: false, downloadedDate: nil),
 ]
