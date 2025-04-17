@@ -15,5 +15,6 @@ sonar {
         property("sonar.organization", "comixed")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.gradle.skipCompile", true)
+        property("sonar.exclusions", "**/gradle.build.kts,**/build/**")
     }
 }

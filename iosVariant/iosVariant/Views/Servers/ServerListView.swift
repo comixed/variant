@@ -60,7 +60,9 @@ struct ServerListView: View {
 
           Button(
             action: {
-              onEditServer(Server(serverId: nil, name: "", url: "", username: "", password: ""))
+              onEditServer(
+                Server(
+                  serverId: nil, name: "", url: "", username: "", password: "", accessedDate: nil))
             },
             label: {
               Text("+").font(.system(.largeTitle))

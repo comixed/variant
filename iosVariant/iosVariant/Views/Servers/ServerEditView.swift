@@ -90,6 +90,6 @@ struct ServerEditView: View {
 
 #Preview("Save") {
   ServerEditView(
-    server: Server(serverId: nil, name: "", url: "", username: "", password: ""),
+    server: Server(serverId: nil, name: "", url: "", username: "", password: "", accessedDate: nil),
     onSaveChanges: { _ in }, onCancelChanges: {})
 }

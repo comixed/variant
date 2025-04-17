@@ -100,7 +100,8 @@ struct ServersView: View {
       .sheet(isPresented: self.$isEditing) {
         ServerEditView(
           server: self.selected
-            ?? Server(serverId: nil, name: "", url: "", username: "", password: ""),
+            ?? Server(
+              serverId: nil, name: "", url: "", username: "", password: "", accessedDate: nil),
           onSaveChanges: { server in
             self.serverManager.saveServer(server: server)
             self.isEditing = false
