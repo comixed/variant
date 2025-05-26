@@ -16,34 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
-import Variant
+package org.comixedproject.variant
 
-struct NavigationLinkView: View {
-  let server: Server
-  let serverLink: ServerLink
+import platform.UIKit.UIDevice
 
-  var onBrowseServer: (Server, String, Bool) -> Void
-
-  var body: some View {
-    HStack {
-      VStack(alignment: .leading) {
-        Text("\(serverLink.title)").font(.headline)
-      }
-
-      Spacer()
-
-      Button(action: {
-        onBrowseServer(server, serverLink.downloadLink, false)
-      }) {
-        Image(systemName: "chevron.right")
-      }
-    }
-  }
+class IOSPlatform: Platform {
+    override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
 }
 
-#Preview {
-  NavigationLinkView(
-    server: SERVER_LIST[0], serverLink: SERVER_LINK_LIST[0],
-    onBrowseServer: { _, _, _ in })
-}
+actual fun getPlatform(): Platform = IOSPlatform()

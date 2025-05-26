@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve Variant
+about: Create a report to help us improve shared
 title: 'Describe the bug using a single sentence, read instructions below'
 labels: 'bug, triage'
 assignees: ''

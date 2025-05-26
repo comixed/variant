@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "variant"
+rootProject.name = "Variant"
 include(":androidVariant")
 include(":shared")

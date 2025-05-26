@@ -16,31 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
-import Variant
+package org.comixedproject.variant
 
-struct ServerDetailView: View {
-  let server: Server
-  let onTapped: () -> Void
-
-  var body: some View {
-    VStack(alignment: .leading) {
-      Text(server.name)
-        .font(.headline)
-      Text(server.url)
-        .font(.subheadline)
-      Text(server.username)
-        .font(.body)
-    }
-    .onTapGesture {
-      onTapped()
-    }
-  }
+interface Platform {
+    val name: String
 }
 
-#Preview {
-  ServerDetailView(
-    server: SERVER_LIST[0],
-    onTapped: {}
-  )
-}
+expect fun getPlatform(): Platform

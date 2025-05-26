@@ -1,6 +1,6 @@
 /*
  * Variant - A digital comic book reading application for the iPad and Android tablets.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared
+package org.comixedproject.variant
 
-import android.app.Application
-import android.content.Context
+class Greeting {
+    private val platform: Platform = getPlatform()
 
-actual object VariantAppContext {
-    private lateinit var application: Application
-
-    fun setUp(context: Context) {
-        application = context as Application
-    }
-
-    fun get(): Context {
-        if (::application.isInitialized.not()) throw Exception("Application context is not initialized")
-        return application.applicationContext
+    fun greet(): String {
+        return "Hello, ${platform.name}!"
     }
 }

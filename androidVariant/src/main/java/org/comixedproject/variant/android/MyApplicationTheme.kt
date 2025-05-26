@@ -1,6 +1,6 @@
 /*
  * Variant - A digital comic book reading application for the iPad and Android tablets.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,50 +33,41 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * <code>VariantTheme</code> provides the application's theme.
- *
- * @author Darryl L. Pierce
- */
 @Composable
-fun VariantTheme(
+fun MyApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
-    val colors =
-        if (darkTheme) {
-            darkColorScheme(
-                primary = Color(0xFFBB86FC),
-                secondary = Color(0xFF03DAC5),
-                tertiary = Color(0xFF3700B3),
-            )
-        } else {
-            lightColorScheme(
-                primary = Color(0xFF6200EE),
-                secondary = Color(0xFF03DAC5),
-                tertiary = Color(0xFF3700B3),
-            )
-        }
-    val typography =
-        Typography(
-            bodyMedium =
-                TextStyle(
-                    fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
-                ),
+    val colors = if (darkTheme) {
+        darkColorScheme(
+            primary = Color(0xFFBB86FC),
+            secondary = Color(0xFF03DAC5),
+            tertiary = Color(0xFF3700B3)
         )
-    val shapes =
-        Shapes(
-            small = RoundedCornerShape(4.dp),
-            medium = RoundedCornerShape(4.dp),
-            large = RoundedCornerShape(0.dp),
+    } else {
+        lightColorScheme(
+            primary = Color(0xFF6200EE),
+            secondary = Color(0xFF03DAC5),
+            tertiary = Color(0xFF3700B3)
         )
+    }
+    val typography = Typography(
+        bodyMedium = TextStyle(
+            fontFamily = FontFamily.Default,
+            fontWeight = FontWeight.Normal,
+            fontSize = 16.sp
+        )
+    )
+    val shapes = Shapes(
+        small = RoundedCornerShape(4.dp),
+        medium = RoundedCornerShape(4.dp),
+        large = RoundedCornerShape(0.dp)
+    )
 
     MaterialTheme(
         colorScheme = colors,
         typography = typography,
         shapes = shapes,
-        content = content,
+        content = content
     )
 }

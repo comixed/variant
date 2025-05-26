@@ -1,6 +1,6 @@
 /*
  * Variant - A digital comic book reading application for the iPad and Android tablets.
- * Copyright (C) 2024, The ComiXed Project
+ * Copyright (C) 2025, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.shared
+package org.comixedproject.variant
 
-expect object VariantAppContext
+class AndroidPlatform : Platform {
+    override val name: String = "Android ${android.os.Build.VERSION.SDK_INT}"
+}
+
+actual fun getPlatform(): Platform = AndroidPlatform()

@@ -32,6 +32,4 @@ To achieve these goals, the project will:
  Please read [this document](./CONTRIBUTING.md) for guidelines on contributing to the project.
 
 
-#Credits
-
- * [SVG Repo](https://www.svgrepo.com) for the project icon.
+# Credits
