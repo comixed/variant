@@ -3,9 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -15,6 +13,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
+
 
     listOf(
         iosX64(),
@@ -30,37 +29,12 @@ kotlin {
         all {
             languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
         }
-        androidMain.dependencies {
-            implementation(libs.lifecycle.viewmodel.android)
-            implementation(libs.sqldelight.driver.android)
-            implementation(libs.ktor.client.android)
-            implementation(libs.ktor.client.okhttp)
-        }
-        iosMain.dependencies {
-            implementation(libs.sqldelight.driver.native)
-            implementation(libs.ktor.client.ios)
-        }
+        androidMain.dependencies {  }
+        iosMain.dependencies {  }
         commonMain.dependencies {
-            implementation(libs.koin.core)
-            implementation(libs.kermit.logging)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.serialization)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.logging)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.ktor.client.auth)
-            implementation(libs.korio)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kfswatch)
-            implementation(libs.kmp.io)
-            implementation(libs.xml.util)
-            implementation(libs.xml.util.serialization)
-            api(libs.kmp.viewmodel.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.koin.test)
-            implementation(libs.ktor.client.mock)
         }
     }
 
@@ -72,7 +46,6 @@ android {
     compileSdk = 34
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -84,15 +57,4 @@ android {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-}
-
-sqldelight {
-    databases {
-        create("VariantDb") {
-            packageName.set("org.comixedproject.variant.database")
-            schemaOutputDirectory.set(
-                file("src/commonMain/sqldelight/org/comixedproject/variant/db")
-            )
-        }
-    }
 }
