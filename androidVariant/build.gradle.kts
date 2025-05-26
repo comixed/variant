@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "org.comixedproject.variant.android"
-    compileSdk = 35
+    compileSdk = 34
     defaultConfig {
         applicationId = "org.comixedproject.variant.android"
         minSdk = 26
@@ -40,6 +40,8 @@ android {
 
 dependencies {
     implementation(projects.shared)
+    implementation(libs.koin.android)
+    implementation(libs.bundles.android.compose)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)

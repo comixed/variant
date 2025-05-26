@@ -19,16 +19,35 @@
 import SwiftUI
 import Variant
 
-struct ContentView: View {
-	let greet = Greeting().greet()
+struct HomeView: View {
+    @State var currentDestination = 0
 
-	var body: some View {
-		Text(greet)
-	}
+    var body: some View {
+        TabView(selection: $currentDestination) {
+            ServerView()
+                .tag(0)
+                .tabItem {
+                    Label("Servers", systemImage: "person.crop.circle.fill")
+                }
+
+            Text("Comics view")
+                .tag(1)
+                .tabItem {
+                    Label("Comics", systemImage: "book.fill")
+                }
+
+            Text("Settings view")
+                .tag(2)
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                }
+        }
+        .edgesIgnoringSafeArea(.bottom)
+    }
 }
 
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContentView()
-	}
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeView()
+    }
 }

@@ -16,17 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+package org.comixedproject.variant.app
 
-@main
-struct iOSApp: App {
-	var body: some Scene {
-		WindowGroup {
-			HomeView()
-		}
-	}
-    
-    init() {
-        Koin.start()
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import org.comixedproject.variant.database.VariantDb
+import org.koin.core.module.Module
+import org.koin.dsl.module
+
+actual val platformModule: Module = module {
+    single<SqlDriver> {
+        AndroidSqliteDriver(VariantDb.Schema, get(), "VariantDb")
     }
 }

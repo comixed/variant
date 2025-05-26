@@ -16,17 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+package org.comixedproject.variant.android
 
-@main
-struct iOSApp: App {
-	var body: some Scene {
-		WindowGroup {
-			HomeView()
-		}
-	}
-    
-    init() {
-        Koin.start()
+import android.app.Application
+import android.content.Context
+import org.comixedproject.variant.app.VariantAppContext
+import org.comixedproject.variant.app.initKoin
+import org.koin.core.Koin
+import org.koin.dsl.module
+
+lateinit var koin: Koin
+
+class VariantApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        VariantAppContext.setUp(applicationContext)
+
+        koin =
+            initKoin(
+                appModule = module { single<Context> { this@VariantApp } }
+            ).koin
     }
 }

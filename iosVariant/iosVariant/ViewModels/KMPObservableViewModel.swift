@@ -16,17 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+import KMPObservableViewModelCore
+import Variant
 
-@main
-struct iOSApp: App {
-	var body: some Scene {
-		WindowGroup {
-			HomeView()
-		}
-	}
-    
-    init() {
-        Koin.start()
-    }
-}
+extension Kmp_observableviewmodel_coreViewModel: ViewModel { }

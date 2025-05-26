@@ -16,10 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant
+package org.comixedproject.variant.app
 
-class AndroidPlatform : Platform {
-    override val name: String = "Android ${android.os.Build.VERSION.SDK_INT}"
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
+import org.comixedproject.variant.database.VariantDb
+import org.koin.core.module.Module
+import org.koin.dsl.module
+
+actual val platformModule: Module = module {
+    single<SqlDriver> {
+        NativeSqliteDriver(VariantDb.Schema, "VariantDb")
+    }
 }
-
-actual fun getPlatform(): Platform = AndroidPlatform()
