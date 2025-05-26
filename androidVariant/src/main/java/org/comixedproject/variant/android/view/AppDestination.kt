@@ -16,17 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+package org.comixedproject.variant.android.view
 
-@main
-struct iOSApp: App {
-	var body: some Scene {
-		WindowGroup {
-			HomeView()
-		}
-	}
-    
-    init() {
-        Koin.start()
-    }
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.ui.graphics.vector.ImageVector
+import org.comixedproject.variant.android.R
+
+enum class AppDestination(
+    val icon: ImageVector,
+    val label: Int
+) {
+    SERVERS(Icons.Filled.AccountCircle, R.string.serverDestinationLabel);
 }

@@ -16,17 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+package org.comixedproject.variant.model
 
-@main
-struct iOSApp: App {
-	var body: some Scene {
-		WindowGroup {
-			HomeView()
-		}
-	}
-    
-    init() {
-        Koin.start()
-    }
-}
+data class Server(
+    val serverId: Long?,
+    var name: String,
+    var url: String,
+    var username: String,
+    var password: String
+)

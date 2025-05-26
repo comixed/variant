@@ -16,10 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant
+package org.comixedproject.variant.android.view
 
-interface Platform {
-    val name: String
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import org.comixedproject.variant.android.VariantTheme
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun VariantTopAppBar() {
+    TopAppBar(
+        title = {
+            Text("Variant")
+        })
 }
 
-expect fun getPlatform(): Platform
+@Composable
+@Preview
+fun VariantTopAppBar_serverView() {
+    VariantTheme { VariantTopAppBar() }
+}

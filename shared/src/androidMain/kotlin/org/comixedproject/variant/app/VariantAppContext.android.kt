@@ -16,17 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
+package org.comixedproject.variant.app
 
-@main
-struct iOSApp: App {
-	var body: some Scene {
-		WindowGroup {
-			HomeView()
-		}
-	}
-    
-    init() {
-        Koin.start()
+import android.app.Application
+import android.content.Context
+
+actual object VariantAppContext {
+    private lateinit var application: Application
+
+    fun setUp(context: Context) {
+        application = context as Application
+    }
+
+    fun get(): Context {
+        if (::application.isInitialized.not()) throw Exception("Application context is not initialized")
+        return application.applicationContext
     }
 }

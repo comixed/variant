@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="serverNameLabel">The server\'s name...</string>
+    <string name="serverUrlLabel">The server\'s address...</string>
+    <string name="serverUsernameLabel">Your username...</string>
+    <string name="serverPasswordLabel">Your password...</string>
+    <string name="saveButton">Save</string>
+    <string name="serverDestinationLabel">Servers</string>
+    <string name="addServerDescription">Add a new server...</string>
+    <string name="emptyServerListText">Create a server to get started!</string>
+</resources>

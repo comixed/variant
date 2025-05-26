@@ -16,12 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant
+package org.comixedproject.variant.platform
 
-import platform.UIKit.UIDevice
+import co.touchlab.kermit.Logger
 
-class IOSPlatform: Platform {
-    override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
+public object Log {
+    public fun info(tag: String, message: String) {
+        Logger.withTag(tag).i(message)
+    }
+
+    public fun debug(tag: String, message: String) {
+        Logger.withTag(tag).d(message)
+    }
+
+    public fun warning(tag: String, message: String) {
+        Logger.withTag(tag).w(message)
+    }
+
+    public fun error(tag: String, message: String) {
+        Logger.withTag(tag).e(message)
+    }
 }
-
-actual fun getPlatform(): Platform = IOSPlatform()

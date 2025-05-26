@@ -16,12 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant
+import SwiftUI
+import Variant
 
-class Greeting {
-    private val platform: Platform = getPlatform()
+struct ServerListItemView: View {
+    let server: Server
 
-    fun greet(): String {
-        return "Hello, ${platform.name}!"
+    var body: some View {
+        VStack(alignment: .leading) {
+          Text(server.name)
+            .font(.headline)
+          Text(server.url)
+            .font(.subheadline)
+          Text(server.username)
+            .font(.body)
+        }
     }
+}
+
+#Preview {
+    ServerListItemView(server: SERVER_LIST[0])
 }
