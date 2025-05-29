@@ -19,8 +19,9 @@
 package org.comixedproject.variant.app
 
 import org.comixedproject.variant.database.DatabaseHelper
+import org.comixedproject.variant.database.repository.DirectoryRepository
 import org.comixedproject.variant.database.repository.ServerRepository
-import org.comixedproject.variant.viewmodel.ServerViewModel
+import org.comixedproject.variant.viewmodel.VariantViewModel
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -33,10 +34,11 @@ object Modules {
 
     val repositories = module {
         factory { ServerRepository(get()) }
+        factory { DirectoryRepository(get()) }
     }
 
     val viewModels = module {
-        factory { ServerViewModel(get()) }
+        factory { VariantViewModel(get(), get()) }
     }
 }
 

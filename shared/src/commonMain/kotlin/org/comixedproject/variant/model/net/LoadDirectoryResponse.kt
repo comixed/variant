@@ -16,34 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
-import KMPObservableViewModelSwiftUI
-import SwiftUI
-import Variant
+package org.comixedproject.variant.model.net
 
-private let TAG = "IOSApp"
+import kotlinx.serialization.Serializable
 
-@main
-struct iOSApp: App {
-    @StateViewModel var variantViewModel: VariantViewModel = Koin.instance.get()
-
-    var body: some Scene {
-        WindowGroup {
-            HomeView()
-        }
-    }
-
-    init() {
-        Koin.start()
-
-        if let path = FileManager.default.urls(
-            for: .downloadsDirectory,
-            in: .userDomainMask
-        ).first {
-            Log().debug(tag: TAG, message: "Assigning download path: \(path)")
-            self.variantViewModel.libraryDirectory = path.absoluteString
-        } else {
-            Log().debug(tag: TAG, message: "No download path found")
-        }
-    }
-}
+/**
+ * <code>LoadDirectoryResponse</code> represents the response to loading a directory's contents.
+ */
+@Serializable
+data class LoadDirectoryResponse(
+    val contents: List<DirectoryFromRemote> = emptyList<DirectoryFromRemote>()
+)

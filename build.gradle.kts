@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.sqldelight).apply(false)
     alias(libs.plugins.ksp).apply(false)
     alias(libs.plugins.native.coroutines).apply(false)
+    alias(libs.plugins.plugin.serialization).apply(false)
 
     alias(libs.plugins.sonarqube)
 }

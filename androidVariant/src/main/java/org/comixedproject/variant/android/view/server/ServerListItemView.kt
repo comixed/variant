@@ -18,6 +18,7 @@
 
 package org.comixedproject.variant.android.view.server
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -42,12 +43,16 @@ import org.comixedproject.variant.android.SERVER_LIST
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.ui.DismissBackground
 import org.comixedproject.variant.model.Server
+import org.comixedproject.variant.platform.Log
+
+private const val TAG = "ServerListItemView"
 
 @Composable
 fun ServerListItemView(
     server: Server,
     onEditServer: (Server) -> Unit,
-    onDeleteServer: (Server) -> Unit
+    onDeleteServer: (Server) -> Unit,
+    onServerClicked: (Server) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -86,6 +91,10 @@ fun ServerListItemView(
                         modifier = Modifier
                             .padding(16.dp)
                             .fillMaxWidth()
+                            .clickable {
+                                Log.debug(TAG, "Clicked on ${server.name}")
+                                onServerClicked(server)
+                            }
                     ) {
 
                         Text(
@@ -116,6 +125,7 @@ fun ServerListItemView_preview() {
         ServerListItemView(
             SERVER_LIST.get(0),
             onEditServer = { _ -> },
-            onDeleteServer = { _ -> })
+            onDeleteServer = { _ -> },
+            onServerClicked = { _ -> })
     }
 }

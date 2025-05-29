@@ -2,9 +2,11 @@
 .gradle
 .idea
 .DS_Store
+.kotlin
 build
 captures
 .externalNativeBuild
 .cxx
 local.properties
 xcuserdata
+iosVariant/iosVariant.xcodeproj/project.xcworkspace/

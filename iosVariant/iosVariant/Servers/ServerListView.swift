@@ -19,20 +19,42 @@
 import SwiftUI
 import Variant
 
+private let TAG = "ServerListView"
+
 struct ServerListView: View {
     let serverList: [Server]
 
     @State var selected: Server?
 
     var onEditServer: (Server) -> Void
+    var onDeleteServer: (Server) -> Void
+    var onBrowseServer: (Server) -> Void
 
     var body: some View {
         ZStack {
-            List(serverList, id: \.serverId, selection: $selected) { server in
-                ServerListItemView(server: server)
+            NavigationStack {
+                List(serverList, id: \.serverId, selection: $selected) { server in
+                    ServerListItemView(
+                        server: server,
+                        onEditServer: { server in
+                            Log().info(
+                                tag: TAG,
+                                message: "Editing server: \(server.name)"
+                            )
+                            onEditServer(server)
+                        },
+                        onDeleteServer: { _ in },
+                        onServerClicked: { server in
+                            Log().info(
+                                tag: TAG,
+                                message: "Browsing server: \(server.name)"
+                            )
+                            onBrowseServer(server)
+                        }
+                    )
                     .swipeActions(edge: .leading, allowsFullSwipe: false) {
                         Button {
-
+                            
                         } label: {
                             Label("Delete", systemImage: "trash.fill")
                         }
@@ -46,6 +68,8 @@ struct ServerListView: View {
                         }
                         .tint(.green)
                     }
+                }
+                .navigationTitle("Server List")
             }
 
             VStack {
@@ -88,5 +112,10 @@ struct ServerListView: View {
 }
 
 #Preview {
-    ServerListView(serverList: SERVER_LIST, onEditServer: { _ in })
+    ServerListView(
+        serverList: SERVER_LIST,
+        onEditServer: { _ in },
+        onDeleteServer: { _ in },
+        onBrowseServer: { _ in }
+    )
 }
