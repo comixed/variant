@@ -26,7 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import org.comixedproject.variant.android.view.HomeView
-import org.comixedproject.variant.viewmodel.ServerViewModel
+import org.comixedproject.variant.viewmodel.VariantViewModel
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
@@ -34,7 +34,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val serverViewModel: ServerViewModel = koinViewModel()
+            val variantViewModel: VariantViewModel = koinViewModel()
+            val directory = applicationContext.filesDir.path
+
+            variantViewModel.libraryDirectory = directory
 
             VariantTheme {
                 Surface(

@@ -71,7 +71,7 @@ class ServerRepository(val databaseHelper: DatabaseHelper) {
 
 fun ServersDb.map() =
     Server(
-        serverId = this.server_id,
+        serverId = this.id,
         name = this.name,
         url = this.url,
         username = this.username,

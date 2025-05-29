@@ -16,34 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
-import KMPObservableViewModelSwiftUI
-import SwiftUI
-import Variant
+package org.comixedproject.variant.network
 
-private let TAG = "IOSApp"
 
-@main
-struct iOSApp: App {
-    @StateViewModel var variantViewModel: VariantViewModel = Koin.instance.get()
+import io.ktor.client.plugins.logging.Logger
+import org.comixedproject.variant.platform.Log
 
-    var body: some Scene {
-        WindowGroup {
-            HomeView()
-        }
-    }
-
-    init() {
-        Koin.start()
-
-        if let path = FileManager.default.urls(
-            for: .downloadsDirectory,
-            in: .userDomainMask
-        ).first {
-            Log().debug(tag: TAG, message: "Assigning download path: \(path)")
-            self.variantViewModel.libraryDirectory = path.absoluteString
-        } else {
-            Log().debug(tag: TAG, message: "No download path found")
-        }
+class HttpClientLogger(val tag: String) : Logger {
+    override fun log(message: String) {
+        Log.debug(tag, message)
     }
 }
+

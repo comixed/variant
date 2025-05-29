@@ -1,7 +1,7 @@
 -- The initial database migration
 
 CREATE TABLE ServersDb (
-  server_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL UNIQUE,
   url TEXT NOT NULL,
   username TEXT NOT NULL DEFAULT "",
@@ -15,7 +15,32 @@ createServer:
 INSERT OR IGNORE INTO ServersDb(name, url, username, password) VALUES (?, ?, ?, ?);
 
 updateServer:
-UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE server_id = ?;
+UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE id = ?;
 
 deleteServer:
-DELETE FROM ServersDb WHERE server_id = ?;
+DELETE FROM ServersDb WHERE id = ?;
+
+
+CREATE TABLE DirectoriesDb (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  directory_id TEXT NOT NULL,
+  server_id INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  path TEXT NOT NULL,
+  parent TEXT NOT NULL,
+  filename TEXT NOT NULL,
+  is_directory INTEGER DEFAULT 0 NOT NULL,
+  cover_url TEXT
+);
+
+loadDirectoryContents:
+SELECT * FROM DirectoriesDb WHERE server_id = ? AND parent = ?;
+
+saveDirectoryContent:
+INSERT OR IGNORE INTO DirectoriesDb(directory_id, server_id, title, path, parent, filename, is_directory, cover_url) VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteDirectoryContents:
+DELETE FROM DirectoriesDb WHERE server_id = ? AND parent = ?;
+
+findDirectory:
+SELECT * FROM DirectoriesDb WHERE path = ?;

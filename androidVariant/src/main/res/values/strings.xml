@@ -8,4 +8,6 @@
     <string name="serverDestinationLabel">Servers</string>
     <string name="addServerDescription">Add a new server...</string>
     <string name="emptyServerListText">Create a server to get started!</string>
+    <string name="rootDirectoryTitle">[Root Directory]</string>
+    <string name="stopBrowsingDescription">Stop browsing...</string>
 </resources>

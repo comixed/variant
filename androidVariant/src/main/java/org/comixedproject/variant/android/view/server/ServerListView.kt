@@ -43,7 +43,9 @@ private const val TAG = "ServerListView"
 fun ServerListView(
     serverList: List<Server>,
     onEditServer: (Server) -> Unit,
-    onDeleteServer: (Server) -> Unit, modifier: Modifier = Modifier
+    onDeleteServer: (Server) -> Unit,
+    onBrowseServer: (Server) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Scaffold(
         content = { padding ->
@@ -61,7 +63,8 @@ fun ServerListView(
                         ServerListItemView(
                             server,
                             onEditServer = onEditServer,
-                            onDeleteServer = onDeleteServer
+                            onDeleteServer = onDeleteServer,
+                            onServerClicked = onBrowseServer
                         )
                     }
                 }
@@ -77,11 +80,23 @@ fun ServerListView(
 @Composable
 @Preview
 fun ServerListView_emptyList() {
-    VariantTheme { ServerListView(emptyList(), onEditServer = { _ -> }, onDeleteServer = { _ -> }) }
+    VariantTheme {
+        ServerListView(
+            emptyList(),
+            onEditServer = { _ -> },
+            onDeleteServer = { _ -> },
+            onBrowseServer = { _ -> })
+    }
 }
 
 @Composable
 @Preview
 fun ServerListView_withItems() {
-    VariantTheme { ServerListView(SERVER_LIST, onEditServer = { _ -> }, onDeleteServer = { _ -> }) }
+    VariantTheme {
+        ServerListView(
+            SERVER_LIST,
+            onEditServer = { _ -> },
+            onDeleteServer = { _ -> },
+            onBrowseServer = { _ -> })
+    }
 }

@@ -55,3 +55,94 @@ public var SERVER_LIST = [
         password: "my!password"
     ),
 ]
+
+public var DIRECTORY_LIST = [
+    DirectoryEntry(
+        id: 1,
+        directoryId: "1",
+        serverId: 1,
+        title: "All Comics",
+        filename: "",
+        path: "/api/v1/all",
+        parent: "/api/v1/root",
+        isDirectory: true,
+        coverUrl: ""
+    ),
+    DirectoryEntry(
+        id: 2,
+        directoryId: "2",
+        serverId: 1,
+        title: "Unread Comics",
+        filename: "",
+        path: "/api/v1/all?unread=true",
+        parent: "/api/v1/root",
+        isDirectory: true,
+        coverUrl: ""
+    ),
+    DirectoryEntry(
+        id: 3,
+        directoryId: "3",
+        serverId: 1,
+        title: "Collections",
+        filename: "",
+        path: "/api/v1/collections",
+        parent: "/api/v1/root",
+        isDirectory: true,
+        coverUrl: ""
+    ),
+    DirectoryEntry(
+        id: 4,
+        directoryId: "4",
+        serverId: 1,
+        title: "Reading Lists",
+        filename: "",
+        path: "/api/v1/lists/reading",
+        parent: "/api/v1/root",
+        isDirectory: true,
+        coverUrl: ""
+    ),
+    DirectoryEntry(
+        id: 6,
+        directoryId: "5",
+        serverId: 1,
+        title: "Smart Lists",
+        filename: "",
+        path: "/api/v1/lists/smart",
+        parent: "/api/v1/root",
+        isDirectory: true,
+        coverUrl: ""
+    ),
+    DirectoryEntry(
+        id: 11,
+        directoryId: "11",
+        serverId: 1,
+        title: "Amazing Spider-Man #75 (v2018) (No Cover Date).cbz",
+        filename: "Amazing Spider-Man #75 (v2018) (No Cover Date).cbz",
+        path: "/api/v1/lists/reading",
+        parent: "/api/v1/root",
+        isDirectory: false,
+        coverUrl: ""
+    ),
+    DirectoryEntry(
+        id: 12,
+        directoryId: "12",
+        serverId: 1,
+        title: "Amazing Spider-Man #6 (v2022) (Sep 2022).cbz",
+        filename: "Amazing Spider-Man #6 (v2022) (Sep 2022).cbz",
+        path: "/api/v1/lists/smart",
+        parent: "/api/v1/root",
+        isDirectory: false,
+        coverUrl: ""
+    ),
+    DirectoryEntry(
+        id: 13,
+        directoryId: "13",
+        serverId: 1,
+        title: "[unknown] V???? #? (unknown)",
+        filename: "Unknown VUnknown #Unknown (Unknown).cbz",
+        path: "/api/v1/lists/smart",
+        parent: "/api/v1/root",
+        isDirectory: false,
+        coverUrl: ""
+    ),
+]

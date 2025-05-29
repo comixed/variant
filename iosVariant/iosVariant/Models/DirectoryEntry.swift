@@ -16,34 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
-import KMPObservableViewModelSwiftUI
-import SwiftUI
 import Variant
 
-private let TAG = "IOSApp"
-
-@main
-struct iOSApp: App {
-    @StateViewModel var variantViewModel: VariantViewModel = Koin.instance.get()
-
-    var body: some Scene {
-        WindowGroup {
-            HomeView()
-        }
-    }
-
-    init() {
-        Koin.start()
-
-        if let path = FileManager.default.urls(
-            for: .downloadsDirectory,
-            in: .userDomainMask
-        ).first {
-            Log().debug(tag: TAG, message: "Assigning download path: \(path)")
-            self.variantViewModel.libraryDirectory = path.absoluteString
-        } else {
-            Log().debug(tag: TAG, message: "No download path found")
-        }
+extension DirectoryEntry : @retroactive Identifiable {
+    public var id: String {
+        self.directoryId
     }
 }

@@ -16,34 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Foundation
-import KMPObservableViewModelSwiftUI
-import SwiftUI
-import Variant
+package org.comixedproject.variant.model.library
 
-private let TAG = "IOSApp"
-
-@main
-struct iOSApp: App {
-    @StateViewModel var variantViewModel: VariantViewModel = Koin.instance.get()
-
-    var body: some Scene {
-        WindowGroup {
-            HomeView()
-        }
-    }
-
-    init() {
-        Koin.start()
-
-        if let path = FileManager.default.urls(
-            for: .downloadsDirectory,
-            in: .userDomainMask
-        ).first {
-            Log().debug(tag: TAG, message: "Assigning download path: \(path)")
-            self.variantViewModel.libraryDirectory = path.absoluteString
-        } else {
-            Log().debug(tag: TAG, message: "No download path found")
-        }
-    }
-}
+data class DirectoryEntry(
+    val id: Long?,
+    val directoryId: String,
+    val serverId: Long,
+    val title: String,
+    val filename: String,
+    val path: String,
+    val parent: String,
+    val isDirectory: Boolean,
+    val coverUrl: String?
+)
