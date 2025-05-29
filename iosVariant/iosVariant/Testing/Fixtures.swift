@@ -146,3 +146,12 @@ public var DIRECTORY_LIST = [
         coverUrl: ""
     ),
 ]
+
+public var COMIC_BOOK_LIST = DIRECTORY_LIST.filter { !$0.isDirectory }.map {
+    ComicBook(
+        path: $0.path,
+        filename: $0.filename,
+        size: UInt64(($0.filename.count * 1024)),
+        lastModified: Int64(Date().timeIntervalSince1970)
+    )
+}

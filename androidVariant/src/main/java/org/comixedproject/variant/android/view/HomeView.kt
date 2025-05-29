@@ -20,6 +20,7 @@ package org.comixedproject.variant.android.view
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,12 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.view.AppDestination.SERVERS
+import org.comixedproject.variant.android.view.comics.ComicBookView
 import org.comixedproject.variant.android.view.server.ServerView
 
 @Composable
 fun HomeView() {
-    var currentDestination by remember { mutableStateOf(SERVERS) }
+    var currentDestination by remember { mutableStateOf(AppDestination.SERVERS) }
 
     Scaffold(
         topBar = { VariantTopAppBar() },
@@ -44,7 +45,9 @@ fun HomeView() {
         },
         content = { padding ->
             when (currentDestination) {
-                SERVERS -> ServerView(modifier = Modifier.padding(padding))
+                AppDestination.SERVERS -> ServerView(modifier = Modifier.padding(padding))
+                AppDestination.COMICS -> ComicBookView(modifier = Modifier.padding(padding))
+                AppDestination.SETTINGS -> Text("Settings")
             }
         }
     )

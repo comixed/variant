@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
             val variantViewModel: VariantViewModel = koinViewModel()
             val directory = applicationContext.filesDir.path
 
-            variantViewModel.libraryDirectory = directory
+            variantViewModel.setLibraryDirectory(directory)
 
             VariantTheme {
                 Surface(

@@ -19,6 +19,7 @@
 package org.comixedproject.variant.android
 
 import org.comixedproject.variant.model.Server
+import org.comixedproject.variant.model.library.ComicBook
 import org.comixedproject.variant.model.library.DirectoryEntry
 
 val SERVER_LIST = listOf(
@@ -149,3 +150,12 @@ val DIRECTORY_LIST = listOf(
         ""
     )
 )
+
+val COMIC_BOOK_LIST = DIRECTORY_LIST.filter { !it.isDirectory }.map {
+    ComicBook(
+        it.path,
+        it.filename,
+        (it.filename.length * 1024).toULong(),
+        System.currentTimeMillis()
+    )
+}.toList()

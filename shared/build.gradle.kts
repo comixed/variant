@@ -48,6 +48,8 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.bundles.ktor.common)
             implementation(libs.kmp.io)
+            implementation(libs.kfs.watch)
+            implementation(libs.kotlinx.datetime)
 
             api(libs.kmp.viewmodel.core)
         }

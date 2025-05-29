@@ -30,7 +30,7 @@ struct HomeView: View {
                     Label("Servers", systemImage: "person.crop.circle.fill")
                 }
 
-            Text("Comics view")
+            ComicBooksView()
                 .tag(1)
                 .tabItem {
                     Label("Comics", systemImage: "book.fill")

@@ -25,25 +25,43 @@ private let TAG = "IOSApp"
 
 @main
 struct iOSApp: App {
-    @StateViewModel var variantViewModel: VariantViewModel = Koin.instance.get()
+    var variantViewModel: VariantViewModel
 
     var body: some Scene {
         WindowGroup {
             HomeView()
+                .environmentViewModel(variantViewModel)
         }
     }
 
     init() {
         Koin.start()
 
-        if let path = FileManager.default.urls(
-            for: .downloadsDirectory,
-            in: .userDomainMask
-        ).first {
-            Log().debug(tag: TAG, message: "Assigning download path: \(path)")
-            self.variantViewModel.libraryDirectory = path.absoluteString
-        } else {
-            Log().debug(tag: TAG, message: "No download path found")
+        variantViewModel = Koin.instance.get()
+
+        guard
+            let rootDirectory = FileManager.default.urls(
+                for: .documentDirectory,
+                in: .userDomainMask
+            ).first
+        else {
+            Log().error(
+                tag: TAG,
+                message: "Failed to get document directory URL"
+            )
+            fatalError()
+        }
+        do {
+            let libraryDirectory = rootDirectory.appendingPathComponent("Variant")
+            try FileManager.default.createDirectory(
+                at: libraryDirectory,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+            variantViewModel.setLibraryDirectory(directory: libraryDirectory.path)
+        } catch {
+            Log().error(tag: TAG, message: error.localizedDescription)
+            fatalError(error.localizedDescription)
         }
     }
 }

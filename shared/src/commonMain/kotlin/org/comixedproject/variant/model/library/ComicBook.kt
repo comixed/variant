@@ -16,20 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.view
+package org.comixedproject.variant.model.library
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.ui.graphics.vector.ImageVector
-import org.comixedproject.variant.android.R
-
-enum class AppDestination(
-    val icon: ImageVector,
-    val label: Int
-) {
-    SERVERS(Icons.Filled.AccountCircle, R.string.serverDestinationLabel),
-    COMICS(Icons.Filled.Home, R.string.comicsDestinationLabel),
-    SETTINGS(Icons.Filled.Settings, R.string.settingsDestinationLabel)
-}
+data class ComicBook(
+    val path: String,
+    val filename: String,
+    val size: ULong,
+    val lastModified: Long
+)

@@ -24,8 +24,6 @@ private let TAG = "ServerListItemView"
 struct ServerListItemView: View {
     let server: Server
 
-    var onEditServer: (Server) -> Void
-    var onDeleteServer: (Server) -> Void
     var onServerClicked: (Server) -> Void
 
     var body: some View {
@@ -47,8 +45,6 @@ struct ServerListItemView: View {
 #Preview {
     ServerListItemView(
         server: SERVER_LIST[0],
-        onEditServer: { _ in },
-        onDeleteServer: { _ in },
         onServerClicked: { _ in }
     )
 }

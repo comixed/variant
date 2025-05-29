@@ -16,20 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.view
+import KMPObservableViewModelSwiftUI
+import SwiftUI
+import Variant
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.ui.graphics.vector.ImageVector
-import org.comixedproject.variant.android.R
+struct ComicBooksView: View {
+    @EnvironmentViewModel var variantViewModel: VariantViewModel
 
-enum class AppDestination(
-    val icon: ImageVector,
-    val label: Int
-) {
-    SERVERS(Icons.Filled.AccountCircle, R.string.serverDestinationLabel),
-    COMICS(Icons.Filled.Home, R.string.comicsDestinationLabel),
-    SETTINGS(Icons.Filled.Settings, R.string.settingsDestinationLabel)
+    var body: some View {
+        ComicBookListView(comicBookList: self.variantViewModel.comicBookList,
+        )
+    }
+}
+
+#Preview {
+    ComicBooksView()
 }
