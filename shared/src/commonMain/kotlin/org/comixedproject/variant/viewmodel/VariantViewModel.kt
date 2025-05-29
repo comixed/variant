@@ -24,16 +24,21 @@ import com.oldguy.common.io.RawFile
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
 import com.rickclephas.kmp.observableviewmodel.MutableStateFlow
 import com.rickclephas.kmp.observableviewmodel.ViewModel
+import com.rickclephas.kmp.observableviewmodel.coroutineScope
 import com.rickclephas.kmp.observableviewmodel.launch
+import io.github.irgaly.kfswatch.KfsDirectoryWatcher
+import io.github.irgaly.kfswatch.KfsDirectoryWatcherEvent
+import io.github.irgaly.kfswatch.KfsLogger
 import io.ktor.http.URLBuilder
 import io.ktor.http.takeFrom
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import org.comixedproject.variant.database.repository.DirectoryRepository
 import org.comixedproject.variant.database.repository.ServerRepository
 import org.comixedproject.variant.model.Server
+import org.comixedproject.variant.model.library.ComicBook
 import org.comixedproject.variant.model.library.DirectoryEntry
 import org.comixedproject.variant.model.state.DownloadingState
 import org.comixedproject.variant.platform.Log
@@ -46,11 +51,47 @@ open class VariantViewModel(
     val directoryRepository: DirectoryRepository
 ) : ViewModel() {
     private var _libraryDirectory = ""
-    var libraryDirectory: String
-        get() = _libraryDirectory
-        set(directory) {
-            _libraryDirectory = directory
+    private var libraryWatcher: KfsDirectoryWatcher? = null
+
+    fun setLibraryDirectory(directory: String) {
+        Log.debug(TAG, "_libraryDirectory=${directory}")
+        _libraryDirectory = directory
+        viewModelScope.coroutineScope.launch {
+
+            if (!File(_libraryDirectory).exists) {
+                Log.info(TAG, "Creating library directory: ${_libraryDirectory}")
+                File(_libraryDirectory).makeDirectory()
+            }
+
+            libraryWatcher?.let { watcher ->
+                Log.debug(TAG, "Stopping current library monitor")
+                watcher.removeAll()
+                watcher.close()
+            }
+
+            loadLibraryContents()
+
+            Log.debug(TAG, "Preparing to monitor library: ${_libraryDirectory}")
+            libraryWatcher = KfsDirectoryWatcher(
+                scope = viewModelScope.coroutineScope,
+                logger = object : KfsLogger {
+                    override fun debug(message: String) {
+                        Log.debug(TAG, message)
+                    }
+
+                    override fun error(message: String) {
+                        Log.error(TAG, message)
+                    }
+                })
+            libraryWatcher?.add(_libraryDirectory)
+            libraryWatcher?.onEventFlow?.collect { event: KfsDirectoryWatcherEvent ->
+                viewModelScope.coroutineScope.launch {
+                    Log.debug(TAG, "Received file watcher event: ${event}")
+                    loadLibraryContents()
+                }
+            }
         }
+    }
 
     private val _serverList =
         MutableStateFlow<List<Server>>(viewModelScope, serverRepository.servers)
@@ -109,6 +150,12 @@ open class VariantViewModel(
 
     @NativeCoroutinesState
     val downloadingState: StateFlow<MutableList<DownloadingState>> = _downloadingState.asStateFlow()
+
+    private val _comicBookList =
+        MutableStateFlow<List<ComicBook>>(viewModelScope, listOf())
+
+    @NativeCoroutinesState
+    val comicBookList: StateFlow<List<ComicBook>> = _comicBookList.asStateFlow()
 
     fun editServer(server: Server?) {
         server?.let {
@@ -183,27 +230,34 @@ open class VariantViewModel(
         state.add(downloadingState)
         _downloadingState.emit(state)
 
-        val url = URLBuilder(server.url).takeFrom(path).build()
-        val file = File("${_libraryDirectory}/${filename}")
-        val output = RawFile(file, FileMode.Write)
+        try {
+            val url = URLBuilder(server.url).takeFrom(path).build()
+            val outputFile = File(_libraryDirectory, filename)
+            Log.debug(TAG, "Writing comic to local file: ${outputFile.fullPath}")
 
-        ReaderAPI.downloadComic(server, url, output, onProgress = { received, total ->
-            viewModelScope.launch(Dispatchers.IO) {
-                val downloadingState = DownloadingState(server, path, received, total)
-                val state =
-                    _downloadingState.value.filter { !(it.server.serverId == server.serverId && it.path == path) }
-                        .toMutableList()
-                state.add(downloadingState)
-                Log.debug(
-                    TAG,
-                    "Download state update: ${downloadingState.path}=${downloadingState.received}/${downloadingState.total}"
-                )
-                _downloadingState.emit(state)
-            }
-        })
+            val output = RawFile(outputFile, FileMode.Write)
 
-        output.close()
-        Log.debug(TAG, "Download complete")
+            ReaderAPI.downloadComic(server, url, output, onProgress = { received, total ->
+                viewModelScope.launch(Dispatchers.Main) {
+                    val downloadingState = DownloadingState(server, path, received, total)
+                    val state =
+                        _downloadingState.value.filter { !(it.server.serverId == server.serverId && it.path == path) }
+                            .toMutableList()
+                    state.add(downloadingState)
+                    Log.debug(
+                        TAG,
+                        "Download state update: ${downloadingState.path}=${downloadingState.received}/${downloadingState.total}"
+                    )
+                    _downloadingState.emit(state)
+                }
+            })
+            Log.debug(TAG, "Preparing to close the output file")
+            output.close()
+            Log.debug(TAG, "Download complete")
+        } catch (error: Exception) {
+            Log.error(TAG, "Failed to download ${path}: ${error.message}")
+            error.printStackTrace()
+        }
 
         val finalState =
             _downloadingState.value.filter { !(it.server.serverId == server.serverId && it.path == path) }
@@ -214,5 +268,24 @@ open class VariantViewModel(
     suspend fun stopBrowsing() {
         Log.debug(TAG, "Clearing the server browsing state")
         _browsing.emit(false)
+    }
+
+    private fun loadLibraryContents() {
+        Log.debug(TAG, "Loading library contents: ${_libraryDirectory}")
+
+        val path = File(_libraryDirectory)
+        val contents =
+            path.listFiles.filter { !it.isDirectory }
+                .filter { it.extension.equals(".cbz") || it.extension.equals(".cbr") }
+                .map { entry ->
+                    Log.debug(TAG, "Found file: ${entry.path}")
+                    ComicBook(
+                        entry.fullPath,
+                        entry.name,
+                        entry.size,
+                        entry.lastModifiedEpoch
+                    )
+                }.toList()
+        _comicBookList.tryEmit(contents)
     }
 }

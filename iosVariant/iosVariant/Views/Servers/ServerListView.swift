@@ -36,14 +36,6 @@ struct ServerListView: View {
                 List(serverList, id: \.serverId, selection: $selected) { server in
                     ServerListItemView(
                         server: server,
-                        onEditServer: { server in
-                            Log().info(
-                                tag: TAG,
-                                message: "Editing server: \(server.name)"
-                            )
-                            onEditServer(server)
-                        },
-                        onDeleteServer: { _ in },
                         onServerClicked: { server in
                             Log().info(
                                 tag: TAG,

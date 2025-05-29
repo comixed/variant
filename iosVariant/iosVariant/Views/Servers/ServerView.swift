@@ -23,11 +23,7 @@ import Variant
 private let TAG = "ServerView"
 
 struct ServerView: View {
-    @StateViewModel var variantViewModel: VariantViewModel = Koin.instance.get()
-
-    var downloadingState: [DownloadingState] {
-        return []
-    }
+    @EnvironmentViewModel var variantViewModel: VariantViewModel
 
     var body: some View {
         VStack {
@@ -53,7 +49,7 @@ struct ServerView: View {
                     title: self.variantViewModel.title,
                     parentPath: self.variantViewModel.parentPath,
                     directoryContents: self.variantViewModel.directoryContents,
-                    downloadingState: downloadingState,
+                    downloadingState: self.variantViewModel.downloadingState as! [DownloadingState],
                     isRefreshing: self.variantViewModel.loading,
                     onLoadDirectory: { path, reload in
                         Log().debug(
