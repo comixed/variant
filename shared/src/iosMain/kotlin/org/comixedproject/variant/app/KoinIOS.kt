@@ -18,6 +18,8 @@
 
 package org.comixedproject.variant.app
 
+import com.russhwolf.settings.NSUserDefaultsSettings
+import com.russhwolf.settings.Settings
 import kotlinx.cinterop.ObjCClass
 import kotlinx.cinterop.getOriginalKotlinClass
 import org.koin.core.Koin
@@ -25,11 +27,16 @@ import org.koin.core.KoinApplication
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.Qualifier
 import org.koin.dsl.module
+import platform.Foundation.NSUserDefaults
 
 object KoinIOS {
-    fun initialize(): KoinApplication =
+    fun initialize(userDefaults: NSUserDefaults): KoinApplication =
         initKoin(
-            appModule = module { },
+            appModule = module {
+                single<Settings> {
+                    NSUserDefaultsSettings(userDefaults)
+                }
+            },
         )
 }
 

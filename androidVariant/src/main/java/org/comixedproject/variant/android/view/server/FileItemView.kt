@@ -57,7 +57,7 @@ fun FileItemView(
     modifier: Modifier = Modifier
 ) {
     val downloading = downloadingState
-        .filter { it.server.serverId == fileEntry.serverId && it.path == fileEntry.path }
+        .filter { it.path == fileEntry.path }
         .firstOrNull()
 
 
@@ -136,13 +136,12 @@ fun FileItemView_preview() {
 @Preview
 fun FileItemView_preview_downloading() {
     val fileEntry = DIRECTORY_LIST.filter { !it.isDirectory }.first()
-    val server = SERVER_LIST.filter { it.serverId == fileEntry.serverId }.first()
+    val server = SERVER_LIST.first()
     VariantTheme {
         FileItemView(
             fileEntry,
             listOf(
                 DownloadingState(
-                    server,
                     fileEntry.path,
                     50, 100
                 )

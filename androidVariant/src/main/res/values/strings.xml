@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="serverNameLabel">The server\'s name...</string>
-    <string name="serverUrlLabel">The server\'s address...</string>
+    <string name="serverUrlLabel">The server address...</string>
     <string name="serverUsernameLabel">Your username...</string>
     <string name="serverPasswordLabel">Your password...</string>
     <string name="saveButton">Save</string>
-    <string name="serverDestinationLabel">Servers</string>
+    <string name="browseServerDestinationLabel">Browse Server</string>
     <string name="addServerDescription">Add a new server...</string>
     <string name="emptyServerListText">Create a server to get started!</string>
     <string name="rootDirectoryTitle">[Root Directory]</string>
-    <string name="stopBrowsingDescription">Stop browsing...</string>
     <string name="comicsDestinationLabel">Comics</string>
     <string name="settingsDestinationLabel">Settings</string>
     <string name="emptyComicListText">No comic books to show...</string>
     <string name="comicFileSizeText">%1$s mb</string>
+    <string name="cancelButton">Cancel</string>
 </resources>

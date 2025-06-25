@@ -16,33 +16,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import KMPObservableViewModelSwiftUI
 import SwiftUI
 import Variant
 
+private let TAG = "HomeView"
+
 struct HomeView: View {
-    @State var currentDestination = 0
+    @EnvironmentViewModel var variantViewModel: VariantViewModel
+    @State var currentDestination: AppDestination = .comics
 
     var body: some View {
         TabView(selection: $currentDestination) {
-            ServerView()
-                .tag(0)
-                .tabItem {
-                    Label("Servers", systemImage: "person.crop.circle.fill")
-                }
-
             ComicBooksView()
-                .tag(1)
+                .tag(AppDestination.comics)
+                .tabItem { Label("Comics", systemImage: "book.fill") }
+
+            ServerView()
+                .tag(AppDestination.browseServer)
                 .tabItem {
-                    Label("Comics", systemImage: "book.fill")
+                    Label("Browse", systemImage: "person.crop.circle.fill")
                 }
 
-            Text("Settings view")
-                .tag(2)
-                .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
-                }
+            SettingsView()
+                .tag(AppDestination.settings)
+                .tabItem { Label("Settings", systemImage: "gearshape.fill") }
         }
         .edgesIgnoringSafeArea(.bottom)
+        .onChange(of: currentDestination) { tab in
+            if tab == .browseServer {
+                Task {
+                    try await variantViewModel.loadDirectory(
+                        path: variantViewModel.currentPath,
+                        reload: false
+                    )
+                }
+            }
+        }
     }
 }
 

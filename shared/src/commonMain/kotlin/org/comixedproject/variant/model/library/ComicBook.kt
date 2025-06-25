@@ -21,6 +21,6 @@ package org.comixedproject.variant.model.library
 data class ComicBook(
     val path: String,
     val filename: String,
-    val size: ULong,
+    val size: Long,
     val lastModified: Long
 )

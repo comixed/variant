@@ -37,10 +37,12 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.sqldelight.driver.android)
             implementation(libs.ktor.client.android)
+            implementation(libs.multiplatform.settings)
         }
         iosMain.dependencies {
             implementation(libs.sqldelight.driver.native)
             implementation(libs.ktor.client.ios)
+            implementation(libs.multiplatform.settings)
         }
         commonMain.dependencies {
             implementation(libs.koin.core)
@@ -50,6 +52,7 @@ kotlin {
             implementation(libs.kmp.io)
             implementation(libs.kfs.watch)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.multiplatform.settings)
 
             api(libs.kmp.viewmodel.core)
         }

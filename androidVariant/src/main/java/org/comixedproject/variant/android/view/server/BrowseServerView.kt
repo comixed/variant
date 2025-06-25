@@ -26,7 +26,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,7 +45,6 @@ import org.comixedproject.variant.android.DIRECTORY_LIST
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.SERVER_LIST
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.model.Server
 import org.comixedproject.variant.model.library.DirectoryEntry
 import org.comixedproject.variant.model.state.DownloadingState
 import org.comixedproject.variant.platform.Log
@@ -56,7 +54,6 @@ private const val TAG = "BrowseServerView"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrowseServerView(
-    server: Server,
     path: String,
     title: String,
     parentPath: String,
@@ -65,7 +62,6 @@ fun BrowseServerView(
     isRefreshing: Boolean,
     onLoadDirectory: (String, Boolean) -> Unit,
     onDownloadFile: (String, String) -> Unit,
-    onStopBrowsing: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
@@ -94,16 +90,6 @@ fun BrowseServerView(
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.headlineMedium, modifier = Modifier.weight(1f)
                 )
-
-                IconButton(onClick = {
-                    Log.debug(TAG, "Stopping browsing")
-                    onStopBrowsing()
-                }) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = stringResource(R.string.stopBrowsingDescription)
-                    )
-                }
             }
         },
         content = { padding ->
@@ -162,12 +148,11 @@ fun BrowseServerView_preview_directories() {
     val directory = DIRECTORY_LIST.get(0)
     VariantTheme {
         BrowseServerView(
-            server,
             server.url,
             "",
             "",
             DIRECTORY_LIST.filter { it.isDirectory }, emptyList(), false,
-            onLoadDirectory = { _, _ -> }, onStopBrowsing = {}, onDownloadFile = { _, _ -> })
+            onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
     }
 }
 
@@ -178,10 +163,9 @@ fun BrowseServerView_preview_files() {
     val directory = DIRECTORY_LIST.get(0)
     VariantTheme {
         BrowseServerView(
-            server,
             server.url,
             directory.title, directory.parent,
             DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), false,
-            onLoadDirectory = { _, _ -> }, onStopBrowsing = {}, onDownloadFile = { _, _ -> })
+            onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
     }
 }

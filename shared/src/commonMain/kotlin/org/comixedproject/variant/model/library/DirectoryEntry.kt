@@ -21,7 +21,6 @@ package org.comixedproject.variant.model.library
 data class DirectoryEntry(
     val id: Long?,
     val directoryId: String,
-    val serverId: Long,
     val title: String,
     val filename: String,
     val path: String,

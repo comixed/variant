@@ -18,18 +18,8 @@
 
 package org.comixedproject.variant.android.view
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.ui.graphics.vector.ImageVector
-import org.comixedproject.variant.android.R
-
-enum class AppDestination(
-    val icon: ImageVector,
-    val label: Int
-) {
-    SERVERS(Icons.Filled.AccountCircle, R.string.serverDestinationLabel),
-    COMICS(Icons.Filled.Home, R.string.comicsDestinationLabel),
-    SETTINGS(Icons.Filled.Settings, R.string.settingsDestinationLabel)
+enum class AppDestination {
+    COMICS,
+    BROWSE,
+    SETTINGS
 }

@@ -19,45 +19,39 @@
 package org.comixedproject.variant.database.repository
 
 import org.comixedproject.variant.database.DatabaseHelper
-import org.comixedproject.variant.model.Server
 import org.comixedproject.variant.model.library.DirectoryEntry
 
 private const val TAG = "ServerRepository"
 
 class DirectoryRepository(val databaseHelper: DatabaseHelper) {
-    fun loadDirectoryContents(server: Server, directory: String): List<DirectoryEntry> {
+    fun loadDirectoryContents(directory: String): List<DirectoryEntry> {
         val result = mutableListOf<DirectoryEntry>()
 
-        server.serverId?.let { serverId ->
-            databaseHelper.loadDirectoryContents(serverId, directory).forEach {
-                result.add(
-                    DirectoryEntry(
-                        id = it.id,
-                        directoryId = it.directory_id,
-                        serverId = serverId,
-                        title = it.title,
-                        path = it.path,
-                        parent = it.parent,
-                        filename = it.filename,
-                        isDirectory = when (it.is_directory) {
-                            1L -> true
-                            else -> false
-                        },
-                        coverUrl = it.cover_url
-                    )
+        databaseHelper.loadDirectoryContents(directory).forEach {
+            result.add(
+                DirectoryEntry(
+                    id = it.id,
+                    directoryId = it.directory_id,
+                    title = it.title,
+                    path = it.path,
+                    parent = it.parent,
+                    filename = it.filename,
+                    isDirectory = when (it.is_directory) {
+                        1L -> true
+                        else -> false
+                    },
+                    coverUrl = it.cover_url
                 )
-            }
+            )
         }
 
         return result
     }
 
-    fun saveDirectoryContents(server: Server, directory: String, contents: List<DirectoryEntry>) {
-        server.serverId?.let { serverId ->
-            databaseHelper.deleteDirectoryContents(serverId, directory)
-            contents.forEach {
-                databaseHelper.saveDirectoryContent(it)
-            }
+    fun saveDirectoryContents(directory: String, contents: List<DirectoryEntry>) {
+        databaseHelper.deleteDirectoryContents(directory)
+        contents.forEach {
+            databaseHelper.saveDirectoryContent(it)
         }
     }
 
@@ -66,7 +60,6 @@ class DirectoryRepository(val databaseHelper: DatabaseHelper) {
             return DirectoryEntry(
                 id = directory.id,
                 directoryId = directory.directory_id,
-                serverId = directory.server_id,
                 title = directory.title,
                 path = directory.path,
                 parent = directory.parent,

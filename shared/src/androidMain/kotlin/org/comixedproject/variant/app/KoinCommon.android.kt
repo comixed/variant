@@ -20,6 +20,8 @@ package org.comixedproject.variant.app
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.SharedPreferencesSettings
 import org.comixedproject.variant.database.VariantDb
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -27,5 +29,9 @@ import org.koin.dsl.module
 actual val platformModule: Module = module {
     single<SqlDriver> {
         AndroidSqliteDriver(VariantDb.Schema, get(), "VariantDb")
+    }
+
+    single<Settings> {
+        SharedPreferencesSettings(get())
     }
 }

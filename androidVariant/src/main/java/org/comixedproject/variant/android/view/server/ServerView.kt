@@ -28,7 +28,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.platform.Log
-import org.comixedproject.variant.reader.READER_ROOT
 import org.comixedproject.variant.viewmodel.VariantViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -37,11 +36,6 @@ private const val TAG = "ServerView"
 @Composable
 fun ServerView(modifier: Modifier = Modifier) {
     val variantViewModel: VariantViewModel = koinViewModel()
-    val serverList by variantViewModel.serverList.collectAsState()
-    val editing by variantViewModel.editing.collectAsState()
-    val editingServer by variantViewModel.editingServer.collectAsState()
-    val browsing by variantViewModel.browsing.collectAsState()
-    val browsingServer by variantViewModel.browsingServer.collectAsState()
     val currentPath by variantViewModel.currentPath.collectAsState()
     val title by variantViewModel.title.collectAsState()
     val parentPath by variantViewModel.parentPath.collectAsState()
@@ -51,65 +45,25 @@ fun ServerView(modifier: Modifier = Modifier) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    if (editing) {
-        editingServer?.let { server ->
-            EditServerView(
-                server,
-                onSave = { server ->
-                    coroutineScope.launch(Dispatchers.IO) {
-                        Log.info(TAG, "Saving server: ${server.name} ${server.url}")
-                        variantViewModel.saveServer(server)
-                        variantViewModel.editServer(null)
-                    }
-                },
-                onCancel = { variantViewModel.editServer(null) },
-                modifier = modifier
-            )
-        }
-    } else if (browsing) {
-        browsingServer?.let { server ->
-            BrowseServerView(
-                server,
-                currentPath,
-                title,
-                parentPath,
-                directoryContents,
-                downloadingState,
-                loading,
-                modifier = modifier,
-                onLoadDirectory = { path, reload ->
-                    coroutineScope.launch(Dispatchers.IO) {
-                        Log.debug(TAG, "Loading directory: ${path} reload=${reload}")
-                        variantViewModel.loadDirectory(server, path, reload)
-                    }
-                },
-                onDownloadFile = { path, filename ->
-                    coroutineScope.launch(Dispatchers.IO) {
-                        Log.debug(TAG, "Downloading file: ${path} -> ${filename}")
-                        variantViewModel.downloadFile(server, path, filename)
-                    }
-                },
-                onStopBrowsing = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        variantViewModel.stopBrowsing()
-                    }
-                },
-            )
-        }
-    } else {
-        ServerListView(
-            serverList,
-            onEditServer = { server -> variantViewModel.editServer(server) },
-            onDeleteServer = { _ -> },
-            onBrowseServer = { server ->
-                coroutineScope.launch(Dispatchers.IO) {
-                    Log.info(TAG, "Starting to browse server: ${server.name}")
-                    variantViewModel.loadDirectory(server, READER_ROOT, false)
-                }
-            },
-            modifier = modifier
-        )
-    }
+    BrowseServerView(
+        currentPath,
+        title,
+        parentPath,
+        directoryContents,
+        downloadingState,
+        loading,
+        modifier = modifier,
+        onLoadDirectory = { path, reload ->
+            coroutineScope.launch(Dispatchers.IO) {
+                Log.debug(TAG, "Loading directory: ${path} reload=${reload}")
+                variantViewModel.loadDirectory(path, reload)
+            }
+        },
+        onDownloadFile = { path, filename ->
+            Log.debug(TAG, "Downloading file: ${path} -> ${filename}")
+            variantViewModel.downloadFile(path, filename)
+        },
+    )
 }
 
 @Composable

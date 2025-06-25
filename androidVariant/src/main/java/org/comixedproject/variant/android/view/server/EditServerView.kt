@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -37,58 +38,49 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.R
-import org.comixedproject.variant.android.SERVER_LIST
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.model.Server
-import org.comixedproject.variant.platform.Log
 
 private const val TAG = "EditServerView"
 
-private fun validateForm(name: String, url: String): Boolean {
-    return !(name.isBlank() || url.isBlank())
+private fun validateForm(url: String): Boolean {
+    return !(url.isBlank())
 }
 
 @Composable
 fun EditServerView(
-    server: Server, onSave: (Server) -> Unit, onCancel: () -> Unit, modifier: Modifier = Modifier
+    address: String,
+    username: String,
+    password: String,
+    onSave: (String, String, String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    var serverName by rememberSaveable { mutableStateOf(server.name) }
-    var serverUrl by rememberSaveable { mutableStateOf(server.url) }
-    var username by rememberSaveable { mutableStateOf(server.username) }
-    var password by rememberSaveable { mutableStateOf(server.password) }
-    var validForm by rememberSaveable { mutableStateOf(validateForm(serverName, serverUrl)) }
+    var addressValue by rememberSaveable { mutableStateOf(address) }
+    var usernameValue by rememberSaveable { mutableStateOf(username) }
+    var passwordValue by rememberSaveable { mutableStateOf(password) }
+    var validForm by rememberSaveable { mutableStateOf(validateForm(addressValue)) }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        TextField(value = serverName, onValueChange = {
-            serverName = it
-            validForm = validateForm(serverName, serverUrl)
-        }, label = {
-            Text(
-                stringResource(R.string.serverNameLabel)
-            )
-        }, modifier = Modifier.fillMaxWidth())
-
-        TextField(value = serverUrl, onValueChange = {
-            serverUrl = it
-            validForm = validateForm(serverName, serverUrl)
+        TextField(value = addressValue, onValueChange = {
+            addressValue = it
+            validForm = validateForm(addressValue)
         }, label = {
             Text(
                 stringResource(R.string.serverUrlLabel)
             )
         }, modifier = Modifier.fillMaxWidth())
 
-        TextField(value = username, onValueChange = {
-            username = it
-            validForm = validateForm(serverName, serverUrl)
+        TextField(value = usernameValue, onValueChange = {
+            usernameValue = it
+            validForm = validateForm(addressValue)
         }, label = {
             Text(
                 stringResource(R.string.serverUsernameLabel)
             )
         }, modifier = Modifier.fillMaxWidth())
 
-        TextField(value = password, onValueChange = {
-            password = it
-            validForm = validateForm(serverName, serverUrl)
+        TextField(value = passwordValue, onValueChange = {
+            passwordValue = it
+            validForm = validateForm(addressValue)
         }, label = {
             Text(
                 stringResource(R.string.serverPasswordLabel)
@@ -99,16 +91,22 @@ fun EditServerView(
             Spacer(modifier = Modifier.weight(1f))
 
             Button(onClick = {
-                Log.debug(TAG, "Saving server changes: name=${serverName}")
-                server.name = serverName
-                server.url = serverUrl
-                server.username = username
-                server.password = password
-                onSave(server)
+                onSave(addressValue, usernameValue, passwordValue)
             }, enabled = validForm) {
                 Icon(
                     imageVector = Icons.Default.Done,
                     contentDescription = stringResource(R.string.saveButton)
+                )
+            }
+
+            Button(onClick = {
+                addressValue = address
+                usernameValue = username
+                passwordValue = password
+            }, enabled = validForm) {
+                Icon(
+                    imageVector = Icons.Default.Clear,
+                    contentDescription = stringResource(R.string.cancelButton)
                 )
             }
         }
@@ -118,11 +116,17 @@ fun EditServerView(
 @Composable
 @Preview
 fun EditServerView_preview_new() {
-    VariantTheme { EditServerView(Server(null, "", "", "", ""), onSave = { _ -> }, onCancel = { }) }
+    VariantTheme { EditServerView("", "", "", onSave = { _, _, _ -> }) }
 }
 
 @Composable
 @Preview
 fun EditServerView_preview_existing() {
-    VariantTheme { EditServerView(SERVER_LIST.get(0), onSave = { _ -> }, onCancel = { }) }
+    VariantTheme {
+        EditServerView(
+            "hostname:7171",
+            "reader@comixproject.org",
+            "my!password",
+            onSave = { _, _, _ -> })
+    }
 }

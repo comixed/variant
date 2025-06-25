@@ -16,35 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import SwiftUI
-import Variant
+import Foundation
 
-private let TAG = "ServerListItemView"
-
-struct ServerListItemView: View {
-    let server: Server
-
-    var onServerClicked: (Server) -> Void
-
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(server.name)
-                .font(.headline)
-            Text(server.url)
-                .font(.subheadline)
-            Text(server.username)
-                .font(.body)
-        }
-        .onTapGesture {
-            Log().debug(tag: TAG, message: "Server list item tapped")
-            onServerClicked(self.server)
-        }
-    }
-}
-
-#Preview {
-    ServerListItemView(
-        server: SERVER_LIST[0],
-        onServerClicked: { _ in }
-    )
+enum AppDestination {
+    case comics
+    case browseServer
+    case settings
 }

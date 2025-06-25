@@ -22,6 +22,7 @@ kermit-logging = { group = "co.touchlab", name = "kermit", version = "2.0.4" }
 kmp-io = { group = "io.github.skolson", name = "kmp-io", version = "0.1.9" }
 kfs-watch = { group = "io.github.irgaly.kfswatch", name = "kfswatch", version = "1.3.0" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.6.2" }
+multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version = "1.3.0" }
 
 # koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin-version" }
