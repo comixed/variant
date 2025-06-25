@@ -64,7 +64,6 @@ val DIRECTORY_LIST = listOf(
     DirectoryEntry(
         1,
         "1",
-        1,
         "All Comics",
         "/api/v1/all",
         "/api/v1/root",
@@ -75,7 +74,6 @@ val DIRECTORY_LIST = listOf(
     DirectoryEntry(
         2,
         "2",
-        1,
         "Unread Comics",
         "/api/v1/all?unread=true",
         "/api/v1/root",
@@ -86,7 +84,6 @@ val DIRECTORY_LIST = listOf(
     DirectoryEntry(
         3,
         "3",
-        1,
         "Collections",
         "/api/v1/collections",
         "/api/v1/root",
@@ -97,7 +94,6 @@ val DIRECTORY_LIST = listOf(
     DirectoryEntry(
         4,
         "4",
-        1,
         "Reading Lists",
         "/api/v1/lists/reading",
         "/api/v1/root",
@@ -108,7 +104,6 @@ val DIRECTORY_LIST = listOf(
     DirectoryEntry(
         5,
         "5",
-        1,
         "Smart Lists",
         "/api/v1/lists/smart",
         "/api/v1/root",
@@ -119,7 +114,6 @@ val DIRECTORY_LIST = listOf(
     DirectoryEntry(
         11,
         "11",
-        1,
         "The Amazing Spider-Man V2018 #75 (unknown)",
         "Amazing Spider-Man #75 (v2018) (No Cover Date).cbz",
         "/api/v1/lists/reading",
@@ -130,7 +124,6 @@ val DIRECTORY_LIST = listOf(
     DirectoryEntry(
         12,
         "12",
-        1,
         "The Amazing Spider-Man V2022 #75 (unknown)",
         "Amazing Spider-Man #6 (v2022) (Sep 2022).cbz",
         "/api/v1/lists/smart",
@@ -141,7 +134,6 @@ val DIRECTORY_LIST = listOf(
     DirectoryEntry(
         13,
         "13",
-        1,
         "[unknown] V???? #? (unknown)",
         "Unknown VUnknown #Unknown (Unknown).cbz",
         "/api/v1/lists/smart",
@@ -155,7 +147,7 @@ val COMIC_BOOK_LIST = DIRECTORY_LIST.filter { !it.isDirectory }.map {
     ComicBook(
         it.path,
         it.filename,
-        (it.filename.length * 1024).toULong(),
+        (it.filename.length * 1024).toLong(),
         System.currentTimeMillis()
     )
 }.toList()

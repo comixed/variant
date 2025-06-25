@@ -22,7 +22,6 @@ import Variant
 private let TAG = "BrowseServerView"
 
 struct BrowseServerView: View {
-    let server: Server
     let path: String
     let title: String
     let parentPath: String
@@ -31,7 +30,6 @@ struct BrowseServerView: View {
     let isRefreshing: Bool
     let onLoadDirectory: (String, Bool) -> Void
     let onDownloadFile: (String, String) -> Void
-    let onStopBrowsing: () -> Void
 
     @State var selected: DirectoryEntry?
 
@@ -44,7 +42,8 @@ struct BrowseServerView: View {
 
     var body: some View {
         NavigationStack {
-            List(directoryContents, id: \.id, selection: $selected) { entry in
+            List(directoryContents, id: \.id, selection: $selected) {
+                entry in
                 if entry.isDirectory {
                     DirectoryItemView(
                         entry: entry,
@@ -66,20 +65,15 @@ struct BrowseServerView: View {
             }
             .navigationTitle(displayableTitle)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Back") {
-                        Log().info(
-                            tag: TAG,
-                            message: "Loading parent: \(parentPath)"
-                        )
-                        onLoadDirectory(parentPath, false)
-                    }
-                }
-
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Cancel") {
-                        Log().info(tag: TAG, message: "Stopping browsing")
-                        onStopBrowsing()
+                if (parentPath != "") {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Back") {
+                            Log().info(
+                                tag: TAG,
+                                message: "Loading parent: \(parentPath)"
+                            )
+                            onLoadDirectory(parentPath, false)
+                        }
                     }
                 }
             }
@@ -89,16 +83,13 @@ struct BrowseServerView: View {
 
 #Preview {
     BrowseServerView(
-        server: SERVER_LIST[0],
-        path: SERVER_LIST[0].url,
+        path: "/reader/v1",
         title: "",
         parentPath: "",
         directoryContents: DIRECTORY_LIST,
         downloadingState: [],
         isRefreshing: false,
         onLoadDirectory: { _, _ in },
-        onDownloadFile: { _, _ in },
-        onStopBrowsing: {}
-
+        onDownloadFile: { _, _ in }
     )
 }

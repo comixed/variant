@@ -21,6 +21,7 @@ import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.model.library.ComicBook
 
 private val TAG = "ComicBookListItemView"
+private val BYTES_PER_MB = 1024.0 * 1024.0
 
 @Composable
 fun ComicBookListItemView(comicBook: ComicBook, modifier: Modifier = Modifier) {
@@ -43,7 +44,7 @@ fun ComicBookListItemView(comicBook: ComicBook, modifier: Modifier = Modifier) {
             Text(
                 text = stringResource(
                     R.string.comicFileSizeText,
-                    String.format(format= "%.1f", (comicBook.size).toDouble() / 1024.0)
+                    String.format(format = "%.1f", (comicBook.size).toDouble() / BYTES_PER_MB)
                 ),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Left,

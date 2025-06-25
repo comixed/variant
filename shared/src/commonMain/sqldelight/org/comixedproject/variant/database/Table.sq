@@ -1,30 +1,8 @@
 -- The initial database migration
 
-CREATE TABLE ServersDb (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL UNIQUE,
-  url TEXT NOT NULL,
-  username TEXT NOT NULL DEFAULT "",
-  password TEXT NOT NULL DEFAULT ""
-);
-
-loadAllServers:
-SELECT * FROM ServersDb;
-
-createServer:
-INSERT OR IGNORE INTO ServersDb(name, url, username, password) VALUES (?, ?, ?, ?);
-
-updateServer:
-UPDATE ServersDb SET name = ?, url = ?, username = ?, password = ? WHERE id = ?;
-
-deleteServer:
-DELETE FROM ServersDb WHERE id = ?;
-
-
 CREATE TABLE DirectoriesDb (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   directory_id TEXT NOT NULL,
-  server_id INTEGER NOT NULL,
   title TEXT NOT NULL,
   path TEXT NOT NULL,
   parent TEXT NOT NULL,
@@ -34,13 +12,13 @@ CREATE TABLE DirectoriesDb (
 );
 
 loadDirectoryContents:
-SELECT * FROM DirectoriesDb WHERE server_id = ? AND parent = ?;
+SELECT * FROM DirectoriesDb WHERE parent = ?;
 
 saveDirectoryContent:
-INSERT OR IGNORE INTO DirectoriesDb(directory_id, server_id, title, path, parent, filename, is_directory, cover_url) VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+INSERT OR IGNORE INTO DirectoriesDb(directory_id, title, path, parent, filename, is_directory, cover_url) VALUES(?, ?, ?, ?, ?, ?, ?);
 
 deleteDirectoryContents:
-DELETE FROM DirectoriesDb WHERE server_id = ? AND parent = ?;
+DELETE FROM DirectoriesDb WHERE parent = ?;
 
 findDirectory:
 SELECT * FROM DirectoriesDb WHERE path = ?;

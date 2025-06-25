@@ -21,6 +21,7 @@ import SwiftUI
 import Variant
 
 private let TAG = "ComicBookListItemView"
+private let BYTES_PER_MB = 1024.0 * 1024.0
 
 struct ComicBookListItemView: View {
     let comicBook: ComicBook
@@ -28,7 +29,8 @@ struct ComicBookListItemView: View {
     var onComicBookClicked: (ComicBook) -> Void
 
     var filesize: String {
-        return "\(String(format: "%.1f", Double(comicBook.size) / 1024.0)) mb"
+        return
+            "\(String(format: "%.1f", Double(comicBook.size) / BYTES_PER_MB)) mb"
     }
 
     var lastModified: String {

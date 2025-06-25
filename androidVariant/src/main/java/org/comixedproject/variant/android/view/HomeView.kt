@@ -20,34 +20,48 @@ package org.comixedproject.variant.android.view
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.view.comics.ComicBookView
 import org.comixedproject.variant.android.view.server.ServerView
+import org.comixedproject.variant.android.view.settings.SettingsView
+import org.comixedproject.variant.viewmodel.VariantViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeView() {
-    var currentDestination by remember { mutableStateOf(AppDestination.SERVERS) }
+    val variantViewModel: VariantViewModel = koinViewModel()
+    var currentDestination by remember { mutableStateOf(AppDestination.COMICS) }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
-        topBar = { VariantTopAppBar() },
-        bottomBar = {
-            VariantBottomAppBar(
-                currentDestination,
-                onChangeDestination = { currentDestination = it })
+        topBar = {
+            VariantTopAppBar(
+                onBrowseComics = { currentDestination = AppDestination.COMICS },
+                onBrowseServer = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        variantViewModel.loadDirectory(variantViewModel.currentPath.value, false)
+                    }
+                    currentDestination = AppDestination.BROWSE
+                },
+                onUpdateSettings = { currentDestination = AppDestination.SETTINGS })
         },
         content = { padding ->
             when (currentDestination) {
-                AppDestination.SERVERS -> ServerView(modifier = Modifier.padding(padding))
                 AppDestination.COMICS -> ComicBookView(modifier = Modifier.padding(padding))
-                AppDestination.SETTINGS -> Text("Settings")
+                AppDestination.BROWSE -> ServerView(modifier = Modifier.padding(padding))
+                AppDestination.SETTINGS -> SettingsView(onCloseSettings = {
+                    currentDestination = AppDestination.COMICS
+                }, modifier = Modifier.padding(padding))
             }
         }
     )

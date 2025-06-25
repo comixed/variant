@@ -26,30 +26,37 @@ import com.rickclephas.kmp.observableviewmodel.MutableStateFlow
 import com.rickclephas.kmp.observableviewmodel.ViewModel
 import com.rickclephas.kmp.observableviewmodel.coroutineScope
 import com.rickclephas.kmp.observableviewmodel.launch
+import com.russhwolf.settings.Settings
 import io.github.irgaly.kfswatch.KfsDirectoryWatcher
 import io.github.irgaly.kfswatch.KfsDirectoryWatcherEvent
 import io.github.irgaly.kfswatch.KfsLogger
 import io.ktor.http.URLBuilder
 import io.ktor.http.takeFrom
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.database.repository.DirectoryRepository
-import org.comixedproject.variant.database.repository.ServerRepository
 import org.comixedproject.variant.model.Server
 import org.comixedproject.variant.model.library.ComicBook
 import org.comixedproject.variant.model.library.DirectoryEntry
 import org.comixedproject.variant.model.state.DownloadingState
 import org.comixedproject.variant.platform.Log
+import org.comixedproject.variant.reader.READER_ROOT
 import org.comixedproject.variant.reader.ReaderAPI
 
 private const val TAG = "VariantViewModel"
 
+private const val ADDRESS_SETTING = "server.address"
+private const val USERNAME_SETTING = "server.username"
+private const val PASSWORD_SETTING = "server.password"
+
 open class VariantViewModel(
-    val serverRepository: ServerRepository,
+    val settings: Settings,
     val directoryRepository: DirectoryRepository
 ) : ViewModel() {
+
     private var _libraryDirectory = ""
     private var libraryWatcher: KfsDirectoryWatcher? = null
 
@@ -93,33 +100,25 @@ open class VariantViewModel(
         }
     }
 
-    private val _serverList =
-        MutableStateFlow<List<Server>>(viewModelScope, serverRepository.servers)
+    var address: String
+        get() = settings.getString(ADDRESS_SETTING, "")
+        set(value) = settings.putString(ADDRESS_SETTING, value)
+
+    var username: String
+        get() = settings.getString(USERNAME_SETTING, "")
+        set(value) = settings.putString(USERNAME_SETTING, value)
+
+    var password: String
+        get() = settings.getString(PASSWORD_SETTING, "")
+        set(value) = settings.putString(PASSWORD_SETTING, value)
+
+    private val _server =
+        MutableStateFlow<Server?>(viewModelScope, null)
 
     @NativeCoroutinesState
-    val serverList: StateFlow<List<Server>> = _serverList.asStateFlow()
+    val server: StateFlow<Server?> = _server.asStateFlow()
 
-    private val _editing = MutableStateFlow<Boolean>(viewModelScope, false)
-
-    @NativeCoroutinesState
-    val editing: StateFlow<Boolean> = _editing.asStateFlow()
-
-    private val _editingServer = MutableStateFlow<Server?>(viewModelScope, null)
-
-    @NativeCoroutinesState
-    val editingServer: StateFlow<Server?> = _editingServer.asStateFlow()
-
-    private val _browsing = MutableStateFlow<Boolean>(viewModelScope, false)
-
-    @NativeCoroutinesState
-    val browsing: StateFlow<Boolean> = _browsing.asStateFlow()
-
-    private val _browsingServer = MutableStateFlow<Server?>(viewModelScope, null)
-
-    @NativeCoroutinesState
-    val browsingServer: StateFlow<Server?> = _browsingServer.asStateFlow()
-
-    private val _currentPath = MutableStateFlow<String>(viewModelScope, "")
+    private val _currentPath = MutableStateFlow<String>(viewModelScope, READER_ROOT)
 
     @NativeCoroutinesState
     val currentPath: StateFlow<String> = _currentPath.asStateFlow()
@@ -157,44 +156,26 @@ open class VariantViewModel(
     @NativeCoroutinesState
     val comicBookList: StateFlow<List<ComicBook>> = _comicBookList.asStateFlow()
 
-    fun editServer(server: Server?) {
-        server?.let {
-            Log.debug(TAG, "Editing server: ${it.name}")
-        }
-        viewModelScope.launch {
-            _editing.emit(server != null)
-            _editingServer.emit(server)
-        }
-    }
-
-    suspend fun saveServer(server: Server) {
-        Log.debug(TAG, "Saving server: ${server.name} ${server.url}")
-        serverRepository.save(server)
-        doReloadServers()
-    }
-
-    private suspend fun doReloadServers() {
-        Log.debug(TAG, "Loading server list")
-        val servers = serverRepository.servers
-        _serverList.emit(servers)
-    }
-
-    suspend fun loadDirectory(server: Server, path: String, reload: Boolean) {
-        var contents = directoryRepository.loadDirectoryContents(server, path)
+    suspend fun loadDirectory(path: String, reload: Boolean) {
+        var contents = directoryRepository.loadDirectoryContents(path)
         if (contents.isEmpty() || reload) {
             _loading.emit(true)
 
             try {
-                val url = URLBuilder(server.url).takeFrom(path).build()
+                val url = URLBuilder(this.address).takeFrom(path)
+                    .build()
                 Log.debug(
                     TAG,
-                    "Loading directory contents: server=${server.name} url=${url} reload=${reload}"
+                    "Loading directory contents: url=${url} reload=${reload}"
                 )
-                contents = ReaderAPI.loadDirectory(server, url).contents.map {
+                contents = ReaderAPI.loadDirectory(
+                    url,
+                    this.username,
+                    this.password
+                ).contents.map {
                     DirectoryEntry(
                         id = null,
                         directoryId = it.directoryId,
-                        serverId = server.serverId!!,
                         title = it.title,
                         path = it.path,
                         parent = path,
@@ -203,7 +184,7 @@ open class VariantViewModel(
                         coverUrl = it.coverUrl
                     )
                 }
-                directoryRepository.saveDirectoryContents(server, path, contents)
+                directoryRepository.saveDirectoryContents(path, contents)
             } catch (error: Exception) {
                 Log.error(TAG, "Failed to load directory: ${error.message}")
                 error.printStackTrace()
@@ -212,62 +193,65 @@ open class VariantViewModel(
 
         val directory = directoryRepository.findDirectory(path)
 
-        _browsingServer.emit(server)
         _currentPath.emit(path)
         _title.emit(directory?.title ?: "")
         _parentPath.emit(directory?.parent ?: "")
         _directoryContents.emit(contents)
-        _browsing.emit(true)
         _loading.emit(true)
     }
 
-    suspend fun downloadFile(server: Server, path: String, filename: String) {
-        Log.debug(TAG, "Starting download: ${server.name} path=${path}")
+    fun downloadFile(path: String, filename: String) {
+        Log.debug(TAG, "Starting download: path=${path}")
+        val address = this.address
+        val username = this.username
+        val password = this.password
 
-        val downloadingState = DownloadingState(server, path, 0, 0)
-        val state = _downloadingState.value
+        viewModelScope.launch(Dispatchers.Main) {
+            val downloadingState = DownloadingState(path, 0, 0)
+            val state = _downloadingState.value
 
-        state.add(downloadingState)
-        _downloadingState.emit(state)
+            state.add(downloadingState)
+            _downloadingState.emit(state)
 
-        try {
-            val url = URLBuilder(server.url).takeFrom(path).build()
-            val outputFile = File(_libraryDirectory, filename)
-            Log.debug(TAG, "Writing comic to local file: ${outputFile.fullPath}")
+            try {
+                val url = URLBuilder(address).takeFrom(path).build()
+                val outputFile = File("${_libraryDirectory}/${filename}")
+                Log.debug(TAG, "Writing comic to local file: ${outputFile.fullPath}")
 
-            val output = RawFile(outputFile, FileMode.Write)
+                val output = RawFile(outputFile, FileMode.Write)
 
-            ReaderAPI.downloadComic(server, url, output, onProgress = { received, total ->
-                viewModelScope.launch(Dispatchers.Main) {
-                    val downloadingState = DownloadingState(server, path, received, total)
-                    val state =
-                        _downloadingState.value.filter { !(it.server.serverId == server.serverId && it.path == path) }
-                            .toMutableList()
-                    state.add(downloadingState)
-                    Log.debug(
-                        TAG,
-                        "Download state update: ${downloadingState.path}=${downloadingState.received}/${downloadingState.total}"
-                    )
-                    _downloadingState.emit(state)
-                }
-            })
-            Log.debug(TAG, "Preparing to close the output file")
-            output.close()
-            Log.debug(TAG, "Download complete")
-        } catch (error: Exception) {
-            Log.error(TAG, "Failed to download ${path}: ${error.message}")
-            error.printStackTrace()
+                ReaderAPI.downloadComic(
+                    url,
+                    username,
+                    password,
+                    output,
+                    onProgress = { received, total ->
+                        viewModelScope.launch(Dispatchers.Main) {
+                            val downloadingState = DownloadingState(path, received, total)
+                            val state =
+                                _downloadingState.value.filter { !(it.path == path) }
+                                    .toMutableList()
+                            state.add(downloadingState)
+                            Log.debug(
+                                TAG,
+                                "Download state update: ${downloadingState.path}=${downloadingState.received}/${downloadingState.total}"
+                            )
+                            _downloadingState.emit(state)
+                        }
+                    })
+                Log.debug(TAG, "Preparing to close the output file")
+                output.close()
+                Log.debug(TAG, "Download complete")
+            } catch (error: Exception) {
+                Log.error(TAG, "Failed to download ${path}: ${error.message}")
+                error.printStackTrace()
+            }
+
+            val finalState =
+                _downloadingState.value.filter { !(it.path == path) }
+                    .toMutableList()
+            _downloadingState.emit(finalState)
         }
-
-        val finalState =
-            _downloadingState.value.filter { !(it.server.serverId == server.serverId && it.path == path) }
-                .toMutableList()
-        _downloadingState.emit(finalState)
-    }
-
-    suspend fun stopBrowsing() {
-        Log.debug(TAG, "Clearing the server browsing state")
-        _browsing.emit(false)
     }
 
     private suspend fun loadLibraryContents() {
@@ -284,8 +268,8 @@ open class VariantViewModel(
                     ComicBook(
                         entry.fullPath,
                         entry.name,
-                        entry.size,
-                        entry.lastModifiedEpoch
+                        entry.size.toLong(),
+                         entry.lastModifiedEpoch
                     )
                 }.toList()
         _comicBookList.tryEmit(contents)

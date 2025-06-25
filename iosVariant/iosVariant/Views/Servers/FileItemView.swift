@@ -74,7 +74,6 @@ struct FileItemView: View {
         entry: DIRECTORY_LIST.filter { $0.isDirectory == false }.first!,
         downloadingState: [
             DownloadingState(
-                server: SERVER_LIST[0],
                 path: DIRECTORY_LIST.filter { $0.isDirectory == false }.first!
                     .path,
                 received: 50,

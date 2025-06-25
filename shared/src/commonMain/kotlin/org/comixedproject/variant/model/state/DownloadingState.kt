@@ -18,10 +18,7 @@
 
 package org.comixedproject.variant.model.state
 
-import org.comixedproject.variant.model.Server
-
 data class DownloadingState(
-    val server: Server,
     val path: String,
     var received: Long,
     var total: Long

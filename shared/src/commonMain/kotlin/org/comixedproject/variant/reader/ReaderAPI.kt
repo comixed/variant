@@ -45,7 +45,6 @@ import io.ktor.utils.io.exhausted
 import io.ktor.utils.io.readRemaining
 import kotlinx.io.readByteArray
 import kotlinx.serialization.json.Json
-import org.comixedproject.variant.model.Server
 import org.comixedproject.variant.model.net.LoadDirectoryResponse
 import org.comixedproject.variant.network.HttpClientLogger
 import org.comixedproject.variant.platform.Log
@@ -60,7 +59,7 @@ public object ReaderAPI {
 
     const val VARIANT_USER_AGENT = "CX-Variant"
 
-    private fun client(server: Server, url: Url): HttpClient = HttpClient {
+    private fun client(url: Url, username: String, password: String): HttpClient = HttpClient {
         install(ContentNegotiation) {
             json(Json { isLenient = true; ignoreUnknownKeys = true })
         }
@@ -74,7 +73,7 @@ public object ReaderAPI {
             basic {
                 sendWithoutRequest { true }
                 credentials {
-                    BasicAuthCredentials(username = server.username, password = server.password)
+                    BasicAuthCredentials(username = username, password = password)
                 }
             }
         }
@@ -85,18 +84,17 @@ public object ReaderAPI {
         }
     }
 
-    suspend fun loadDirectory(server: Server, url: Url): LoadDirectoryResponse =
-        client(server, url).get {
+    suspend fun loadDirectory(url: Url, username: String, password: String): LoadDirectoryResponse =
+        client(url, username, password).get {
             accept(ContentType.Application.Json)
         }.body()
 
     suspend fun downloadComic(
-        server: Server,
-        url: Url,
+        url: Url, username: String, password: String,
         output: RawFile,
         onProgress: (Long, Long) -> Unit
     ) {
-        client(server, url).prepareGet {
+        client(url, username, password).prepareGet {
             onDownload { received, total ->
                 onProgress(received, total ?: 0)
             }

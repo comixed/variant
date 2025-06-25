@@ -24,47 +24,12 @@ import org.comixedproject.variant.model.library.DirectoryEntry
 class DatabaseHelper(sqlDriver: SqlDriver) {
     private val database: VariantDb = VariantDb(sqlDriver)
 
-    fun loadServers(): List<ServersDb> = database.tableQueries.loadAllServers().executeAsList()
-
-    fun createServer(
-        name: String,
-        url: String,
-        username: String,
-        password: String,
-    ) = database.tableQueries.createServer(
-        name,
-        url,
-        username,
-        password
-    )
-
-    fun updateServer(
-        serverId: Long,
-        name: String,
-        url: String,
-        username: String,
-        password: String
-    ) {
-        database.tableQueries.updateServer(
-            name,
-            url,
-            username,
-            password,
-            serverId
-        )
-    }
-
-    fun deleteServer(serverId: Long) {
-        database.tableQueries.deleteServer(serverId)
-    }
-
-    fun loadDirectoryContents(serverId: Long, directory: String) =
-        database.tableQueries.loadDirectoryContents(serverId, directory).executeAsList()
+    fun loadDirectoryContents(directory: String) =
+        database.tableQueries.loadDirectoryContents(directory).executeAsList()
 
     fun saveDirectoryContent(directoryEntry: DirectoryEntry) =
         database.tableQueries.saveDirectoryContent(
             directoryEntry.directoryId,
-            directoryEntry.serverId,
             directoryEntry.title,
             directoryEntry.path,
             directoryEntry.parent,
@@ -76,8 +41,8 @@ class DatabaseHelper(sqlDriver: SqlDriver) {
             directoryEntry.coverUrl
         )
 
-    fun deleteDirectoryContents(serverId: Long, directory: String) =
-        database.tableQueries.deleteDirectoryContents(serverId, directory)
+    fun deleteDirectoryContents(directory: String) =
+        database.tableQueries.deleteDirectoryContents(directory)
 
     fun findDirectory(path: String) = database.tableQueries.findDirectory(path).executeAsOneOrNull()
 }

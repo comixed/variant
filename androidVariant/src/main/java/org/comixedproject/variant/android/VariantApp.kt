@@ -20,6 +20,7 @@ package org.comixedproject.variant.android
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import org.comixedproject.variant.app.VariantAppContext
 import org.comixedproject.variant.app.initKoin
 import org.koin.core.Koin
@@ -34,7 +35,13 @@ class VariantApp : Application() {
 
         koin =
             initKoin(
-                appModule = module { single<Context> { this@VariantApp } }
+                appModule = module {
+                    single<Context> { this@VariantApp }
+
+                    single<SharedPreferences> {
+                        get<Context>().getSharedPreferences("VariantApp", Context.MODE_PRIVATE)
+                    }
+                }
             ).koin
     }
 }
