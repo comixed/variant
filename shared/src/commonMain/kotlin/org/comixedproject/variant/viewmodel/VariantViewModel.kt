@@ -270,13 +270,15 @@ open class VariantViewModel(
         _browsing.emit(false)
     }
 
-    private fun loadLibraryContents() {
+    private suspend fun loadLibraryContents() {
         Log.debug(TAG, "Loading library contents: ${_libraryDirectory}")
 
         val path = File(_libraryDirectory)
         val contents =
-            path.listFiles.filter { !it.isDirectory }
-                .filter { it.extension.equals(".cbz") || it.extension.equals(".cbr") }
+            path.directoryList()
+                .map { File(it) }
+                .filter { !it.isDirectory }
+                .filter { it.extension.equals("cbz") || it.extension.equals("cbr") }
                 .map { entry ->
                     Log.debug(TAG, "Found file: ${entry.path}")
                     ComicBook(
