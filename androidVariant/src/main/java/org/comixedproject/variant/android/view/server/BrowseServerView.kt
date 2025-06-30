@@ -33,7 +33,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -59,7 +58,7 @@ fun BrowseServerView(
     parentPath: String,
     contents: List<DirectoryEntry>,
     downloadingState: List<DownloadingState>,
-    isRefreshing: Boolean,
+    loading: Boolean,
     onLoadDirectory: (String, Boolean) -> Unit,
     onDownloadFile: (String, String) -> Unit,
     modifier: Modifier = Modifier
@@ -94,17 +93,9 @@ fun BrowseServerView(
         },
         content = { padding ->
             PullToRefreshBox(
-                isRefreshing = isRefreshing,
+                isRefreshing = loading,
+                state = pullToRefreshState,
                 onRefresh = { onLoadDirectory(path, true) },
-                indicator = {
-                    Indicator(
-                        modifier = Modifier.align(Alignment.TopCenter),
-                        isRefreshing = isRefreshing,
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        state = pullToRefreshState
-                    )
-                },
                 content = {
                     LazyColumn(
                         modifier = Modifier
@@ -166,6 +157,20 @@ fun BrowseServerView_preview_files() {
             server.url,
             directory.title, directory.parent,
             DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), false,
+            onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
+    }
+}
+
+@Composable
+@Preview
+fun BrowseServerView_preview_refreshing() {
+    val server = SERVER_LIST.get(0)
+    val directory = DIRECTORY_LIST.get(0)
+    VariantTheme {
+        BrowseServerView(
+            server.url,
+            directory.title, directory.parent,
+            DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), true,
             onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
     }
 }

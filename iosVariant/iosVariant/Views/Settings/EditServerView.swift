@@ -28,7 +28,6 @@ struct EditServerView: View {
     let password: String
 
     var onSaveChanges: (String, String, String) -> Void
-    var onCancelChanges: () -> Void
 
     @State private var addressValue: String = ""
     @State private var usernameValue: String = ""
@@ -38,8 +37,7 @@ struct EditServerView: View {
         address: String,
         username: String,
         password: String,
-        onSaveChanges: @escaping (String, String, String) -> Void,
-        onCancelChanges: @escaping () -> Void
+        onSaveChanges: @escaping (String, String, String) -> Void
     ) {
         self.address = address
         self.username = username
@@ -50,7 +48,6 @@ struct EditServerView: View {
         self.passwordValue = password
 
         self.onSaveChanges = onSaveChanges
-        self.onCancelChanges = onCancelChanges
     }
 
     var body: some View {
@@ -82,9 +79,6 @@ struct EditServerView: View {
                 Button("Save") {
                     onSaveChanges(addressValue, usernameValue, passwordValue)
                 }
-                Button("Cancel") {
-                    onCancelChanges()
-                }
             }
         }.navigationViewStyle(StackNavigationViewStyle())
     }
@@ -95,7 +89,6 @@ struct EditServerView: View {
         address: "http://myserver.comixedproject.org:7171",
         username: "reader@comixedproject.org",
         password: "my!password",
-        onSaveChanges: { _, _, _ in },
-        onCancelChanges: {}
+        onSaveChanges: { _, _, _ in }
     )
 }

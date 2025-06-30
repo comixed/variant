@@ -33,12 +33,10 @@ import io.github.irgaly.kfswatch.KfsLogger
 import io.ktor.http.URLBuilder
 import io.ktor.http.takeFrom
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.database.repository.DirectoryRepository
-import org.comixedproject.variant.model.Server
 import org.comixedproject.variant.model.library.ComicBook
 import org.comixedproject.variant.model.library.DirectoryEntry
 import org.comixedproject.variant.model.state.DownloadingState
@@ -112,43 +110,20 @@ open class VariantViewModel(
         get() = settings.getString(PASSWORD_SETTING, "")
         set(value) = settings.putString(PASSWORD_SETTING, value)
 
-    private val _server =
-        MutableStateFlow<Server?>(viewModelScope, null)
+    private val _browsingState = MutableStateFlow<BrowsingState>(
+        viewModelScope, BrowsingState(
+            READER_ROOT,
+            "", "", emptyList<DirectoryEntry>(), emptyList<DownloadingState>()
+        )
+    )
 
     @NativeCoroutinesState
-    val server: StateFlow<Server?> = _server.asStateFlow()
-
-    private val _currentPath = MutableStateFlow<String>(viewModelScope, READER_ROOT)
-
-    @NativeCoroutinesState
-    val currentPath: StateFlow<String> = _currentPath.asStateFlow()
-
-    private val _title = MutableStateFlow<String>(viewModelScope, "")
-
-    @NativeCoroutinesState
-    val title: StateFlow<String> = _title.asStateFlow()
-
-    private val _parentPath = MutableStateFlow<String>(viewModelScope, "")
-
-    @NativeCoroutinesState
-    val parentPath: StateFlow<String> = _parentPath.asStateFlow()
-
-    private val _directoryContents =
-        MutableStateFlow<List<DirectoryEntry>>(viewModelScope, emptyList())
-
-    @NativeCoroutinesState
-    val directoryContents: StateFlow<List<DirectoryEntry>> = _directoryContents.asStateFlow()
+    val browsingState: StateFlow<BrowsingState> = _browsingState.asStateFlow()
 
     private val _loading = MutableStateFlow<Boolean>(viewModelScope, false)
 
     @NativeCoroutinesState
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
-
-    private val _downloadingState =
-        MutableStateFlow<MutableList<DownloadingState>>(viewModelScope, mutableListOf())
-
-    @NativeCoroutinesState
-    val downloadingState: StateFlow<MutableList<DownloadingState>> = _downloadingState.asStateFlow()
 
     private val _comicBookList =
         MutableStateFlow<List<ComicBook>>(viewModelScope, listOf())
@@ -156,48 +131,56 @@ open class VariantViewModel(
     @NativeCoroutinesState
     val comicBookList: StateFlow<List<ComicBook>> = _comicBookList.asStateFlow()
 
-    suspend fun loadDirectory(path: String, reload: Boolean) {
-        var contents = directoryRepository.loadDirectoryContents(path)
-        if (contents.isEmpty() || reload) {
-            _loading.emit(true)
+    fun loadDirectory(path: String, reload: Boolean) {
+        viewModelScope.launch(Dispatchers.Main) {
+            Log.debug(TAG, "Loading directory: ${path}")
+            var contents = directoryRepository.loadDirectoryContents(path)
+            if (contents.isEmpty() || reload) {
+                _loading.emit(true)
 
-            try {
-                val url = URLBuilder(this.address).takeFrom(path)
-                    .build()
-                Log.debug(
-                    TAG,
-                    "Loading directory contents: url=${url} reload=${reload}"
-                )
-                contents = ReaderAPI.loadDirectory(
-                    url,
-                    this.username,
-                    this.password
-                ).contents.map {
-                    DirectoryEntry(
-                        id = null,
-                        directoryId = it.directoryId,
-                        title = it.title,
-                        path = it.path,
-                        parent = path,
-                        filename = it.filename,
-                        isDirectory = it.directory,
-                        coverUrl = it.coverUrl
+                try {
+                    val url = URLBuilder(address).takeFrom(path)
+                        .build()
+                    Log.debug(
+                        TAG,
+                        "Loading directory contents: url=${url} reload=${reload}"
                     )
+                    contents = ReaderAPI.loadDirectory(
+                        url,
+                        username,
+                        password
+                    ).contents.map {
+                        DirectoryEntry(
+                            id = null,
+                            directoryId = it.directoryId,
+                            title = it.title,
+                            path = it.path,
+                            parent = path,
+                            filename = it.filename,
+                            isDirectory = it.directory,
+                            coverUrl = it.coverUrl
+                        )
+                    }
+                    directoryRepository.saveDirectoryContents(path, contents)
+                } catch (error: Exception) {
+                    Log.error(TAG, "Failed to load directory: ${error.message}")
+                    error.printStackTrace()
                 }
-                directoryRepository.saveDirectoryContents(path, contents)
-            } catch (error: Exception) {
-                Log.error(TAG, "Failed to load directory: ${error.message}")
-                error.printStackTrace()
             }
+
+            val directory = directoryRepository.findDirectory(path)
+            Log.debug(TAG, "Updating browsing state: currentPath=${path}")
+            _browsingState.emit(
+                BrowsingState(
+                    path,
+                    directory?.parent ?: "",
+                    directory?.title ?: "",
+                    contents,
+                    _browsingState.value.downloadingState
+                )
+            )
+            _loading.emit(false)
         }
-
-        val directory = directoryRepository.findDirectory(path)
-
-        _currentPath.emit(path)
-        _title.emit(directory?.title ?: "")
-        _parentPath.emit(directory?.parent ?: "")
-        _directoryContents.emit(contents)
-        _loading.emit(true)
     }
 
     fun downloadFile(path: String, filename: String) {
@@ -208,10 +191,10 @@ open class VariantViewModel(
 
         viewModelScope.launch(Dispatchers.Main) {
             val downloadingState = DownloadingState(path, 0, 0)
-            val state = _downloadingState.value
-
+            val state = mutableListOf<DownloadingState>()
+            state.addAll(_browsingState.value.downloadingState)
             state.add(downloadingState)
-            _downloadingState.emit(state)
+            doUpdateDownloadingState(state)
 
             try {
                 val url = URLBuilder(address).takeFrom(path).build()
@@ -229,14 +212,14 @@ open class VariantViewModel(
                         viewModelScope.launch(Dispatchers.Main) {
                             val downloadingState = DownloadingState(path, received, total)
                             val state =
-                                _downloadingState.value.filter { !(it.path == path) }
+                                _browsingState.value.downloadingState.filter { !(it.path == path) }
                                     .toMutableList()
                             state.add(downloadingState)
                             Log.debug(
                                 TAG,
                                 "Download state update: ${downloadingState.path}=${downloadingState.received}/${downloadingState.total}"
                             )
-                            _downloadingState.emit(state)
+                            doUpdateDownloadingState(state)
                         }
                     })
                 Log.debug(TAG, "Preparing to close the output file")
@@ -248,9 +231,9 @@ open class VariantViewModel(
             }
 
             val finalState =
-                _downloadingState.value.filter { !(it.path == path) }
+                _browsingState.value.downloadingState.filter { !(it.path == path) }
                     .toMutableList()
-            _downloadingState.emit(finalState)
+            doUpdateDownloadingState(finalState)
         }
     }
 
@@ -269,9 +252,22 @@ open class VariantViewModel(
                         entry.fullPath,
                         entry.name,
                         entry.size.toLong(),
-                         entry.lastModifiedEpoch
+                        entry.lastModifiedEpoch
                     )
                 }.toList()
         _comicBookList.tryEmit(contents)
+    }
+
+    private suspend fun doUpdateDownloadingState(state: List<DownloadingState>) {
+        val browsingState = _browsingState.value
+        _browsingState.emit(
+            BrowsingState(
+                browsingState.currentPath,
+                browsingState.parentPath,
+                browsingState.title,
+                browsingState.contents,
+                state
+            )
+        )
     }
 }
