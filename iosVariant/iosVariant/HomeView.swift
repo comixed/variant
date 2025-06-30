@@ -47,7 +47,7 @@ struct HomeView: View {
             if tab == .browseServer {
                 Task {
                     try await variantViewModel.loadDirectory(
-                        path: variantViewModel.currentPath,
+                        path: variantViewModel.browsingState.currentPath,
                         reload: false
                     )
                 }

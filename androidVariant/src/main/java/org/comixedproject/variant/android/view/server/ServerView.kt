@@ -36,21 +36,17 @@ private const val TAG = "ServerView"
 @Composable
 fun ServerView(modifier: Modifier = Modifier) {
     val variantViewModel: VariantViewModel = koinViewModel()
-    val currentPath by variantViewModel.currentPath.collectAsState()
-    val title by variantViewModel.title.collectAsState()
-    val parentPath by variantViewModel.parentPath.collectAsState()
-    val directoryContents by variantViewModel.directoryContents.collectAsState()
+    val browsingState by variantViewModel.browsingState.collectAsState()
     val loading by variantViewModel.loading.collectAsState()
-    val downloadingState by variantViewModel.downloadingState.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
 
     BrowseServerView(
-        currentPath,
-        title,
-        parentPath,
-        directoryContents,
-        downloadingState,
+        browsingState.currentPath,
+        browsingState.title,
+        browsingState.parentPath,
+        browsingState.contents,
+        browsingState.downloadingState,
         loading,
         modifier = modifier,
         onLoadDirectory = { path, reload ->

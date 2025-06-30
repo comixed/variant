@@ -49,7 +49,10 @@ fun HomeView() {
                 onBrowseComics = { currentDestination = AppDestination.COMICS },
                 onBrowseServer = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        variantViewModel.loadDirectory(variantViewModel.currentPath.value, false)
+                        variantViewModel.loadDirectory(
+                            variantViewModel.browsingState.value.currentPath,
+                            false
+                        )
                     }
                     currentDestination = AppDestination.BROWSE
                 },

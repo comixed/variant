@@ -147,8 +147,8 @@
 			isa = PBXGroup;
 			children = (
 				B6AEB7982E102915003FB705 /* Settings */,
-				B68FF2E72E08348A0010853B /* Comics */,
 				B6B20B9A2DE508A9008598A7 /* Servers */,
+				B68FF2E72E08348A0010853B /* Comics */,
 				B6AEB7942E1024FC003FB705 /* AppDestination.swift */,
 			);
 			path = Views;

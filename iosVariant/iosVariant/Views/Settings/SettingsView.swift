@@ -40,8 +40,7 @@ struct SettingsView: View {
                     variantViewModel.address = address
                     variantViewModel.username = username
                     variantViewModel.password = password
-                },
-                onCancelChanges: {}
+                }
             )
         }
     }

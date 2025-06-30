@@ -27,24 +27,22 @@ struct ServerView: View {
 
     var body: some View {
         BrowseServerView(
-            path: self.variantViewModel.currentPath,
-            title: self.variantViewModel.title,
-            parentPath: self.variantViewModel.parentPath,
-            directoryContents: self.variantViewModel.directoryContents,
-            downloadingState: self.variantViewModel.downloadingState
-                as! [DownloadingState],
-            isRefreshing: self.variantViewModel.loading,
+            path: self.variantViewModel.browsingState.currentPath,
+            title: self.variantViewModel.browsingState.title,
+            parentPath: self.variantViewModel.browsingState.parentPath,
+            directoryContents: self.variantViewModel.browsingState.contents,
+            downloadingState: self.variantViewModel.browsingState
+                .downloadingState,
+            loading: self.variantViewModel.loading,
             onLoadDirectory: { path, reload in
                 Log().debug(
                     tag: TAG,
                     message: "Loading path: \(path) reload=\(reload)"
                 )
-                Task {
-                    try await self.variantViewModel.loadDirectory(
-                        path: path,
-                        reload: reload
-                    )
-                }
+                self.variantViewModel.loadDirectory(
+                    path: path,
+                    reload: reload
+                )
             },
             onDownloadFile: { path, filename in
                 Task {
