@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened]
 jobs:
   build:
@@ -38,4 +38,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build check sonar --info -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew build check sonar -Dsonar.gradle.skipCompile=true -Dsonar.projectKey=comixed_variant -Dsonar.token=${{ secrets.SONAR_TOKEN }}
