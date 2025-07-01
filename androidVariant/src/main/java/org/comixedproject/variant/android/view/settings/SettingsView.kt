@@ -58,7 +58,7 @@ fun SettingsView(
 
 @Composable
 @Preview
-fun SettingsView_preview() {
+fun SettingsViewPreview() {
     VariantTheme {
         SettingsView(onCloseSettings = { })
     }

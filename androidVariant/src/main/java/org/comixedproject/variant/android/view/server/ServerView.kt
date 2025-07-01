@@ -64,6 +64,6 @@ fun ServerView(modifier: Modifier = Modifier) {
 
 @Composable
 @Preview
-fun ServerView_preview() {
+fun ServerViewPreview() {
     VariantTheme { ServerView() }
 }

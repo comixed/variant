@@ -36,6 +36,7 @@ class DirectoryRepository(val databaseHelper: DatabaseHelper) {
                     path = it.path,
                     parent = it.parent,
                     filename = it.filename,
+                    fileSize = it.file_size,
                     isDirectory = when (it.is_directory) {
                         1L -> true
                         else -> false
@@ -64,6 +65,7 @@ class DirectoryRepository(val databaseHelper: DatabaseHelper) {
                 path = directory.path,
                 parent = directory.parent,
                 filename = directory.filename,
+                fileSize = directory.file_size,
                 isDirectory = when (directory.is_directory) {
                     1L -> true
                     else -> false

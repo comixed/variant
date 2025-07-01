@@ -18,6 +18,7 @@
 
 package org.comixedproject.variant.android
 
+import org.comixedproject.variant.android.view.BYTES_PER_MB
 import org.comixedproject.variant.model.Server
 import org.comixedproject.variant.model.library.ComicBook
 import org.comixedproject.variant.model.library.DirectoryEntry
@@ -66,6 +67,7 @@ val DIRECTORY_LIST = listOf(
         "1",
         "All Comics",
         "/api/v1/all",
+        0,
         "/api/v1/root",
         "",
         true,
@@ -76,6 +78,7 @@ val DIRECTORY_LIST = listOf(
         "2",
         "Unread Comics",
         "/api/v1/all?unread=true",
+        0,
         "/api/v1/root",
         "",
         true,
@@ -86,6 +89,7 @@ val DIRECTORY_LIST = listOf(
         "3",
         "Collections",
         "/api/v1/collections",
+        0,
         "/api/v1/root",
         "",
         true,
@@ -96,6 +100,7 @@ val DIRECTORY_LIST = listOf(
         "4",
         "Reading Lists",
         "/api/v1/lists/reading",
+        0,
         "/api/v1/root",
         "",
         true,
@@ -106,6 +111,7 @@ val DIRECTORY_LIST = listOf(
         "5",
         "Smart Lists",
         "/api/v1/lists/smart",
+        0,
         "/api/v1/root",
         "",
         true,
@@ -116,6 +122,7 @@ val DIRECTORY_LIST = listOf(
         "11",
         "The Amazing Spider-Man V2018 #75 (unknown)",
         "Amazing Spider-Man #75 (v2018) (No Cover Date).cbz",
+        (32 * BYTES_PER_MB).toLong(),
         "/api/v1/lists/reading",
         "/api/v1/root",
         false,
@@ -126,6 +133,7 @@ val DIRECTORY_LIST = listOf(
         "12",
         "The Amazing Spider-Man V2022 #75 (unknown)",
         "Amazing Spider-Man #6 (v2022) (Sep 2022).cbz",
+        (32 * BYTES_PER_MB).toLong(),
         "/api/v1/lists/smart",
         "/api/v1/root",
         false,
@@ -136,6 +144,7 @@ val DIRECTORY_LIST = listOf(
         "13",
         "[unknown] V???? #? (unknown)",
         "Unknown VUnknown #Unknown (Unknown).cbz",
+        (32 * BYTES_PER_MB).toLong(),
         "/api/v1/lists/smart",
         "/api/v1/root",
         false,

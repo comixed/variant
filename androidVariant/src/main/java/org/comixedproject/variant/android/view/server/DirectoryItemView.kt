@@ -50,7 +50,7 @@ private const val TAG = "DirectoryDetailView"
 @Composable
 fun DirectoryItemView(
     directoryEntry: DirectoryEntry,
-    onLoadDirectory: (String, String) -> Unit,
+    onLoadDirectory: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(
@@ -64,7 +64,7 @@ fun DirectoryItemView(
                 .fillMaxWidth()
                 .clickable {
                     Log.info(TAG, "Loading path: ${directoryEntry.path}")
-                    onLoadDirectory(directoryEntry.path, directoryEntry.title)
+                    onLoadDirectory(directoryEntry.path)
                 }
         ) {
             Row(
@@ -90,10 +90,10 @@ fun DirectoryItemView(
 
 @Composable
 @Preview
-fun DirectoryItemView_preview() {
+fun DirectoryItemViewPreview() {
     VariantTheme {
         DirectoryItemView(
             DIRECTORY_LIST.filter { it.isDirectory }.first(),
-            onLoadDirectory = { _, _ -> })
+            onLoadDirectory = { _ -> })
     }
 }

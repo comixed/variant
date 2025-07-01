@@ -40,6 +40,11 @@ struct FileItemView: View {
         }
     }
 
+    var fileSize: String {
+        return
+            "\(String(format: "%.1f", Double(entry.fileSize) / BYTES_PER_MB))"
+    }
+
     var body: some View {
         HStack {
             Button(
@@ -62,14 +67,25 @@ struct FileItemView: View {
                     .font(.subheadline)
 
                 if downloading {
-                    ProgressView(value: downloadProgress)
+                    HStack {
+                        Text("\(fileSize) MB")
+                        ProgressView(value: downloadProgress)
+                    }
                 }
             }
         }
     }
 }
 
-#Preview {
+#Preview("default") {
+    FileItemView(
+        entry: DIRECTORY_LIST.filter { $0.isDirectory == false }.first!,
+        downloadingState: [],
+        onDownloadFile: { _, _ in }
+    )
+}
+
+#Preview("downloading") {
     FileItemView(
         entry: DIRECTORY_LIST.filter { $0.isDirectory == false }.first!,
         downloadingState: [

@@ -18,10 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.COMIC_BOOK_LIST
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.android.view.BYTES_PER_MB
 import org.comixedproject.variant.model.library.ComicBook
 
 private val TAG = "ComicBookListItemView"
-private val BYTES_PER_MB = 1024.0 * 1024.0
 
 @Composable
 fun ComicBookListItemView(comicBook: ComicBook, modifier: Modifier = Modifier) {
@@ -68,6 +68,6 @@ fun ComicBookListItemView(comicBook: ComicBook, modifier: Modifier = Modifier) {
 
 @Composable
 @Preview
-fun ComicBookListItemView_preview() {
+fun ComicBookListItemViewPreview() {
     VariantTheme { ComicBookListItemView(comicBook = COMIC_BOOK_LIST.get(0)) }
 }

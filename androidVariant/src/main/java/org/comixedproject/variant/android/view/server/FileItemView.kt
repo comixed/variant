@@ -42,8 +42,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.comixedproject.variant.android.DIRECTORY_LIST
-import org.comixedproject.variant.android.SERVER_LIST
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.android.view.BYTES_PER_MB
 import org.comixedproject.variant.model.library.DirectoryEntry
 import org.comixedproject.variant.model.state.DownloadingState
 
@@ -110,10 +110,19 @@ fun FileItemView(
                             true -> (received.toFloat() / total.toFloat())
                             false -> 0.0
                         }
-                        LinearProgressIndicator(
-                            progress = { progress.toFloat() },
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        val fileSize = String.format("%.1f", fileEntry.fileSize / BYTES_PER_MB)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("${fileSize} MB", style = MaterialTheme.typography.bodySmall)
+                            LinearProgressIndicator(
+                                progress = { progress.toFloat() },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(4.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -123,7 +132,7 @@ fun FileItemView(
 
 @Composable
 @Preview
-fun FileItemView_preview() {
+fun FileItemViewPreview() {
     VariantTheme {
         FileItemView(
             DIRECTORY_LIST.filter { !it.isDirectory }.first(),
@@ -134,9 +143,8 @@ fun FileItemView_preview() {
 
 @Composable
 @Preview
-fun FileItemView_preview_downloading() {
+fun FileItemViewPreviewDownloading() {
     val fileEntry = DIRECTORY_LIST.filter { !it.isDirectory }.first()
-    val server = SERVER_LIST.first()
     VariantTheme {
         FileItemView(
             fileEntry,

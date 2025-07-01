@@ -68,7 +68,7 @@ fun ComicBookListView(comicBookList: List<ComicBook>, modifier: Modifier = Modif
 
 @Composable
 @Preview
-fun ComicBookListView_preview() {
+fun ComicBookListViewPreview() {
     VariantTheme {
         ComicBookListView(COMIC_BOOK_LIST)
     }
