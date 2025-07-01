@@ -157,6 +157,7 @@ open class VariantViewModel(
                             path = it.path,
                             parent = path,
                             filename = it.filename,
+                            fileSize = it.fileSize,
                             isDirectory = it.directory,
                             coverUrl = it.coverUrl
                         )

@@ -11,6 +11,6 @@
     <string name="comicsDestinationLabel">Comics</string>
     <string name="settingsDestinationLabel">Settings</string>
     <string name="emptyComicListText">No comic books to show...</string>
-    <string name="comicFileSizeText">%1$s mb</string>
+    <string name="comicFileSizeText">%1$s MB</string>
     <string name="cancelButton">Cancel</string>
 </resources>

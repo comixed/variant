@@ -27,5 +27,6 @@ data class DirectoryFromRemote(
     val path: String,
     val directory: Boolean,
     val filename: String,
+    val fileSize: Long,
     val coverUrl: String?
 )

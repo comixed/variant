@@ -7,6 +7,7 @@ CREATE TABLE DirectoriesDb (
   path TEXT NOT NULL,
   parent TEXT NOT NULL,
   filename TEXT NOT NULL,
+  file_size INTEGER DEFAULT 0 NOT NULL,
   is_directory INTEGER DEFAULT 0 NOT NULL,
   cover_url TEXT
 );
@@ -15,7 +16,7 @@ loadDirectoryContents:
 SELECT * FROM DirectoriesDb WHERE parent = ?;
 
 saveDirectoryContent:
-INSERT OR IGNORE INTO DirectoriesDb(directory_id, title, path, parent, filename, is_directory, cover_url) VALUES(?, ?, ?, ?, ?, ?, ?);
+INSERT OR IGNORE INTO DirectoriesDb(directory_id, title, path, parent, filename, file_size, is_directory, cover_url) VALUES(?, ?, ?, ?, ?, ?, ?, ?);
 
 deleteDirectoryContents:
 DELETE FROM DirectoriesDb WHERE parent = ?;

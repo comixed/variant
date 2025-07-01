@@ -107,7 +107,7 @@ fun BrowseServerView(
 
                                 true -> DirectoryItemView(
                                     entry,
-                                    onLoadDirectory = { path, title ->
+                                    onLoadDirectory = { path ->
                                         onLoadDirectory(
                                             path,
                                             false
@@ -134,7 +134,7 @@ fun BrowseServerView(
 
 @Composable
 @Preview
-fun BrowseServerView_preview_directories() {
+fun BrowseServerViewPreviewDirectories() {
     val server = SERVER_LIST.get(0)
     val directory = DIRECTORY_LIST.get(0)
     VariantTheme {
@@ -149,7 +149,7 @@ fun BrowseServerView_preview_directories() {
 
 @Composable
 @Preview
-fun BrowseServerView_preview_files() {
+fun BrowseServerViewPreviewFiles() {
     val server = SERVER_LIST.get(0)
     val directory = DIRECTORY_LIST.get(0)
     VariantTheme {
@@ -163,7 +163,7 @@ fun BrowseServerView_preview_files() {
 
 @Composable
 @Preview
-fun BrowseServerView_preview_refreshing() {
+fun BrowseServerViewPreviewRefreshing() {
     val server = SERVER_LIST.get(0)
     val directory = DIRECTORY_LIST.get(0)
     VariantTheme {

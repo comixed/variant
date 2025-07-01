@@ -72,6 +72,6 @@ fun HomeView() {
 
 @Composable
 @Preview
-fun HomeView_preview() {
+fun HomeViewPreview() {
     VariantTheme { HomeView() }
 }

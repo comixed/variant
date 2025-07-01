@@ -16,16 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.model.library
+package org.comixedproject.variant.android.view
 
-data class DirectoryEntry(
-    val id: Long?,
-    val directoryId: String,
-    val title: String,
-    val filename: String,
-    val fileSize: Long,
-    val path: String,
-    val parent: String,
-    val isDirectory: Boolean,
-    val coverUrl: String?
-)
+val BYTES_PER_MB = 1024.0 * 1024.0

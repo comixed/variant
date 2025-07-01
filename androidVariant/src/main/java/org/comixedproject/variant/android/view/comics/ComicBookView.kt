@@ -39,6 +39,6 @@ fun ComicBookView(modifier: Modifier = Modifier) {
 
 @Composable
 @Preview
-fun ComicBookView_preview() {
+fun ComicBookViewPreview() {
     VariantTheme { ComicBookView() }
 }

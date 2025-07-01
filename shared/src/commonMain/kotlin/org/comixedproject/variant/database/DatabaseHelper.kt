@@ -34,6 +34,7 @@ class DatabaseHelper(sqlDriver: SqlDriver) {
             directoryEntry.path,
             directoryEntry.parent,
             directoryEntry.filename,
+            directoryEntry.fileSize,
             when (directoryEntry.isDirectory) {
                 false -> 0
                 else -> 1

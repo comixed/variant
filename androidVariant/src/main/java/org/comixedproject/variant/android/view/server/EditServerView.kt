@@ -115,13 +115,13 @@ fun EditServerView(
 
 @Composable
 @Preview
-fun EditServerView_preview_new() {
+fun EditServerViewPreviewNew() {
     VariantTheme { EditServerView("", "", "", onSave = { _, _, _ -> }) }
 }
 
 @Composable
 @Preview
-fun EditServerView_preview_existing() {
+fun EditServerViewPreviewExisting() {
     VariantTheme {
         EditServerView(
             "hostname:7171",
