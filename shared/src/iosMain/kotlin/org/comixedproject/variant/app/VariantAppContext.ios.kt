@@ -18,4 +18,42 @@
 
 package org.comixedproject.variant.app
 
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.convert
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.usePinned
+import platform.Foundation.NSData
+import platform.Foundation.dataWithBytes
+import platform.UIKit.UIImage
+
 actual object VariantAppContext
+
+@kotlinx.cinterop.BetaInteropApi
+fun ByteArray.toNSDataOrNull(): NSData? {
+    if (this.isEmpty()) return null
+
+    return try {
+        this.usePinned {
+            NSData.dataWithBytes(
+                bytes = it.addressOf(0),
+                length = this.size.convert()
+            )
+        }
+    } catch (e: Exception) {
+        null
+    }
+}
+
+@kotlinx.cinterop.BetaInteropApi
+fun ByteArray.toUIImage(scale: Double): UIImage? = memScoped {
+    var result: UIImage? = null
+
+    toNSDataOrNull()?.let { nsData ->
+        result = UIImage.imageWithData(nsData, scale)
+    }
+
+    result
+}
+
+@kotlinx.cinterop.BetaInteropApi
+fun ByteArray.toUIImage(): UIImage? = this.toUIImage(1.0)

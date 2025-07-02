@@ -114,6 +114,19 @@ public var COMIC_BOOK_LIST = DIRECTORY_LIST.filter { !$0.isDirectory }.map {
         path: $0.path,
         filename: $0.filename,
         size: Int64(($0.filename.count * 1024)),
-        lastModified: Int64(Date().timeIntervalSince1970)
+        lastModified: Int64(Date().timeIntervalSince1970),
+        metadata: ComicBookMetadata(
+            publisher: "Marvel",
+            series: "The Amazing Spider-Man",
+            volume: "1963",
+            issueNumber: "183",
+            coverDate: 0,
+            title: "The Title",
+            notes: "The Notes",
+            summary: "The Summary",
+            year: 1963,
+            month: 5
+        ),
+        pages: []
     )
 }

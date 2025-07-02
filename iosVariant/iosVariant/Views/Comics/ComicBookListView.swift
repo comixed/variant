@@ -20,34 +20,25 @@ import KMPObservableViewModelSwiftUI
 import SwiftUI
 import Variant
 
-struct ComicBookListView: View {
-    @State var selected: ComicBook?
+private let TAG = "ComicBookListView"
 
+struct ComicBookListView: View {
     let comicBookList: [ComicBook]
+
+    let columns = [GridItem(.adaptive(minimum: 128))]
 
     var body: some View {
         NavigationStack {
-            List(comicBookList, id: \.path, selection: $selected) { comicBook in
-                ComicBookListItemView(
-                    comicBook: comicBook,
-                    onComicBookClicked: { _ in }
-                )
-                .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                    Button {
-
-                    } label: {
-                        Label("Delete", systemImage: "trash.fill")
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(comicBookList, id: \.path) { comicBook in
+                        ComicBookListItemView(
+                            comicBook: comicBook,
+                            onComicBookClicked: { _ in }
+                        )
                     }
-                    .tint(.red)
                 }
-                .swipeActions(edge: .trailing) {
-                    Button {
-
-                    } label: {
-                        Label("Open", systemImage: "play.fill")
-                    }
-                    .tint(.green)
-                }
+                .padding(.horizontal)
             }
             .navigationTitle("Comic List")
         }

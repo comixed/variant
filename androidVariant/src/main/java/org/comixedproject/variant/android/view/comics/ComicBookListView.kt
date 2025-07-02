@@ -18,16 +18,18 @@
 
 package org.comixedproject.variant.android.view.comics
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.comixedproject.variant.android.COMIC_BOOK_LIST
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
@@ -47,22 +49,17 @@ fun ComicBookListView(comicBookList: List<ComicBook>, modifier: Modifier = Modif
                 )
                 Text(stringResource(R.string.emptyComicListText))
             } else {
-                LazyColumn(
-                    modifier = modifier
-                        .fillMaxSize(),
-                    contentPadding = padding
-                ) {
-                    items(comicBookList) { comicBook ->
-                        Log.debug(
-                            TAG,
-                            "Showing comic book: ${comicBook.filename}"
-                        )
-
-                        ComicBookListItemView(comicBook, modifier = Modifier.padding(padding))
-                    }
-                }
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Adaptive(minSize = 128.dp),
+                    verticalItemSpacing = 4.dp,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    content = {
+                        items(comicBookList) { comicBook ->
+                            ComicBookListItemView(comicBook, modifier = Modifier.padding(padding))
+                        }
+                    })
             }
-        }, modifier = modifier
+        }, modifier = modifier.padding(8.dp)
     )
 }
 

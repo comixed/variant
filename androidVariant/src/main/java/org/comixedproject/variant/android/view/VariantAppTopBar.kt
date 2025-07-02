@@ -74,7 +74,7 @@ fun VariantTopAppBar(
 
 @Composable
 @Preview
-fun VariantTopAppBar_serverView() {
+fun VariantTopAppBarPreview() {
     VariantTheme {
         VariantTopAppBar(
             onBrowseComics = {},
