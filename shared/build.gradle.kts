@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.kfs.watch)
             implementation(libs.kotlinx.datetime)
             implementation(libs.multiplatform.settings)
+            implementation(libs.bundles.metadata)
 
             api(libs.kmp.viewmodel.core)
         }

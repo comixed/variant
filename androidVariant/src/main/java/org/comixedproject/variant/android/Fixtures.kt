@@ -19,47 +19,10 @@
 package org.comixedproject.variant.android
 
 import org.comixedproject.variant.android.view.BYTES_PER_MB
-import org.comixedproject.variant.model.Server
 import org.comixedproject.variant.model.library.ComicBook
+import org.comixedproject.variant.model.library.ComicBookMetadata
+import org.comixedproject.variant.model.library.ComicPage
 import org.comixedproject.variant.model.library.DirectoryEntry
-
-val SERVER_LIST = listOf(
-    Server(
-        serverId = 1,
-        name = "Home Server",
-        url = "http://www.comixedproject.org:7171/opds/root.xml",
-        username = "reader@comixedproject.org",
-        password = "my!password"
-    ),
-    Server(
-        serverId = 2,
-        name = "Shared Server",
-        url = "http://www.comixedproject.org:7171/opds/root.xml",
-        username = "reader@comixedproject.org",
-        password = "my!password"
-    ),
-    Server(
-        serverId = 3,
-        name = "Buddy's Server",
-        url = "http://www.comixedproject.org:7171/opds/root.xml",
-        username = "reader@comixedproject.org",
-        password = "my!password"
-    ),
-    Server(
-        serverId = 4,
-        name = "Testing Server",
-        url = "http://www.comixedproject.org:7171/opds/root.xml",
-        username = "reader@comixedproject.org",
-        password = "my!password"
-    ),
-    Server(
-        serverId = 5,
-        name = "Some Other Server",
-        url = "http://www.comixedproject.org:7171/opds/root.xml",
-        username = "reader@comixedproject.org",
-        password = "my!password"
-    ),
-)
 
 val DIRECTORY_LIST = listOf(
     DirectoryEntry(
@@ -157,6 +120,8 @@ val COMIC_BOOK_LIST = DIRECTORY_LIST.filter { !it.isDirectory }.map {
         it.path,
         it.filename,
         (it.filename.length * 1024).toLong(),
-        System.currentTimeMillis()
+        System.currentTimeMillis(),
+        ComicBookMetadata("Marvel", "The Amazing Spider-Man", "1963", "181"),
+        mutableListOf(ComicPage("page-0.jpg"))
     )
 }.toList()

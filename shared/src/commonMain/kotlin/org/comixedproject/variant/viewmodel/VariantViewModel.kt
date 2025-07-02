@@ -36,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.comixedproject.variant.adaptor.ArchiveAPI
 import org.comixedproject.variant.database.repository.DirectoryRepository
 import org.comixedproject.variant.model.library.ComicBook
 import org.comixedproject.variant.model.library.DirectoryEntry
@@ -244,17 +245,23 @@ open class VariantViewModel(
         val path = File(_libraryDirectory)
         val contents =
             path.directoryList()
-                .map { File(it) }
+                .map {
+                    Log.debug(TAG, "Looking for file ${it}")
+                    var file = File(it)
+                    if (!file.exists) {
+                        Log.debug(TAG, "${it} not found, checking for ${_libraryDirectory}/${it}")
+                        file = File("${_libraryDirectory}/${it}")
+                    } else {
+                        Log.debug(TAG, "Found it!")
+                    }
+                    file
+                }
                 .filter { !it.isDirectory }
+                .filter { it.size.toLong() > 0L }
                 .filter { it.extension.equals("cbz") || it.extension.equals("cbr") }
                 .map { entry ->
                     Log.debug(TAG, "Found file: ${entry.path}")
-                    ComicBook(
-                        entry.fullPath,
-                        entry.name,
-                        entry.size.toLong(),
-                        entry.lastModifiedEpoch
-                    )
+                    ArchiveAPI.loadComicBook(entry)
                 }.toList()
         _comicBookList.tryEmit(contents)
     }

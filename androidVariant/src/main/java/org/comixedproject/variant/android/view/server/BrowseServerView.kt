@@ -42,7 +42,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.DIRECTORY_LIST
 import org.comixedproject.variant.android.R
-import org.comixedproject.variant.android.SERVER_LIST
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.model.library.ComicBook
 import org.comixedproject.variant.model.library.DirectoryEntry
@@ -138,11 +137,9 @@ fun BrowseServerView(
 @Composable
 @Preview
 fun BrowseServerViewPreviewDirectories() {
-    val server = SERVER_LIST.get(0)
-    val directory = DIRECTORY_LIST.get(0)
     VariantTheme {
         BrowseServerView(
-            server.url,
+            "http://www.comixedproject.org:7171",
             "",
             "",
             DIRECTORY_LIST.filter { it.isDirectory }, emptyList(), emptyList(), false,
@@ -153,11 +150,10 @@ fun BrowseServerViewPreviewDirectories() {
 @Composable
 @Preview
 fun BrowseServerViewPreviewFiles() {
-    val server = SERVER_LIST.get(0)
     val directory = DIRECTORY_LIST.get(0)
     VariantTheme {
         BrowseServerView(
-            server.url,
+            "http://www.comixedproject.org:7171",
             directory.title, directory.parent,
             DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), emptyList(), false,
             onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
@@ -167,11 +163,10 @@ fun BrowseServerViewPreviewFiles() {
 @Composable
 @Preview
 fun BrowseServerViewPreviewRefreshing() {
-    val server = SERVER_LIST.get(0)
     val directory = DIRECTORY_LIST.get(0)
     VariantTheme {
         BrowseServerView(
-            server.url,
+            "http://www.comixedproject.org:7171",
             directory.title, directory.parent,
             DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), emptyList(), true,
             onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })

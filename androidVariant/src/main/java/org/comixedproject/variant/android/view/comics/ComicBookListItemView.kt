@@ -1,6 +1,7 @@
 package org.comixedproject.variant.android.view.comics
 
-import android.icu.text.SimpleDateFormat
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardDefaults
@@ -9,58 +10,74 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.comixedproject.variant.adaptor.ArchiveAPI
+import org.comixedproject.variant.adaptor.MetadataAPI
 import org.comixedproject.variant.android.COMIC_BOOK_LIST
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.view.BYTES_PER_MB
 import org.comixedproject.variant.model.library.ComicBook
+import org.comixedproject.variant.platform.Log
 
 private val TAG = "ComicBookListItemView"
 
 @Composable
 fun ComicBookListItemView(comicBook: ComicBook, modifier: Modifier = Modifier) {
+    var coverContent by remember { mutableStateOf<ByteArray?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
         modifier = modifier
             .fillMaxWidth()
     ) {
+        val title = MetadataAPI.displayableTitle(comicBook)
+
         Column {
-            Text(
-                text = comicBook.filename,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Left,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = modifier
-            )
+            comicBook.pages.firstOrNull()?.let { cover ->
+                if (coverContent == null) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_cover_image_placeholder),
+                        contentDescription = title
+                    )
+
+                    coroutineScope.launch(Dispatchers.IO) {
+                        Log.debug(
+                            TAG,
+                            "Loading content for ${comicBook.filename}:${cover.filename}"
+                        )
+                        coverContent = ArchiveAPI.loadPage(
+                            comicBook.path,
+                            cover.filename
+                        )
+                    }
+                } else {
+                    coverContent?.let { content ->
+                        Image(
+                            bitmap = BitmapFactory.decodeByteArray(content, 0, content.size)
+                                .asImageBitmap(),
+                            contentDescription = title
+                        )
+                    }
+                }
+            }
 
             Text(
-                text = stringResource(
-                    R.string.comicFileSizeText,
-                    String.format(format = "%.1f", (comicBook.size).toDouble() / BYTES_PER_MB)
-                ),
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Left,
+                title,
+                style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = modifier
-            )
-
-            val date = SimpleDateFormat("MM/dd/YYYY HH:mm a").format(comicBook.lastModified)
-            Text(
-                text = date,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Left,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = modifier
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
