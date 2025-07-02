@@ -52,13 +52,17 @@ struct iOSApp: App {
             fatalError()
         }
         do {
-            let libraryDirectory = rootDirectory.appendingPathComponent("Variant")
+            let libraryDirectory = rootDirectory.appendingPathComponent(
+                "Variant"
+            )
             try FileManager.default.createDirectory(
                 at: libraryDirectory,
                 withIntermediateDirectories: true,
                 attributes: nil
             )
-            variantViewModel.setLibraryDirectory(directory: libraryDirectory.path)
+            variantViewModel.setLibraryDirectory(
+                directory: libraryDirectory.path
+            )
         } catch {
             Log().error(tag: TAG, message: error.localizedDescription)
             fatalError(error.localizedDescription)

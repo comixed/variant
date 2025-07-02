@@ -16,12 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.model
+package org.comixedproject.variant.model.library
 
-data class Server(
-    val serverId: Long?,
-    var name: String,
-    var url: String,
-    var username: String,
-    var password: String
+data class ComicBookMetadata(
+    var publisher: String = "",
+    var series: String = "",
+    var volume: String = "",
+    var issueNumber: String = "",
+    var coverDate: Long = 0,
+    var title: String = "",
+    var notes: String = "",
+    var summary: String = "",
+    var year: Int = 0,
+    var month: Int = 0
 )

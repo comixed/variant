@@ -24,8 +24,7 @@ struct ComicBooksView: View {
     @EnvironmentViewModel var variantViewModel: VariantViewModel
 
     var body: some View {
-        ComicBookListView(comicBookList: self.variantViewModel.comicBookList,
-        )
+        ComicBookListView(comicBookList: self.variantViewModel.comicBookList)
     }
 }
 

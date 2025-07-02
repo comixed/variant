@@ -1,6 +1,6 @@
 [versions]
 android-gradle-plugin = "8.10.0"
-kotlin = "2.1.20"
+kotlin = "2.1.21"
 compose = "1.5.4"
 compose-material3 = "1.1.2"
 androidx-activity-compose = "1.8.0"
@@ -8,6 +8,7 @@ koin-version = "3.5.6"
 sqldelight-plugin = "2.0.2"
 android-material3-version = "1.3.2"
 ktor-version = "3.1.3"
+xml-util-version = "0.91.0"
 
 [libraries]
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
@@ -52,6 +53,10 @@ ktor-client-ios = { group = "io.ktor", name = "ktor-client-ios", version.ref = "
 # serialization
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.8.1" }
 
+# XML
+xml-util = { group = "io.github.pdvrieze.xmlutil", name = "core", version.ref = "xml-util-version" }
+xml-util-serialization = { group = "io.github.pdvrieze.xmlutil", name = "serialization", version.ref = "xml-util-version" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
@@ -67,3 +72,4 @@ plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 [bundles]
 android-compose = ["koin-androidx-compose", "androidx-compose-material3", "androidx-compose-material3-android"]
 ktor-common = ["ktor-client-core", "ktor-client-auth", "ktor-client-serialization", "ktor-client-serialization-json", "ktor-client-content-negotiation", "ktor-server-content-negotiation", "ktor-client-logging"]
+metadata = ["xml-util", "xml-util-serialization"]

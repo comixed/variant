@@ -23,30 +23,39 @@ import Variant
 private let TAG = "ComicBookListItemView"
 
 struct ComicBookListItemView: View {
+    @ObservedObject var imageLoader: ImageLoader
+
     let comicBook: ComicBook
 
     var onComicBookClicked: (ComicBook) -> Void
 
-    var filesize: String {
-        return
-            "\(String(format: "%.1f", Double(comicBook.size) / BYTES_PER_MB)) MB"
-    }
-
-    var lastModified: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/YYYY HH:mm a"
-        return
-            "\(dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(comicBook.lastModified))))"
+    init(
+        comicBook: ComicBook,
+        onComicBookClicked: @escaping (ComicBook) -> Void
+    ) {
+        self.comicBook = comicBook
+        self.onComicBookClicked = onComicBookClicked
+        self.imageLoader = ImageLoader(comicBook: comicBook)
     }
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(comicBook.filename)
-                .font(.headline)
-            Text(filesize)
+            if (imageLoader.image != nil) {
+                Image(uiImage: imageLoader.image!)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 128)
+            } else {
+                Image(systemName: "placeholdertext.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 128)
+            }
+
+            Text(MetadataAPI().displayableTitle(comicBook: comicBook))
                 .font(.subheadline)
-            Text(lastModified)
-                .font(.subheadline)
+                .lineLimit(1)
+                .clipped()
         }
         .onTapGesture {
             Log().debug(tag: TAG, message: "Comic book item tapped")
