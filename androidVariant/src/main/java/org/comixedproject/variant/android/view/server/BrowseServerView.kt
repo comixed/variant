@@ -44,6 +44,7 @@ import org.comixedproject.variant.android.DIRECTORY_LIST
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.SERVER_LIST
 import org.comixedproject.variant.android.VariantTheme
+import org.comixedproject.variant.model.library.ComicBook
 import org.comixedproject.variant.model.library.DirectoryEntry
 import org.comixedproject.variant.model.state.DownloadingState
 import org.comixedproject.variant.platform.Log
@@ -57,6 +58,7 @@ fun BrowseServerView(
     title: String,
     parentPath: String,
     contents: List<DirectoryEntry>,
+    comicBookList: List<ComicBook>,
     downloadingState: List<DownloadingState>,
     loading: Boolean,
     onLoadDirectory: (String, Boolean) -> Unit,
@@ -116,6 +118,7 @@ fun BrowseServerView(
 
                                 else -> FileItemView(
                                     entry,
+                                    comicBookList.map { it.filename }.toList(),
                                     downloadingState,
                                     onDownloadFile = onDownloadFile
                                 )
@@ -142,7 +145,7 @@ fun BrowseServerViewPreviewDirectories() {
             server.url,
             "",
             "",
-            DIRECTORY_LIST.filter { it.isDirectory }, emptyList(), false,
+            DIRECTORY_LIST.filter { it.isDirectory }, emptyList(), emptyList(), false,
             onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
     }
 }
@@ -156,7 +159,7 @@ fun BrowseServerViewPreviewFiles() {
         BrowseServerView(
             server.url,
             directory.title, directory.parent,
-            DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), false,
+            DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), emptyList(), false,
             onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
     }
 }
@@ -170,7 +173,7 @@ fun BrowseServerViewPreviewRefreshing() {
         BrowseServerView(
             server.url,
             directory.title, directory.parent,
-            DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), true,
+            DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), emptyList(), true,
             onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
     }
 }

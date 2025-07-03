@@ -37,6 +37,7 @@ private const val TAG = "ServerView"
 fun ServerView(modifier: Modifier = Modifier) {
     val variantViewModel: VariantViewModel = koinViewModel()
     val browsingState by variantViewModel.browsingState.collectAsState()
+    val comicBookList by variantViewModel.comicBookList.collectAsState()
     val loading by variantViewModel.loading.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
@@ -46,6 +47,7 @@ fun ServerView(modifier: Modifier = Modifier) {
         browsingState.title,
         browsingState.parentPath,
         browsingState.contents,
+        comicBookList,
         browsingState.downloadingState,
         loading,
         modifier = modifier,
