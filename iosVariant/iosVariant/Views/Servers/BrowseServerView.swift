@@ -62,6 +62,9 @@ struct BrowseServerView: View {
                     } else {
                         FileItemView(
                             entry: entry,
+                            comicBookFiles: variantViewModel.comicBookList.map {
+                                $0.filename
+                            },
                             downloadingState: downloadingState,
                             onDownloadFile: onDownloadFile
                         )

@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -52,6 +53,7 @@ private const val TAG = "DirectoryDetailView"
 @Composable
 fun FileItemView(
     fileEntry: DirectoryEntry,
+    comicBookFilenameList: List<String>,
     downloadingState: List<DownloadingState>,
     onDownloadFile: (String, String) -> Unit,
     modifier: Modifier = Modifier
@@ -76,13 +78,24 @@ fun FileItemView(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                IconButton(
-                    onClick = {
-                        onDownloadFile(fileEntry.path, fileEntry.filename)
-                    },
-                    enabled = downloadingState.size < 5
-                ) {
-                    Icon(Icons.Filled.AddCircle, contentDescription = fileEntry.title)
+                if (comicBookFilenameList.contains(fileEntry.filename)) {
+                    IconButton(
+                        onClick = {
+
+                        },
+                        enabled = downloadingState.size < 5
+                    ) {
+                        Icon(Icons.Filled.Check, contentDescription = fileEntry.title)
+                    }
+                } else {
+                    IconButton(
+                        onClick = {
+                            onDownloadFile(fileEntry.path, fileEntry.filename)
+                        },
+                        enabled = downloadingState.size < 5
+                    ) {
+                        Icon(Icons.Filled.AddCircle, contentDescription = fileEntry.title)
+                    }
                 }
 
                 Column(modifier = Modifier.weight(1f)) {
@@ -137,6 +150,20 @@ fun FileItemViewPreview() {
         FileItemView(
             DIRECTORY_LIST.filter { !it.isDirectory }.first(),
             listOf(),
+            listOf(),
+            onDownloadFile = { _, _ -> })
+    }
+}
+
+@Composable
+@Preview
+fun FileItemViewPreviewDownloaded() {
+    val fileEntry = DIRECTORY_LIST.filter { !it.isDirectory }.first()
+    VariantTheme {
+        FileItemView(
+            fileEntry,
+            listOf(fileEntry.filename),
+            listOf(),
             onDownloadFile = { _, _ -> })
     }
 }
@@ -148,6 +175,7 @@ fun FileItemViewPreviewDownloading() {
     VariantTheme {
         FileItemView(
             fileEntry,
+            listOf(),
             listOf(
                 DownloadingState(
                     fileEntry.path,

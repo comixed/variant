@@ -23,9 +23,14 @@ private let TAG = "FileItemView"
 
 struct FileItemView: View {
     let entry: DirectoryEntry
+    let comicBookFiles: [String]
     let downloadingState: [DownloadingState]
 
     var onDownloadFile: (String, String) -> Void
+
+    var isDownloaded: Bool {
+        return comicBookFiles.contains(entry.filename)
+    }
 
     var downloading: Bool {
         return downloadingState.map { $0.path }.contains(entry.path)
@@ -47,17 +52,25 @@ struct FileItemView: View {
 
     var body: some View {
         HStack {
-            Button(
-                "",
-                systemImage: "plus.circle.fill",
-                action: {
-                    Log().info(
-                        tag: TAG,
-                        message: "Downloading file: \(entry.path)"
-                    )
-                    onDownloadFile(entry.path, entry.filename)
-                }
-            )
+            if isDownloaded {
+                Button(
+                    "",
+                    systemImage: "checkmark.circle.fill",
+                    action: {}
+                )
+            } else {
+                Button(
+                    "",
+                    systemImage: "plus.circle.fill",
+                    action: {
+                        Log().info(
+                            tag: TAG,
+                            message: "Downloading file: \(entry.path)"
+                        )
+                        onDownloadFile(entry.path, entry.filename)
+                    }
+                )
+            }
 
             VStack(alignment: .leading) {
                 Text(entry.title)
@@ -80,6 +93,18 @@ struct FileItemView: View {
 #Preview("default") {
     FileItemView(
         entry: DIRECTORY_LIST.filter { $0.isDirectory == false }.first!,
+        comicBookFiles: [],
+        downloadingState: [],
+        onDownloadFile: { _, _ in }
+    )
+}
+
+#Preview("already downloaded") {
+    FileItemView(
+        entry: DIRECTORY_LIST.filter { $0.isDirectory == false }.first!,
+        comicBookFiles: [
+            DIRECTORY_LIST.filter { $0.isDirectory == false }.first!.filename
+        ],
         downloadingState: [],
         onDownloadFile: { _, _ in }
     )
@@ -88,6 +113,7 @@ struct FileItemView: View {
 #Preview("downloading") {
     FileItemView(
         entry: DIRECTORY_LIST.filter { $0.isDirectory == false }.first!,
+        comicBookFiles: [],
         downloadingState: [
             DownloadingState(
                 path: DIRECTORY_LIST.filter { $0.isDirectory == false }.first!
