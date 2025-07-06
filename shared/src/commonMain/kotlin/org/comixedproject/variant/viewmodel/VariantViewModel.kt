@@ -244,18 +244,7 @@ open class VariantViewModel(
 
         val path = File(_libraryDirectory)
         val contents =
-            path.directoryList()
-                .map {
-                    Log.debug(TAG, "Looking for file ${it}")
-                    var file = File(it)
-                    if (!file.exists) {
-                        Log.debug(TAG, "${it} not found, checking for ${_libraryDirectory}/${it}")
-                        file = File("${_libraryDirectory}/${it}")
-                    } else {
-                        Log.debug(TAG, "Found it!")
-                    }
-                    file
-                }
+            path.directoryFiles()
                 .filter { !it.isDirectory }
                 .filter { it.size.toLong() > 0L }
                 .filter { it.extension.equals("cbz") || it.extension.equals("cbr") }
