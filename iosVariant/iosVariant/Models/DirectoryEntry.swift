@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Variant
+import shared
 
 extension DirectoryEntry : @retroactive Identifiable {
     public var id: String {

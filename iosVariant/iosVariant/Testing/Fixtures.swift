@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import Variant
+import shared
 
 public var DIRECTORY_LIST = [
     DirectoryEntry(

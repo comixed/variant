@@ -18,7 +18,7 @@
 
 import KMPObservableViewModelSwiftUI
 import SwiftUI
-import Variant
+import shared
 
 struct ComicBooksView: View {
     @EnvironmentViewModel var variantViewModel: VariantViewModel
