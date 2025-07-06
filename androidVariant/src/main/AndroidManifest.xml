@@ -6,6 +6,7 @@
 
     <application
         android:name=".VariantApp"
+        android:label="Variant"
         android:allowBackup="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
