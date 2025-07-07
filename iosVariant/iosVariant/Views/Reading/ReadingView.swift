@@ -20,28 +20,39 @@ import KMPObservableViewModelSwiftUI
 import SwiftUI
 import shared
 
-private let TAG = "ComicBooksView"
+private let TAG = "ReadingView"
 
-struct ComicBooksView: View {
-    @EnvironmentViewModel var variantViewModel: VariantViewModel
+struct ReadingView: View {
+    @State private var currentPage = 0.0
 
-    var onReadComicBook: (ComicBook) -> Void
+    let comicBook: ComicBook
+
+    var onStopReading: () -> Void
+
+    var comicFilename: String {
+        return comicBook.path
+    }
+
+    var pageFilename: String {
+        return (comicBook.pages[Int(currentPage)] as! ComicPage).filename
+    }
+
+    var title: String {
+        return (comicBook.pages[Int(currentPage)] as! ComicPage).filename
+    }
 
     var body: some View {
-        if (variantViewModel.comicBook != nil) {
-         ReadingView(comicBook: self.variantViewModel.comicBook!, onStopReading: {
-             Log().debug(tag: TAG, message: "Stop reading comic book")
-             variantViewModel.readComicBook(comicBook: nil)
-         })
-        } else {
-            ComicBookListView(
-                comicBookList: self.variantViewModel.comicBookList,
-                onComicBookClicked: { comicBook in onReadComicBook(comicBook) }
-            )
-        }
+        ReadingPageView(
+            comicFilename: comicFilename,
+            pageFilename: pageFilename,
+            title: title,
+            pageNumber: $currentPage,
+            totalPages: comicBook.pages.count,
+            onStopReading: { onStopReading() }
+        )
     }
 }
 
 #Preview {
-    ComicBooksView(onReadComicBook: { _ in })
+    ReadingView(comicBook: COMIC_BOOK_LIST[0], onStopReading: {})
 }

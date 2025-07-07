@@ -39,7 +39,11 @@ import org.comixedproject.variant.platform.Log
 private val TAG = "ComicBookListView"
 
 @Composable
-fun ComicBookListView(comicBookList: List<ComicBook>, modifier: Modifier = Modifier) {
+fun ComicBookListView(
+    comicBookList: List<ComicBook>,
+    onClick: (ComicBook) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Scaffold(
         content = { padding ->
             if (comicBookList.isEmpty()) {
@@ -55,7 +59,11 @@ fun ComicBookListView(comicBookList: List<ComicBook>, modifier: Modifier = Modif
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     content = {
                         items(comicBookList) { comicBook ->
-                            ComicBookListItemView(comicBook, modifier = Modifier.padding(padding))
+                            ComicBookListItemView(
+                                comicBook,
+                                onClick = { onClick(it) },
+                                modifier = Modifier.padding(padding)
+                            )
                         }
                     })
             }
@@ -67,6 +75,6 @@ fun ComicBookListView(comicBookList: List<ComicBook>, modifier: Modifier = Modif
 @Preview
 fun ComicBookListViewPreview() {
     VariantTheme {
-        ComicBookListView(COMIC_BOOK_LIST)
+        ComicBookListView(COMIC_BOOK_LIST, onClick = {})
     }
 }

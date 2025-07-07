@@ -41,7 +41,6 @@ import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.core.remaining
-import io.ktor.utils.io.exhausted
 import io.ktor.utils.io.readRemaining
 import kotlinx.io.readByteArray
 import kotlinx.serialization.json.Json
@@ -102,10 +101,13 @@ public object ReaderAPI {
             accept(ContentType.Application.OctetStream)
         }.execute { httpResponse ->
             val channel: ByteReadChannel = httpResponse.body()
-            while (!channel.exhausted()) {
-                val chunk = channel.readRemaining()
-                Log.debug(TAG, "Writing ${chunk.remaining} bytes to output")
-                output.write(ByteBuffer(bytes = chunk.readByteArray()))
+            while (!channel.isClosedForRead) {
+                val packet = channel.readRemaining((102400).toLong())
+                Log.debug(TAG, "Writing ${packet.remaining} bytes to output")
+                while (!packet.exhausted()) {
+                    val bytes = packet.readByteArray()
+                    output.write(ByteBuffer(bytes))
+                }
             }
         }
     }

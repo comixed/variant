@@ -13,4 +13,7 @@
     <string name="emptyComicListText">No comic books to show...</string>
     <string name="comicFileSizeText">%1$s MB</string>
     <string name="cancelButton">Cancel</string>
+    <string name="previousPageLabel">Go to the previous page.</string>
+    <string name="nextPageLabel">Go to the next page.</string>
+    <string name="stopReadingLabel">Stop reading comic book.</string>
 </resources>

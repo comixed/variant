@@ -22,4 +22,4 @@ deleteDirectoryContents:
 DELETE FROM DirectoriesDb WHERE parent = ?;
 
 findDirectory:
-SELECT * FROM DirectoriesDb WHERE path = ?;
+SELECT * FROM DirectoriesDb WHERE path = ? LIMIT 1;
