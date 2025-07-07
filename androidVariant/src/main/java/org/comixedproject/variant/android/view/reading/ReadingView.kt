@@ -16,30 +16,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.view.comics
+package org.comixedproject.variant.android.view.reading
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import org.comixedproject.variant.android.COMIC_BOOK_LIST
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.model.library.ComicBook
-import org.comixedproject.variant.viewmodel.VariantViewModel
-import org.koin.androidx.compose.koinViewModel
+import org.comixedproject.variant.platform.Log
 
-private val TAG = "ComicBookView"
+private const val TAG = "ReadingView"
 
 @Composable
-fun ComicBookView(onReadComicBook: (ComicBook) -> Unit, modifier: Modifier = Modifier) {
-    val variantViewModel: VariantViewModel = koinViewModel()
-    val comicBookList by variantViewModel.comicBookList.collectAsState()
+fun ReadingView(comicBook: ComicBook, onStopReading: () -> Unit, modifier: Modifier = Modifier) {
+    var currentPage by remember { mutableIntStateOf(0) }
 
-    ComicBookListView(comicBookList, onClick = { onReadComicBook(it) }, modifier = modifier)
+    ReadingPageView(
+        comicBook.path,
+        comicBook.pages.get(currentPage).filename,
+        comicBook.pages.get(currentPage).filename,
+        currentPage,
+        comicBook.pages.size,
+        onChangePage = {
+            Log.debug(TAG, "Going to page ${it}")
+            currentPage = it
+        },
+        onStopReading = onStopReading,
+        modifier = modifier
+    )
 }
 
 @Composable
 @Preview
-fun ComicBookViewPreview() {
-    VariantTheme { ComicBookView(onReadComicBook = { }) }
+fun ReadingViewPreview() {
+    VariantTheme { ReadingView(COMIC_BOOK_LIST.get(0), onStopReading = {}) }
 }

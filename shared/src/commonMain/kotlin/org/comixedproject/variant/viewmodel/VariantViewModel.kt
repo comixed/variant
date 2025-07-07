@@ -111,6 +111,11 @@ open class VariantViewModel(
         get() = settings.getString(PASSWORD_SETTING, "")
         set(value) = settings.putString(PASSWORD_SETTING, value)
 
+    var _comicBook = MutableStateFlow<ComicBook?>(viewModelScope, null)
+
+    @NativeCoroutinesState
+    var comicBook: StateFlow<ComicBook?> = _comicBook.asStateFlow()
+
     private val _browsingState = MutableStateFlow<BrowsingState>(
         viewModelScope, BrowsingState(
             READER_ROOT,
@@ -236,6 +241,17 @@ open class VariantViewModel(
                 _browsingState.value.downloadingState.filter { !(it.path == path) }
                     .toMutableList()
             doUpdateDownloadingState(finalState)
+        }
+    }
+
+    fun readComicBook(comicBook: ComicBook?) {
+        viewModelScope.launch(Dispatchers.Main) {
+            if (comicBook != null) {
+                Log.info(TAG, "Reading comic book: ${comicBook.filename}")
+            } else {
+                Log.info(TAG, "Stopped reading comic book")
+            }
+            _comicBook.emit(comicBook)
         }
     }
 

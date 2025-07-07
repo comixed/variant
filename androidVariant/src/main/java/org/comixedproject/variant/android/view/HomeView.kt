@@ -21,6 +21,7 @@ package org.comixedproject.variant.android.view
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.view.comics.ComicBookView
+import org.comixedproject.variant.android.view.reading.ReadingView
 import org.comixedproject.variant.android.view.server.ServerView
 import org.comixedproject.variant.android.view.settings.SettingsView
 import org.comixedproject.variant.viewmodel.VariantViewModel
@@ -42,6 +44,7 @@ fun HomeView() {
     val variantViewModel: VariantViewModel = koinViewModel()
     var currentDestination by remember { mutableStateOf(AppDestination.COMICS) }
     val coroutineScope = rememberCoroutineScope()
+    val comicBook by variantViewModel.comicBook.collectAsState()
 
     Scaffold(
         topBar = {
@@ -60,7 +63,22 @@ fun HomeView() {
         },
         content = { padding ->
             when (currentDestination) {
-                AppDestination.COMICS -> ComicBookView(modifier = Modifier.padding(padding))
+                AppDestination.COMICS ->
+                    if (comicBook != null) {
+                        ReadingView(
+                            comicBook!!,
+                            modifier = Modifier.padding(padding),
+                            onStopReading = { variantViewModel.readComicBook(null) }
+                        )
+                    } else {
+                        ComicBookView(
+                            onReadComicBook = { comicBook ->
+                                variantViewModel.readComicBook(comicBook)
+                            },
+                            modifier = Modifier.padding(padding)
+                        )
+                    }
+
                 AppDestination.BROWSE -> ServerView(modifier = Modifier.padding(padding))
                 AppDestination.SETTINGS -> SettingsView(onCloseSettings = {
                     currentDestination = AppDestination.COMICS
