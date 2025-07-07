@@ -28,9 +28,12 @@ struct HomeView: View {
 
     var body: some View {
         TabView(selection: $currentDestination) {
-            ComicBooksView()
-                .tag(AppDestination.comics)
-                .tabItem { Label("Comics", systemImage: "book.fill") }
+            ComicBooksView(onReadComicBook: { comicBook in
+                variantViewModel.readComicBook(comicBook: comicBook)
+                currentDestination = .comics
+            })
+            .tag(AppDestination.comics)
+            .tabItem { Label("Comics", systemImage: "book.fill") }
 
             ServerView()
                 .tag(AppDestination.browseServer)

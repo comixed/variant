@@ -2,6 +2,7 @@ package org.comixedproject.variant.android.view.comics
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardDefaults
@@ -33,7 +34,11 @@ import org.comixedproject.variant.platform.Log
 private val TAG = "ComicBookListItemView"
 
 @Composable
-fun ComicBookListItemView(comicBook: ComicBook, modifier: Modifier = Modifier) {
+fun ComicBookListItemView(
+    comicBook: ComicBook,
+    onClick: (ComicBook) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var coverContent by remember { mutableStateOf<ByteArray?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -44,7 +49,7 @@ fun ComicBookListItemView(comicBook: ComicBook, modifier: Modifier = Modifier) {
     ) {
         val title = MetadataAPI.displayableTitle(comicBook)
 
-        Column {
+        Column(modifier = Modifier.clickable(onClick = { onClick(comicBook) })) {
             comicBook.pages.firstOrNull()?.let { cover ->
                 if (coverContent == null) {
                     Image(
@@ -86,5 +91,5 @@ fun ComicBookListItemView(comicBook: ComicBook, modifier: Modifier = Modifier) {
 @Composable
 @Preview
 fun ComicBookListItemViewPreview() {
-    VariantTheme { ComicBookListItemView(comicBook = COMIC_BOOK_LIST.get(0)) }
+    VariantTheme { ComicBookListItemView(comicBook = COMIC_BOOK_LIST.get(0), onClick = {}) }
 }

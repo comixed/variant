@@ -23,18 +23,24 @@ import shared
 private let TAG = "ImageLoader"
 
 class ImageLoader: ObservableObject {
-    private var comicBook: ComicBook
+    private var comicFilename: String = ""
     private var pageFilename: String = ""
 
     @Published var image: UIImage? = nil
 
     init(comicBook: ComicBook) {
-        self.comicBook = comicBook
+        self.comicFilename = comicBook.path
 
-        if self.comicBook.pages.count > 0 {
-            self.pageFilename = (self.comicBook.pages[0] as! ComicPage).filename
+        if comicBook.pages.count > 0 {
+            self.pageFilename = (comicBook.pages[0] as! ComicPage).filename
             doLoadPage()
         }
+    }
+
+    init(comicFilename: String, pageFileanme: String) {
+        self.comicFilename = comicFilename
+        self.pageFilename = pageFileanme
+        doLoadPage()
     }
 
     private func doLoadPage() {
@@ -42,10 +48,10 @@ class ImageLoader: ObservableObject {
             Log().debug(
                 tag: TAG,
                 message:
-                    "Loading cover image: \(comicBook.path):\(self.pageFilename)"
+                    "Loading cover image: \(self.comicFilename):\(self.pageFilename)"
             )
             let imageData = try await ArchiveAPI().loadPage(
-                comicFilename: comicBook.path,
+                comicFilename: self.comicFilename,
                 pageFilename: self.pageFilename
             )
 

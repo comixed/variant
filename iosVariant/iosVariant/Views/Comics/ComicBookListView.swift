@@ -27,6 +27,8 @@ struct ComicBookListView: View {
 
     let columns = [GridItem(.adaptive(minimum: 128))]
 
+    var onComicBookClicked: (ComicBook) -> Void
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -34,7 +36,9 @@ struct ComicBookListView: View {
                     ForEach(comicBookList, id: \.path) { comicBook in
                         ComicBookListItemView(
                             comicBook: comicBook,
-                            onComicBookClicked: { _ in }
+                            onComicBookClicked: { comicBook in
+                                onComicBookClicked(comicBook)
+                            }
                         )
                     }
                 }
@@ -47,6 +51,7 @@ struct ComicBookListView: View {
 
 #Preview {
     ComicBookListView(
-        comicBookList: COMIC_BOOK_LIST
+        comicBookList: COMIC_BOOK_LIST,
+        onComicBookClicked: { _ in }
     )
 }
