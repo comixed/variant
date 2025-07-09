@@ -118,6 +118,9 @@ struct FileItemView: View {
             DownloadingState(
                 path: DIRECTORY_LIST.filter { $0.isDirectory == false }.first!
                     .path,
+                filename: DIRECTORY_LIST.filter { $0.isDirectory == false }
+                    .first!
+                    .path,
                 received: 50,
                 total: 100
             )

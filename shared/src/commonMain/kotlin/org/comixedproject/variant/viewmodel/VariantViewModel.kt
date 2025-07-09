@@ -197,7 +197,7 @@ open class VariantViewModel(
         val password = this.password
 
         viewModelScope.launch(Dispatchers.Main) {
-            val downloadingState = DownloadingState(path, 0, 0)
+            val downloadingState = DownloadingState(path, filename, 0, 0)
             val state = mutableListOf<DownloadingState>()
             state.addAll(_browsingState.value.downloadingState)
             state.add(downloadingState)
@@ -217,7 +217,7 @@ open class VariantViewModel(
                     output,
                     onProgress = { received, total ->
                         viewModelScope.launch(Dispatchers.Main) {
-                            val downloadingState = DownloadingState(path, received, total)
+                            val downloadingState = DownloadingState(path, filename, received, total)
                             val state =
                                 _browsingState.value.downloadingState.filter { !(it.path == path) }
                                     .toMutableList()
@@ -259,8 +259,16 @@ open class VariantViewModel(
         Log.debug(TAG, "Loading library contents: ${_libraryDirectory}")
 
         val path = File(_libraryDirectory)
+        val ignored = this._browsingState.value.downloadingState.map { it.filename }.toList()
         val contents =
             path.directoryFiles()
+                .filter {
+                    if (!ignored.contains(it.name)) {
+                        true
+                    } else {
+                        false
+                    }
+                }
                 .filter { !it.isDirectory }
                 .filter { it.size.toLong() > 0L }
                 .filter { it.extension.equals("cbz") || it.extension.equals("cbr") }

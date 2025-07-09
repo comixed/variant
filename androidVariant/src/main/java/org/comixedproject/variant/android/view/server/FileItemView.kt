@@ -178,7 +178,7 @@ fun FileItemViewPreviewDownloading() {
             listOf(),
             listOf(
                 DownloadingState(
-                    fileEntry.path,
+                    fileEntry.path, fileEntry.filename,
                     50, 100
                 )
             ),
