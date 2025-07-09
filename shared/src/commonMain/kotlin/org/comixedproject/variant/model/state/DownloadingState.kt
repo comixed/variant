@@ -20,6 +20,7 @@ package org.comixedproject.variant.model.state
 
 data class DownloadingState(
     val path: String,
+    val filename: String,
     var received: Long,
     var total: Long
 )
