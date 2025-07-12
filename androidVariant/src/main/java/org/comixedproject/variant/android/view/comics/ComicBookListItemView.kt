@@ -1,8 +1,10 @@
 package org.comixedproject.variant.android.view.comics
 
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardDefaults
@@ -17,10 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.adaptor.ArchiveAPI
@@ -33,23 +37,34 @@ import org.comixedproject.variant.platform.Log
 
 private val TAG = "ComicBookListItemView"
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ComicBookListItemView(
     comicBook: ComicBook,
+    selected: Boolean,
     onClick: (ComicBook) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var coverContent by remember { mutableStateOf<ByteArray?>(null) }
     val coroutineScope = rememberCoroutineScope()
+    val borderWidth = when (selected) {
+        true -> 5.dp
+        false -> 0.dp
+    }
 
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
         modifier = modifier
             .fillMaxWidth()
+            .border(borderWidth, Color.Red)
     ) {
         val title = MetadataAPI.displayableTitle(comicBook)
 
-        Column(modifier = Modifier.clickable(onClick = { onClick(comicBook) })) {
+        Column(
+            modifier = Modifier.combinedClickable(
+                onClick = { onClick(comicBook) }
+            )
+        ) {
             comicBook.pages.firstOrNull()?.let { cover ->
                 if (coverContent == null) {
                     Image(
@@ -91,5 +106,21 @@ fun ComicBookListItemView(
 @Composable
 @Preview
 fun ComicBookListItemViewPreview() {
-    VariantTheme { ComicBookListItemView(comicBook = COMIC_BOOK_LIST.get(0), onClick = {}) }
+    VariantTheme {
+        ComicBookListItemView(
+            comicBook = COMIC_BOOK_LIST.get(0),
+            false,
+            onClick = {})
+    }
+}
+
+@Composable
+@Preview
+fun ComicBookListItemViewSelectedPreview() {
+    VariantTheme {
+        ComicBookListItemView(
+            comicBook = COMIC_BOOK_LIST.get(0),
+            true,
+            onClick = {})
+    }
 }

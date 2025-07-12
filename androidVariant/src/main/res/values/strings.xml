@@ -16,4 +16,7 @@
     <string name="previousPageLabel">Go to the previous page.</string>
     <string name="nextPageLabel">Go to the next page.</string>
     <string name="stopReadingLabel">Stop reading comic book.</string>
+    <string name="markReadLabel">Mark selected comics as read.</string>
+    <string name="markUnreadLabel">Mark selected comics as unread.</string>
+    <string name="deleteSelectionsLabel">Delete selected comics from device.</string>
 </resources>

@@ -137,6 +137,16 @@ open class VariantViewModel(
     @NativeCoroutinesState
     val comicBookList: StateFlow<List<ComicBook>> = _comicBookList.asStateFlow()
 
+    private val _selectionMode = MutableStateFlow<Boolean>(viewModelScope, false)
+
+    @NativeCoroutinesState
+    val selectionMode: StateFlow<Boolean> = _selectionMode.asStateFlow()
+
+    private val _selectionList = MutableStateFlow<List<String>>(viewModelScope, listOf())
+
+    @NativeCoroutinesState
+    val selectionList: StateFlow<List<String>> = _selectionList.asStateFlow()
+
     fun loadDirectory(path: String, reload: Boolean) {
         viewModelScope.launch(Dispatchers.Main) {
             Log.debug(TAG, "Loading directory: ${path}")
@@ -253,6 +263,43 @@ open class VariantViewModel(
             }
             _comicBook.emit(comicBook)
         }
+    }
+
+    fun setSelectMode(enable: Boolean) {
+        viewModelScope.launch(Dispatchers.Main) {
+            Log.debug(TAG, "Setting selection mode: ${enable}")
+            _selectionMode.emit(enable)
+            if (!enable) {
+                Log.debug(TAG, "Clearing selections")
+                _selectionList.emit(emptyList())
+            }
+        }
+    }
+
+    fun updateSelectionList(filename: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val selections = mutableListOf<String>()
+            if (_selectionList.value.contains(filename)) {
+                Log.debug(TAG, "Removing selection: ${filename}")
+                selections.addAll(_selectionList.value.filter { !it.equals(filename) }.toList())
+            } else {
+                Log.debug(TAG, "Adding selection: ${filename}")
+                selections.addAll(_selectionList.value)
+                selections.add(filename)
+            }
+            _selectionList.emit(selections)
+        }
+    }
+
+    suspend fun deleteSelections() {
+        _selectionList.value.forEach {
+            val file = File(it)
+            Log.info(TAG, "Deleting file: ${it}")
+            file.delete()
+        }
+
+        _selectionList.emit(emptyList())
+        _selectionMode.emit(false)
     }
 
     private suspend fun loadLibraryContents() {

@@ -33,3 +33,5 @@ To achieve these goals, the project will:
 
 
 # Credits
+
+[Reshot](https://www.reshot.com/free-svg-icons/) - for toolbar icons.
