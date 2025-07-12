@@ -464,19 +464,24 @@
 				);
 				INFOPLIST_FILE = iosVariant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ComiXed Variant";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.dev;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
 					shared,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.comixedproject.iosVariant;
+				PRODUCT_BUNDLE_IDENTIFIER = org.comixedproject.variant;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -496,19 +501,24 @@
 				);
 				INFOPLIST_FILE = iosVariant/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ComiXed Variant";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.dev;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
 					Variant,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.comixedproject.iosVariant;
+				PRODUCT_BUNDLE_IDENTIFIER = org.comixedproject.variant;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
