@@ -41,6 +41,7 @@ private val TAG = "ComicBookListView"
 @Composable
 fun ComicBookListView(
     comicBookList: List<ComicBook>,
+    selectionList: List<String>,
     onClick: (ComicBook) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -61,11 +62,13 @@ fun ComicBookListView(
                         items(comicBookList) { comicBook ->
                             ComicBookListItemView(
                                 comicBook,
-                                onClick = { onClick(it) },
-                                modifier = Modifier.padding(padding)
+                                selectionList.contains(comicBook.path),
+                                onClick = { onClick(it) }
                             )
                         }
-                    })
+                    },
+                    modifier = modifier.padding(padding)
+                )
             }
         }, modifier = modifier.padding(8.dp)
     )
@@ -75,6 +78,6 @@ fun ComicBookListView(
 @Preview
 fun ComicBookListViewPreview() {
     VariantTheme {
-        ComicBookListView(COMIC_BOOK_LIST, onClick = {})
+        ComicBookListView(COMIC_BOOK_LIST, emptyList(), onClick = {})
     }
 }

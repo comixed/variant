@@ -23,25 +23,80 @@ import shared
 private let TAG = "ComicBooksView"
 
 struct ComicBooksView: View {
-    @EnvironmentViewModel var variantViewModel: VariantViewModel
+    let comicBookList: [ComicBook]
+    let selectionMode: Bool
+    let selectionList: [String]
 
-    var onReadComicBook: (ComicBook) -> Void
+    var onSetSelectionMode: (Bool) -> Void
+    var onComicClicked: (ComicBook) -> Void
+    var onDeleteComics: () -> Void
 
     var body: some View {
-        if (variantViewModel.comicBook != nil) {
-         ReadingView(comicBook: self.variantViewModel.comicBook!, onStopReading: {
-             Log().debug(tag: TAG, message: "Stop reading comic book")
-             variantViewModel.readComicBook(comicBook: nil)
-         })
-        } else {
+        NavigationStack {
             ComicBookListView(
-                comicBookList: self.variantViewModel.comicBookList,
-                onComicBookClicked: { comicBook in onReadComicBook(comicBook) }
+                comicBookList: comicBookList,
+                selectionList: selectionList,
+                onClick: { comicBook in onComicClicked(comicBook) }
             )
+            .toolbar {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    if selectionMode {
+                        Button {
+                            onSetSelectionMode(false)
+                        } label: {
+                            Image("selection_mode_on")
+                        }
+
+                        Button {
+                            onDeleteComics()
+                        } label: {
+                            Image(systemName: "trash.fill")
+                        }
+                        .disabled(selectionList.isEmpty)
+                    } else {
+                        Button {
+                            onSetSelectionMode(true)
+                        } label: {
+                            Image("selection_mode_off")
+                        }
+                    }
+
+                    Spacer()
+                }
+            }
         }
     }
 }
 
 #Preview {
-    ComicBooksView(onReadComicBook: { _ in })
+    ComicBooksView(
+        comicBookList: COMIC_BOOK_LIST,
+        selectionMode: false,
+        selectionList: [],
+        onSetSelectionMode: { _ in },
+        onComicClicked: { _ in },
+        onDeleteComics: { }
+    )
+}
+
+#Preview("selection mode on") {
+    ComicBooksView(
+        comicBookList: COMIC_BOOK_LIST,
+        selectionMode: true,
+        selectionList: [COMIC_BOOK_LIST[0].path],
+        onSetSelectionMode: { _ in },
+        onComicClicked: { _ in },
+        onDeleteComics: { }
+    )
+}
+
+#Preview("selection mode on no selections") {
+    ComicBooksView(
+        comicBookList: COMIC_BOOK_LIST,
+        selectionMode: true,
+        selectionList: [],
+        onSetSelectionMode: { _ in },
+        onComicClicked: { _ in },
+        onDeleteComics: { }
+    )
 }
