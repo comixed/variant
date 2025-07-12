@@ -28,10 +28,43 @@ struct HomeView: View {
 
     var body: some View {
         TabView(selection: $currentDestination) {
-            ComicBooksView(onReadComicBook: { comicBook in
-                variantViewModel.readComicBook(comicBook: comicBook)
-                currentDestination = .comics
-            })
+            ComicBooksView(
+                comicBookList: variantViewModel.comicBookList,
+                selectionMode: variantViewModel.selectionMode,
+                selectionList: variantViewModel.selectionList,
+                onSetSelectionMode: { enable in
+                    Log().info(
+                        tag: TAG,
+                        message: "Setting selection mode: \(enable)"
+                    )
+                    variantViewModel.setSelectMode(enable: enable)
+                },
+                onComicClicked: { comicBook in
+                    if variantViewModel.selectionMode {
+                        Log().info(
+                            tag: TAG,
+                            message:
+                                "Toggling comic book select: \(comicBook.path)"
+                        )
+                        variantViewModel.updateSelectionList(
+                            filename: comicBook.path
+                        )
+                    } else {
+                        Log().info(
+                            tag: TAG,
+                            message: "Reading comic book: \(comicBook.filename)"
+                        )
+                        variantViewModel.readComicBook(comicBook: comicBook)
+                        currentDestination = .comics
+                    }
+                },
+                onDeleteComics: {
+                    Log().info(tag: TAG, message: "Deleting \(variantViewModel.selectionList.count) comic book(s)")
+                    Task {
+                        try await variantViewModel.deleteSelections()
+                    }
+                }
+            )
             .tag(AppDestination.comics)
             .tabItem { Label("Comics", systemImage: "book.fill") }
 
@@ -56,11 +89,5 @@ struct HomeView: View {
                 }
             }
         }
-    }
-}
-
-struct HomeViewPreviews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
     }
 }

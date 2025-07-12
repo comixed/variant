@@ -36,14 +36,20 @@ import org.comixedproject.variant.android.view.comics.ComicBookView
 import org.comixedproject.variant.android.view.reading.ReadingView
 import org.comixedproject.variant.android.view.server.ServerView
 import org.comixedproject.variant.android.view.settings.SettingsView
+import org.comixedproject.variant.platform.Log
 import org.comixedproject.variant.viewmodel.VariantViewModel
 import org.koin.androidx.compose.koinViewModel
+
+private const val TAG = "HomeView"
 
 @Composable
 fun HomeView() {
     val variantViewModel: VariantViewModel = koinViewModel()
     var currentDestination by remember { mutableStateOf(AppDestination.COMICS) }
     val coroutineScope = rememberCoroutineScope()
+    val comicBookList by variantViewModel.comicBookList.collectAsState()
+    val selectionMode by variantViewModel.selectionMode.collectAsState()
+    val selectionList by variantViewModel.selectionList.collectAsState()
     val comicBook by variantViewModel.comicBook.collectAsState()
 
     Scaffold(
@@ -72,8 +78,29 @@ fun HomeView() {
                         )
                     } else {
                         ComicBookView(
-                            onReadComicBook = { comicBook ->
-                                variantViewModel.readComicBook(comicBook)
+                            comicBookList,
+                            selectionMode,
+                            selectionList,
+                            onSetSelectionMode = {
+                                Log.info(TAG, "Setting selection mode: ${it}")
+                                variantViewModel.setSelectMode(it)
+                            },
+                            onComicBookClicked = { comicBook ->
+                                if (selectionMode) {
+                                    Log.info(
+                                        TAG,
+                                        "Toggling comic book selection: ${comicBook.path}"
+                                    )
+                                    variantViewModel.updateSelectionList(comicBook.path)
+                                } else {
+                                    Log.info(TAG, "Reading comic book: ${comicBook.filename}")
+                                    variantViewModel.readComicBook(comicBook)
+                                }
+                            },
+                            onDeleteComics = {
+                                coroutineScope.launch(Dispatchers.IO) {
+                                    variantViewModel.deleteSelections()
+                                }
                             },
                             modifier = Modifier.padding(padding)
                         )

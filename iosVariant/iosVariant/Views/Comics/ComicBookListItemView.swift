@@ -26,21 +26,32 @@ struct ComicBookListItemView: View {
     @ObservedObject var imageLoader: ImageLoader
 
     let comicBook: ComicBook
+    let selected: Bool
 
-    var onComicBookClicked: (ComicBook) -> Void
+    var onClick: (ComicBook) -> Void
 
     init(
         comicBook: ComicBook,
-        onComicBookClicked: @escaping (ComicBook) -> Void
+        selected: Bool,
+        onClick: @escaping (ComicBook) -> Void
     ) {
         self.comicBook = comicBook
-        self.onComicBookClicked = onComicBookClicked
+        self.selected = selected
+        self.onClick = onClick
         self.imageLoader = ImageLoader(comicBook: comicBook)
+    }
+
+    var borderWidth: CGFloat {
+        if selected {
+            return 5
+        } else {
+            return 0
+        }
     }
 
     var body: some View {
         VStack(alignment: .leading) {
-            if (imageLoader.image != nil) {
+            if imageLoader.image != nil {
                 Image(uiImage: imageLoader.image!)
                     .resizable()
                     .scaledToFit()
@@ -59,14 +70,25 @@ struct ComicBookListItemView: View {
         }
         .onTapGesture {
             Log().debug(tag: TAG, message: "Comic book item tapped")
-            onComicBookClicked(self.comicBook)
+            onClick(self.comicBook)
         }
+        .padding()
+        .border(.red, width: borderWidth)
     }
 }
 
 #Preview {
     ComicBookListItemView(
         comicBook: COMIC_BOOK_LIST[0],
-        onComicBookClicked: { _ in }
+        selected: false,
+        onClick: { _ in }
+    )
+}
+
+#Preview("selected") {
+    ComicBookListItemView(
+        comicBook: COMIC_BOOK_LIST[0],
+        selected: true,
+        onClick: { _ in }
     )
 }

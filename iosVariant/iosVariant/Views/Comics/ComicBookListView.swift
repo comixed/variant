@@ -24,10 +24,11 @@ private let TAG = "ComicBookListView"
 
 struct ComicBookListView: View {
     let comicBookList: [ComicBook]
+    let selectionList: [String]
 
     let columns = [GridItem(.adaptive(minimum: 128))]
 
-    var onComicBookClicked: (ComicBook) -> Void
+    var onClick: (ComicBook) -> Void
 
     var body: some View {
         NavigationStack {
@@ -36,8 +37,9 @@ struct ComicBookListView: View {
                     ForEach(comicBookList, id: \.path) { comicBook in
                         ComicBookListItemView(
                             comicBook: comicBook,
-                            onComicBookClicked: { comicBook in
-                                onComicBookClicked(comicBook)
+                            selected: selectionList.contains(comicBook.path),
+                            onClick: { comicBook in
+                                onClick(comicBook)
                             }
                         )
                     }
@@ -52,6 +54,7 @@ struct ComicBookListView: View {
 #Preview {
     ComicBookListView(
         comicBookList: COMIC_BOOK_LIST,
-        onComicBookClicked: { _ in }
+        selectionList: [COMIC_BOOK_LIST[0].path],
+        onClick: { _ in }
     )
 }
