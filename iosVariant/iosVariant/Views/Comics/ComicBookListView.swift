@@ -46,7 +46,12 @@ struct ComicBookListView: View {
                 }
                 .padding(.horizontal)
             }
-            .navigationTitle("Comic List")
+            .navigationTitle(
+                String(
+                    localized: "comic-book-list.title",
+                    defaultValue: "Comic List"
+                )
+            )
         }
     }
 }

@@ -53,23 +53,21 @@ struct FileItemView: View {
     var body: some View {
         HStack {
             if isDownloaded {
-                Button(
-                    "",
-                    systemImage: "checkmark.circle.fill",
-                    action: {}
-                )
+                Button {
+
+                } label: {
+                    Image(systemName: "checkmark.circle.fill")
+                }
             } else {
-                Button(
-                    "",
-                    systemImage: "plus.circle.fill",
-                    action: {
-                        Log().info(
-                            tag: TAG,
-                            message: "Downloading file: \(entry.path)"
-                        )
-                        onDownloadFile(entry.path, entry.filename)
-                    }
-                )
+                Button {
+                    Log().info(
+                        tag: TAG,
+                        message: "Downloading file: \(entry.path)"
+                    )
+                    onDownloadFile(entry.path, entry.filename)
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                }
             }
 
             VStack(alignment: .leading) {

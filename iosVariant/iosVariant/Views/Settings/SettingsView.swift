@@ -23,29 +23,29 @@ import shared
 private let TAG = "SettingsView"
 
 struct SettingsView: View {
-    @EnvironmentViewModel var variantViewModel: VariantViewModel
+    let address: String
+    let username: String
+    let password: String
+
+    let onSaveChanges: (String, String, String) -> Void
 
     var body: some View {
         VStack {
             EditServerView(
-                address: variantViewModel.address,
-                username: variantViewModel.username,
-                password: variantViewModel.password,
-                onSaveChanges: { address, username, password in
-                    Log().debug(
-                        tag: TAG,
-                        message:
-                            "Saving server settings: \(address), \(username), \(password)"
-                    )
-                    variantViewModel.address = address
-                    variantViewModel.username = username
-                    variantViewModel.password = password
-                }
+                address: address,
+                username: username,
+                password: password,
+                onSaveChanges: onSaveChanges
             )
         }
     }
 }
 
 #Preview {
-    SettingsView()
+    SettingsView(
+        address: "http://www.comixedproject.org:7171",
+        username: "reader@comixedproject.org",
+        password: "the!password",
+        onSaveChanges: { _, _, _ in }
+    )
 }
