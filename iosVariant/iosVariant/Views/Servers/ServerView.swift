@@ -23,44 +23,42 @@ import shared
 private let TAG = "ServerView"
 
 struct ServerView: View {
-    @EnvironmentViewModel var variantViewModel: VariantViewModel
+    let comicBookList: [ComicBook]
+    let currentPath: String
+    let title: String
+    let parentPath: String
+    let directoryContents: [DirectoryEntry]
+    let downloadingState: [DownloadingState]
+    let loading: Bool
+
+    let onLoadDirectory: (String, Bool) -> Void
+    let onDownloadFile: (String, String) -> Void
 
     var body: some View {
         BrowseServerView(
-            path: self.variantViewModel.browsingState.currentPath,
-            title: self.variantViewModel.browsingState.title,
-            parentPath: self.variantViewModel.browsingState.parentPath,
-            directoryContents: self.variantViewModel.browsingState.contents,
-            downloadingState: self.variantViewModel.browsingState
-                .downloadingState,
-            loading: self.variantViewModel.loading,
-            onLoadDirectory: { path, reload in
-                Log().debug(
-                    tag: TAG,
-                    message: "Loading path: \(path) reload=\(reload)"
-                )
-                self.variantViewModel.loadDirectory(
-                    path: path,
-                    reload: reload
-                )
-            },
-            onDownloadFile: { path, filename in
-                Task {
-                    Log().debug(
-                        tag: TAG,
-                        message: "Downloading file: \(filename)"
-                    )
-
-                    self.variantViewModel.downloadFile(
-                        path: path,
-                        filename: filename
-                    )
-                }
-            }
+            comicBookList: comicBookList,
+            path: currentPath,
+            title: title,
+            parentPath: parentPath,
+            directoryContents: directoryContents,
+            downloadingState: downloadingState,
+            loading: loading,
+            onLoadDirectory: onLoadDirectory,
+            onDownloadFile: onDownloadFile
         )
     }
 }
 
 #Preview {
-    ServerView()
+    ServerView(
+        comicBookList: COMIC_BOOK_LIST,
+        currentPath: "The current path",
+        title: "The Title",
+        parentPath: "The parent path",
+        directoryContents: DIRECTORY_LIST,
+        downloadingState: [],
+        loading: false,
+        onLoadDirectory: { _, _ in },
+        onDownloadFile: { _, _ in }
+    )
 }

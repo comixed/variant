@@ -23,8 +23,7 @@ import shared
 private let TAG = "BrowseServerView"
 
 struct BrowseServerView: View {
-    @EnvironmentViewModel var variantViewModel: VariantViewModel
-
+    let comicBookList: [ComicBook]
     let path: String
     let title: String
     let parentPath: String
@@ -44,8 +43,8 @@ struct BrowseServerView: View {
     }
 
     var body: some View {
-        ZStack {
-            NavigationStack {
+        NavigationStack {
+            ZStack {
                 List(directoryContents, id: \.id, selection: $selected) {
                     entry in
                     if entry.isDirectory {
@@ -62,7 +61,7 @@ struct BrowseServerView: View {
                     } else {
                         FileItemView(
                             entry: entry,
-                            comicBookFiles: variantViewModel.comicBookList.map {
+                            comicBookFiles: comicBookList.map {
                                 $0.filename
                             },
                             downloadingState: downloadingState,
@@ -70,48 +69,67 @@ struct BrowseServerView: View {
                         )
                     }
                 }
-                .refreshable {
-                    if !loading {
-                        Log().info(
-                            tag: TAG,
-                            message:
-                                "Reloading path: \(variantViewModel.browsingState.currentPath)"
-                        )
-                        onLoadDirectory(
-                            variantViewModel.browsingState.currentPath,
-                            true
-                        )
-                    }
-                }
-                .navigationTitle(displayableTitle)
-                .toolbar {
-                    if parentPath != "" {
-                        ToolbarItem(placement: .topBarLeading) {
-                            Button("Back") {
-                                Log().info(
-                                    tag: TAG,
-                                    message: "Loading parent: \(parentPath)"
-                                )
-                                onLoadDirectory(parentPath, false)
-                            }
-                        }
-                    }
+                .grayscale(loading ? 1 : 0)
+
+                if loading {
+                    ProgressView()
                 }
             }
 
-            if loading {
-                ProgressView()
+            .refreshable {
+                if !loading {
+                    Log().info(
+                        tag: TAG,
+                        message:
+                            "Reloading path: \(path)"
+                    )
+                    onLoadDirectory(
+                        path,
+                        true
+                    )
+                }
+            }
+            .navigationTitle(displayableTitle)
+            .toolbar {
+                if parentPath != "" {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            Log().info(
+                                tag: TAG,
+                                message: "Loading parent: \(parentPath)"
+                            )
+                            onLoadDirectory(parentPath, false)
+                        } label: {
+                            Image(systemName: "arrow.backward")
+                        }
+                    }
+                }
             }
         }
     }
 }
 
-#Preview("normal") {
+#Preview("directories") {
     BrowseServerView(
+        comicBookList: COMIC_BOOK_LIST,
         path: "/reader/v1",
         title: "",
         parentPath: "",
-        directoryContents: DIRECTORY_LIST,
+        directoryContents: DIRECTORY_LIST.filter { $0.isDirectory },
+        downloadingState: [],
+        loading: false,
+        onLoadDirectory: { _, _ in },
+        onDownloadFile: { _, _ in }
+    )
+}
+
+#Preview("files") {
+    BrowseServerView(
+        comicBookList: COMIC_BOOK_LIST,
+        path: "/reader/v1",
+        title: "",
+        parentPath: "",
+        directoryContents: DIRECTORY_LIST.filter { $0.isDirectory == false },
         downloadingState: [],
         loading: false,
         onLoadDirectory: { _, _ in },
@@ -121,10 +139,11 @@ struct BrowseServerView: View {
 
 #Preview("loading") {
     BrowseServerView(
+        comicBookList: COMIC_BOOK_LIST,
         path: "/reader/v1",
         title: "",
         parentPath: "",
-        directoryContents: DIRECTORY_LIST,
+        directoryContents: DIRECTORY_LIST.filter { $0.isDirectory },
         downloadingState: [],
         loading: true,
         onLoadDirectory: { _, _ in },

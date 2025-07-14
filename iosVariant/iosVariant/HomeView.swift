@@ -59,24 +59,96 @@ struct HomeView: View {
                     }
                 },
                 onDeleteComics: {
-                    Log().info(tag: TAG, message: "Deleting \(variantViewModel.selectionList.count) comic book(s)")
+                    Log().info(
+                        tag: TAG,
+                        message:
+                            "Deleting \(variantViewModel.selectionList.count) comic book(s)"
+                    )
                     Task {
                         try await variantViewModel.deleteSelections()
                     }
                 }
             )
             .tag(AppDestination.comics)
-            .tabItem { Label("Comics", systemImage: "book.fill") }
+            .tabItem {
+                Label(
+                    String(
+                        localized: "destination.comics.label",
+                        defaultValue: "Comics"
+                    ),
+                    systemImage: "book.fill"
+                )
+            }
 
-            ServerView()
-                .tag(AppDestination.browseServer)
-                .tabItem {
-                    Label("Browse", systemImage: "person.crop.circle.fill")
+            ServerView(
+                comicBookList: self.variantViewModel.comicBookList,
+                currentPath: self.variantViewModel.browsingState.currentPath,
+                title: self.variantViewModel.browsingState.title,
+                parentPath: self.variantViewModel.browsingState.parentPath,
+                directoryContents: self.variantViewModel.browsingState.contents,
+                downloadingState: self.variantViewModel.browsingState
+                    .downloadingState,
+                loading: self.variantViewModel.loading,
+                onLoadDirectory: { path, reload in
+                    Log().debug(
+                        tag: TAG,
+                        message: "Loading path: \(path) reload=\(reload)"
+                    )
+                    self.variantViewModel.loadDirectory(
+                        path: path,
+                        reload: reload
+                    )
+                },
+                onDownloadFile: { path, filename in
+                    Task {
+                        Log().debug(
+                            tag: TAG,
+                            message: "Downloading file: \(filename)"
+                        )
+
+                        self.variantViewModel.downloadFile(
+                            path: path,
+                            filename: filename
+                        )
+                    }
                 }
+            )
+            .tag(AppDestination.browseServer)
+            .tabItem {
+                Label(
+                    String(
+                        localized: "destination.browse-server.label",
+                        defaultValue: "Browse"
+                    ),
+                    systemImage: "person.crop.circle.fill"
+                )
+            }
 
-            SettingsView()
-                .tag(AppDestination.settings)
-                .tabItem { Label("Settings", systemImage: "gearshape.fill") }
+            SettingsView(
+                address: variantViewModel.address,
+                username: variantViewModel.username,
+                password: variantViewModel.password,
+                onSaveChanges: { address, username, password in
+                    Log().debug(
+                        tag: TAG,
+                        message:
+                            "Saving server settings: \(address), \(username), \(password)"
+                    )
+                    variantViewModel.address = address
+                    variantViewModel.username = username
+                    variantViewModel.password = password
+                }
+            )
+            .tag(AppDestination.settings)
+            .tabItem {
+                Label(
+                    String(
+                        localized: "destination.settings.label",
+                        defaultValue: "Settings"
+                    ),
+                    systemImage: "gearshape.fill"
+                )
+            }
         }
         .edgesIgnoringSafeArea(.bottom)
         .onChange(of: currentDestination) { tab in

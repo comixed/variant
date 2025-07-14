@@ -54,30 +54,57 @@ struct EditServerView: View {
         NavigationView {
             VStack {
                 Section(header: Text("Server Details").font(.headline)) {
-                    TextField("Server address", text: $addressValue)
-                        .keyboardType(.URL)
-                        .textContentType(.URL)
-                        .disableAutocorrection(true)
-                        .autocapitalization(.none)
+                    TextField(
+                        String(
+                            localized: "edit-server.label.server-address",
+                            defaultValue: "Server address"
+                        ),
+                        text: $addressValue
+                    )
+                    .keyboardType(.URL)
+                    .textContentType(.URL)
+                    .disableAutocorrection(true)
+                    .autocapitalization(.none)
                 }
 
-                Section(header: Text("Account Details").font(.headline)) {
-                    TextField("Username", text: $usernameValue)
-                        .textContentType(.emailAddress)
-                        .disableAutocorrection(true)
-                        .autocapitalization(.none)
-                    SecureField("Password", text: $passwordValue)
-                        .textContentType(.password)
-                        .disableAutocorrection(true)
-                        .autocapitalization(.none)
+                Section(
+                    header: Text(
+                        String(
+                            localized: "edit-server.header.account-details",
+                            defaultValue: "Account Details"
+                        )
+                    ).font(.headline)
+                ) {
+                    TextField(
+                        String(
+                            localized: "edit-server.label.username",
+                            defaultValue: "Username"
+                        ),
+                        text: $usernameValue
+                    )
+                    .textContentType(.emailAddress)
+                    .disableAutocorrection(true)
+                    .autocapitalization(.none)
+                    SecureField(
+                        String(
+                            localized: "edit-server.label.password",
+                            defaultValue: "Password"
+                        ),
+                        text: $passwordValue
+                    )
+                    .textContentType(.password)
+                    .disableAutocorrection(true)
+                    .autocapitalization(.none)
                 }
 
                 Spacer()
             }
             .padding()
             .toolbar {
-                Button("Save") {
+                Button {
                     onSaveChanges(addressValue, usernameValue, passwordValue)
+                } label: {
+                    Image(systemName: "checkmark.circle.fill")
                 }
             }
         }.navigationViewStyle(StackNavigationViewStyle())
