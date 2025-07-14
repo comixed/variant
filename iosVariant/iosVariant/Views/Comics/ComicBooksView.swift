@@ -23,45 +23,53 @@ import shared
 private let TAG = "ComicBooksView"
 
 struct ComicBooksView: View {
+    let comicBook: ComicBook?
     let comicBookList: [ComicBook]
     let selectionMode: Bool
     let selectionList: [String]
 
     var onSetSelectionMode: (Bool) -> Void
-    var onComicClicked: (ComicBook) -> Void
+    var onComicClicked: (ComicBook?) -> Void
     var onDeleteComics: () -> Void
 
     var body: some View {
-        NavigationStack {
-            ComicBookListView(
-                comicBookList: comicBookList,
-                selectionList: selectionList,
-                onClick: { comicBook in onComicClicked(comicBook) }
+        if comicBook != nil {
+            ReadingView(
+                comicBook: comicBook!,
+                onStopReading: { onComicClicked(nil) }
             )
-            .toolbar {
-                ToolbarItemGroup(placement: .bottomBar) {
-                    if selectionMode {
-                        Button {
-                            onSetSelectionMode(false)
-                        } label: {
-                            Image("selection_mode_on")
+        } else {
+            NavigationStack {
+                ComicBookListView(
+                    comicBookList: comicBookList,
+                    selectionList: selectionList,
+                    onClick: { comicBook in onComicClicked(comicBook) }
+                )
+                .toolbar {
+                    ToolbarItemGroup(placement: .bottomBar) {
+                        if selectionMode {
+                            Button {
+                                onSetSelectionMode(false)
+                            } label: {
+                                Image("selection_mode_on")
+                            }
+
+                            Button {
+                                onDeleteComics()
+                            } label: {
+                                Image(systemName: "trash.fill")
+                            }
+                            .disabled(selectionList.isEmpty)
+                        } else {
+                            Button {
+                                onSetSelectionMode(true)
+                            } label: {
+                                Image("selection_mode_off")
+                            }
                         }
 
-                        Button {
-                            onDeleteComics()
-                        } label: {
-                            Image(systemName: "trash.fill")
-                        }
-                        .disabled(selectionList.isEmpty)
-                    } else {
-                        Button {
-                            onSetSelectionMode(true)
-                        } label: {
-                            Image("selection_mode_off")
-                        }
+                        Spacer()
                     }
-
-                    Spacer()
                 }
             }
         }
@@ -70,33 +78,36 @@ struct ComicBooksView: View {
 
 #Preview {
     ComicBooksView(
+        comicBook: nil,
         comicBookList: COMIC_BOOK_LIST,
         selectionMode: false,
         selectionList: [],
         onSetSelectionMode: { _ in },
         onComicClicked: { _ in },
-        onDeleteComics: { }
+        onDeleteComics: {}
     )
 }
 
 #Preview("selection mode on") {
     ComicBooksView(
+        comicBook: nil,
         comicBookList: COMIC_BOOK_LIST,
         selectionMode: true,
         selectionList: [COMIC_BOOK_LIST[0].path],
         onSetSelectionMode: { _ in },
         onComicClicked: { _ in },
-        onDeleteComics: { }
+        onDeleteComics: {}
     )
 }
 
 #Preview("selection mode on no selections") {
     ComicBooksView(
+        comicBook: nil,
         comicBookList: COMIC_BOOK_LIST,
         selectionMode: true,
         selectionList: [],
         onSetSelectionMode: { _ in },
         onComicClicked: { _ in },
-        onDeleteComics: { }
+        onDeleteComics: {}
     )
 }

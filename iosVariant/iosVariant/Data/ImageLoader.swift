@@ -33,7 +33,7 @@ class ImageLoader: ObservableObject {
 
         if comicBook.pages.count > 0 {
             self.pageFilename = (comicBook.pages[0] as! ComicPage).filename
-            doLoadPage()
+            doLoadCover()
         }
     }
 
@@ -43,12 +43,31 @@ class ImageLoader: ObservableObject {
         doLoadPage()
     }
 
-    private func doLoadPage() {
+    private func doLoadCover() {
         Task {
             Log().debug(
                 tag: TAG,
                 message:
                     "Loading cover image: \(self.comicFilename):\(self.pageFilename)"
+            )
+            let imageData = try await ArchiveAPI().loadCover(
+                comicFilename: self.comicFilename,
+                pageFilename: self.pageFilename
+            )
+
+            if imageData != nil {
+                self.image = imageData!.toUIImage()
+            }
+        }
+
+    }
+
+    private func doLoadPage() {
+        Task {
+            Log().debug(
+                tag: TAG,
+                message:
+                    "Loading page image: \(self.comicFilename):\(self.pageFilename)"
             )
             let imageData = try await ArchiveAPI().loadPage(
                 comicFilename: self.comicFilename,
