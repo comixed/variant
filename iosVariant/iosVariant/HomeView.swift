@@ -29,6 +29,7 @@ struct HomeView: View {
     var body: some View {
         TabView(selection: $currentDestination) {
             ComicBooksView(
+                comicBook: variantViewModel.comicBook,
                 comicBookList: variantViewModel.comicBookList,
                 selectionMode: variantViewModel.selectionMode,
                 selectionList: variantViewModel.selectionList,
@@ -44,15 +45,15 @@ struct HomeView: View {
                         Log().info(
                             tag: TAG,
                             message:
-                                "Toggling comic book select: \(comicBook.path)"
+                                "Toggling comic book select: \(comicBook!.path)"
                         )
                         variantViewModel.updateSelectionList(
-                            filename: comicBook.path
+                            filename: comicBook!.path
                         )
                     } else {
                         Log().info(
                             tag: TAG,
-                            message: "Reading comic book: \(comicBook.filename)"
+                            message: "Reading comic book: \(comicBook?.filename)"
                         )
                         variantViewModel.readComicBook(comicBook: comicBook)
                         currentDestination = .comics

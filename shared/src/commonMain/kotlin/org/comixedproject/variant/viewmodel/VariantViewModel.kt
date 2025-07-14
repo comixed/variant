@@ -63,7 +63,6 @@ open class VariantViewModel(
         Log.debug(TAG, "_libraryDirectory=${directory}")
         _libraryDirectory = directory
         viewModelScope.coroutineScope.launch {
-
             if (!File(_libraryDirectory).exists) {
                 Log.info(TAG, "Creating library directory: ${_libraryDirectory}")
                 File(_libraryDirectory).makeDirectory()

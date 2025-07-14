@@ -18,6 +18,7 @@
 
 package org.comixedproject.variant.adaptor
 
+import co.touchlab.stately.collections.ConcurrentMutableMap
 import com.oldguy.common.io.File
 import com.oldguy.common.io.ZipFile
 import org.comixedproject.variant.model.library.ComicBook
@@ -29,6 +30,10 @@ private const val TAG = "ArchiveAPI"
 private const val UNKNOWN_METADATA = "Unknown"
 
 public object ArchiveAPI {
+    val coverCache = ConcurrentMutableMap<String, ByteArray?>()
+    var cachedComic = ""
+    val pageCache = ConcurrentMutableMap<String, ByteArray?>()
+
     suspend fun loadComicBook(archive: File): ComicBook {
         val pages = mutableListOf<ComicPage>()
         var metadata = ComicBookMetadata()
@@ -71,8 +76,39 @@ public object ArchiveAPI {
         return result
     }
 
+    suspend fun loadCover(comicFilename: String, pageFilename: String): ByteArray? {
+        val key = "${comicFilename}:${pageFilename}"
+
+        if (coverCache.contains(key)) {
+            Log.debug(TAG, "Retrieving cached cover for comic: ${comicFilename}")
+            return coverCache.get(key)
+        }
+
+        val image = loadImageFromFile(comicFilename, pageFilename)
+        Log.debug(TAG, "Caching cover image: ${key}")
+        coverCache.put(key, image)
+        Log.debug(TAG, "Returning ${image?.size} bytes for ${key}")
+        return image
+    }
+
     suspend fun loadPage(comicFilename: String, pageFilename: String): ByteArray? {
-        Log.debug(TAG, "Loading page entry: ${comicFilename}:${pageFilename}")
+        if (!cachedComic.equals(comicFilename)) {
+            Log.debug(TAG, "Resetting page caching for comic: ${comicFilename}")
+            pageCache.clear()
+            cachedComic = comicFilename
+        } else if (pageCache.contains(pageFilename)) {
+            Log.debug(TAG, "Retrieving cached page for comic: ${comicFilename}:${pageFilename}")
+            return pageCache.get(pageFilename)
+        }
+
+        val image = loadImageFromFile(comicFilename, pageFilename)
+        Log.debug(TAG, "Caching page for comic: ${pageFilename}")
+        pageCache.put(pageFilename, image)
+        return image
+    }
+
+    private suspend fun loadImageFromFile(comicFilename: String, pageFilename: String): ByteArray? {
+        Log.debug(TAG, "Loading image from file: ${comicFilename}:${pageFilename}")
         var result: ByteArray? = null
         try {
             ZipFile(File(comicFilename)).use { zip ->

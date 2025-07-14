@@ -54,6 +54,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.multiplatform.settings)
             implementation(libs.bundles.metadata)
+            implementation(libs.stately.concurrent.collections)
 
             api(libs.kmp.viewmodel.core)
         }
