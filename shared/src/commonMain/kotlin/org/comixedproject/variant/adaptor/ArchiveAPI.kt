@@ -38,7 +38,7 @@ public object ArchiveAPI {
         val pages = mutableListOf<ComicPage>()
         var metadata = ComicBookMetadata()
 
-        Log.debug(TAG, "Loading comic archive entries")
+        Log.debug(TAG, "Loading comic archive entries: ${archive.path}")
         try {
             ZipFile(archive).use { zip ->
                 zip.map
