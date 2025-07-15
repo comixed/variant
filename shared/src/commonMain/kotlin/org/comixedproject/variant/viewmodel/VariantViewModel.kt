@@ -29,10 +29,12 @@ import com.rickclephas.kmp.observableviewmodel.launch
 import com.russhwolf.settings.Settings
 import io.github.irgaly.kfswatch.KfsDirectoryWatcher
 import io.github.irgaly.kfswatch.KfsDirectoryWatcherEvent
+import io.github.irgaly.kfswatch.KfsEvent
 import io.github.irgaly.kfswatch.KfsLogger
 import io.ktor.http.URLBuilder
 import io.ktor.http.takeFrom
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -62,7 +64,7 @@ open class VariantViewModel(
     fun setLibraryDirectory(directory: String) {
         Log.debug(TAG, "_libraryDirectory=${directory}")
         _libraryDirectory = directory
-        viewModelScope.coroutineScope.launch {
+        viewModelScope.coroutineScope.launch(Dispatchers.Main) {
             if (!File(_libraryDirectory).exists) {
                 Log.info(TAG, "Creating library directory: ${_libraryDirectory}")
                 File(_libraryDirectory).makeDirectory()
@@ -90,9 +92,14 @@ open class VariantViewModel(
                 })
             libraryWatcher?.add(_libraryDirectory)
             libraryWatcher?.onEventFlow?.collect { event: KfsDirectoryWatcherEvent ->
-                viewModelScope.coroutineScope.launch {
-                    Log.debug(TAG, "Received file watcher event: ${event}")
-                    loadLibraryContents()
+                viewModelScope.coroutineScope.launch(Dispatchers.Main) {
+                    Log.debug(
+                        TAG,
+                        "Received file watcher event: target directory=${event.targetDirectory} path=${event.path}"
+                    )
+                    val path = "${event.targetDirectory}/${event.path}"
+                    val file = File(path)
+                    onLibraryFileEvent(file, event.event)
                 }
             }
         }
@@ -151,7 +158,7 @@ open class VariantViewModel(
             Log.debug(TAG, "Loading directory: ${path}")
             var contents = directoryRepository.loadDirectoryContents(path)
             if (contents.isEmpty() || reload) {
-                _loading.emit(true)
+                _loading.tryEmit(true)
 
                 try {
                     val url = URLBuilder(address).takeFrom(path)
@@ -186,7 +193,7 @@ open class VariantViewModel(
 
             val directory = directoryRepository.findDirectory(path)
             Log.debug(TAG, "Updating browsing state: currentPath=${path}")
-            _browsingState.emit(
+            _browsingState.tryEmit(
                 BrowsingState(
                     path,
                     directory?.parent ?: "",
@@ -195,7 +202,7 @@ open class VariantViewModel(
                     _browsingState.value.downloadingState
                 )
             )
-            _loading.emit(false)
+            _loading.tryEmit(false)
         }
     }
 
@@ -205,7 +212,7 @@ open class VariantViewModel(
         val username = this.username
         val password = this.password
 
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             val downloadingState = DownloadingState(path, filename, 0, 0)
             val state = mutableListOf<DownloadingState>()
             state.addAll(_browsingState.value.downloadingState)
@@ -254,29 +261,29 @@ open class VariantViewModel(
     }
 
     fun readComicBook(comicBook: ComicBook?) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.Default) {
             if (comicBook != null) {
                 Log.info(TAG, "Reading comic book: ${comicBook.filename}")
             } else {
                 Log.info(TAG, "Stopped reading comic book")
             }
-            _comicBook.emit(comicBook)
+            _comicBook.tryEmit(comicBook)
         }
     }
 
     fun setSelectMode(enable: Boolean) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.Default) {
             Log.debug(TAG, "Setting selection mode: ${enable}")
-            _selectionMode.emit(enable)
+            _selectionMode.tryEmit(enable)
             if (!enable) {
                 Log.debug(TAG, "Clearing selections")
-                _selectionList.emit(emptyList())
+                _selectionList.tryEmit(emptyList())
             }
         }
     }
 
     fun updateSelectionList(filename: String) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.Default) {
             val selections = mutableListOf<String>()
             if (_selectionList.value.contains(filename)) {
                 Log.debug(TAG, "Removing selection: ${filename}")
@@ -286,7 +293,7 @@ open class VariantViewModel(
                 selections.addAll(_selectionList.value)
                 selections.add(filename)
             }
-            _selectionList.emit(selections)
+            _selectionList.tryEmit(selections)
         }
     }
 
@@ -297,15 +304,28 @@ open class VariantViewModel(
             file.delete()
         }
 
-        _selectionList.emit(emptyList())
-        _selectionMode.emit(false)
+        _selectionList.tryEmit(emptyList())
+        _selectionMode.tryEmit(false)
+    }
+
+    private suspend fun onLibraryFileEvent(file: File, event: KfsEvent) {
+        Log.debug(TAG, "Processing library event: ${event} for ${file.fullPath}")
+        when (event) {
+            KfsEvent.Create -> loadLibraryContents()
+            KfsEvent.Modify -> loadLibraryContents()
+            KfsEvent.Delete -> {
+                val contents = _comicBookList.value.filter {
+                    !it.path.equals(file.fullPath)
+                }
+                _comicBookList.tryEmit(contents)
+            }
+        }
     }
 
     private suspend fun loadLibraryContents() {
-        Log.debug(TAG, "Loading library contents: ${_libraryDirectory}")
-
         val path = File(_libraryDirectory)
         val ignored = this._browsingState.value.downloadingState.map { it.filename }.toList()
+        val entries = _comicBookList.value.associate { it.path to it }
         val contents =
             path.directoryFiles()
                 .filter {
@@ -316,18 +336,23 @@ open class VariantViewModel(
                     }
                 }
                 .filter { !it.isDirectory }
+                .filter { it.extension.equals("cbz") }
                 .filter { it.size.toLong() > 0L }
-                .filter { it.extension.equals("cbz") || it.extension.equals("cbr") }
-                .map { entry ->
-                    Log.debug(TAG, "Found file: ${entry.path}")
-                    ArchiveAPI.loadComicBook(entry)
+                .map {
+                    if (entries.contains(it.fullPath)) {
+                        Log.debug(TAG, "File already loaded: ${it.fullPath}")
+                        entries.getValue(it.fullPath)
+                    } else {
+                        Log.debug(TAG, "Found file: ${it.path}")
+                        ArchiveAPI.loadComicBook(it)
+                    }
                 }.toList()
         _comicBookList.tryEmit(contents)
     }
 
     private suspend fun doUpdateDownloadingState(state: List<DownloadingState>) {
         val browsingState = _browsingState.value
-        _browsingState.emit(
+        _browsingState.tryEmit(
             BrowsingState(
                 browsingState.currentPath,
                 browsingState.parentPath,

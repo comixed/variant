@@ -22,6 +22,7 @@ import shared
 
 private let TAG = "ImageLoader"
 
+@MainActor
 class ImageLoader: ObservableObject {
     private var comicFilename: String = ""
     private var pageFilename: String = ""
