@@ -23,9 +23,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -37,12 +34,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.comixedproject.variant.android.DIRECTORY_LIST
+import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.view.BYTES_PER_MB
 import org.comixedproject.variant.model.library.DirectoryEntry
@@ -78,23 +77,39 @@ fun FileItemView(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if (comicBookFilenameList.contains(fileEntry.filename)) {
-                    IconButton(
-                        onClick = {
-
-                        },
-                        enabled = downloadingState.size < 5
-                    ) {
-                        Icon(Icons.Filled.Check, contentDescription = fileEntry.title)
+                if (downloading == null) {
+                    if (comicBookFilenameList.contains(fileEntry.filename)) {
+                        IconButton(
+                            onClick = { },
+                            enabled = downloadingState.size < 5
+                        ) {
+                            Icon(
+                                painterResource(id = R.drawable.ic_downloaded_file),
+                                contentDescription = fileEntry.title
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            onClick = {
+                                onDownloadFile(fileEntry.path, fileEntry.filename)
+                            },
+                            enabled = downloadingState.size < 5
+                        ) {
+                            Icon(
+                                painterResource(R.drawable.ic_download_file),
+                                contentDescription = fileEntry.title
+                            )
+                        }
                     }
                 } else {
                     IconButton(
-                        onClick = {
-                            onDownloadFile(fileEntry.path, fileEntry.filename)
-                        },
+                        onClick = { },
                         enabled = downloadingState.size < 5
                     ) {
-                        Icon(Icons.Filled.AddCircle, contentDescription = fileEntry.title)
+                        Icon(
+                            painterResource(R.drawable.ic_downloading_file),
+                            contentDescription = fileEntry.title
+                        )
                     }
                 }
 
@@ -107,18 +122,19 @@ fun FileItemView(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Text(
-                        text = "${fileEntry.filename}",
-                        style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Left,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
 
-                    downloading?.let {
-                        val received = it.received
-                        val total = it.total
+                    if (downloading == null) {
+                        Text(
+                            text = "${fileEntry.filename}",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Left,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    } else {
+                        val received = downloading.received
+                        val total = downloading.total
                         val progress = when (received > 0) {
                             true -> (received.toFloat() / total.toFloat())
                             false -> 0.0
@@ -146,9 +162,10 @@ fun FileItemView(
 @Composable
 @Preview
 fun FileItemViewPreview() {
+    val fileEntry = DIRECTORY_LIST.filter { !it.isDirectory }.first()
     VariantTheme {
         FileItemView(
-            DIRECTORY_LIST.filter { !it.isDirectory }.first(),
+            fileEntry,
             listOf(),
             listOf(),
             onDownloadFile = { _, _ -> })

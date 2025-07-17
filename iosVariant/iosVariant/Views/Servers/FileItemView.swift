@@ -28,7 +28,7 @@ struct FileItemView: View {
 
     var onDownloadFile: (String, String) -> Void
 
-    var isDownloaded: Bool {
+    var downloaded: Bool {
         return comicBookFiles.contains(entry.filename)
     }
 
@@ -52,11 +52,23 @@ struct FileItemView: View {
 
     var body: some View {
         HStack {
-            if isDownloaded {
+            if downloaded {
                 Button {
 
                 } label: {
-                    Image(systemName: "checkmark.circle.fill")
+                    Image("downloaded_file")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32)
+                }
+            } else if downloading {
+                Button {
+
+                } label: {
+                    Image("downloading_file")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32)
                 }
             } else {
                 Button {
@@ -66,7 +78,10 @@ struct FileItemView: View {
                     )
                     onDownloadFile(entry.path, entry.filename)
                 } label: {
-                    Image(systemName: "plus.circle.fill")
+                    Image("download_file")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32)
                 }
             }
 
@@ -74,14 +89,14 @@ struct FileItemView: View {
                 Text(entry.title)
                     .font(.headline)
 
-                Text(entry.filename)
-                    .font(.subheadline)
-
                 if downloading {
                     HStack {
                         Text("\(fileSize) MB")
                         ProgressView(value: downloadProgress)
                     }
+                } else {
+                    Text(entry.filename)
+                        .font(.subheadline)
                 }
             }
         }
