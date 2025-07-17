@@ -19,4 +19,8 @@
     <string name="markReadLabel">Mark selected comics as read.</string>
     <string name="markUnreadLabel">Mark selected comics as unread.</string>
     <string name="deleteSelectionsLabel">Delete selected comics from device.</string>
+    <plurals name="comicBookListTitle">
+        <item quantity="one">%d Comic Book</item>
+        <item quantity="other">%d Comic Books</item>
+    </plurals>
 </resources>
