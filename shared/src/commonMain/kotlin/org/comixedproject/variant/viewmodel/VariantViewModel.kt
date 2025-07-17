@@ -254,9 +254,10 @@ open class VariantViewModel(
             }
 
             val finalState =
-                _browsingState.value.downloadingState.filter { !(it.path == path) }
+                _browsingState.value.downloadingState.filter { !(it.path.equals(path)) }
                     .toMutableList()
             doUpdateDownloadingState(finalState)
+            loadLibraryContents()
         }
     }
 
@@ -330,8 +331,10 @@ open class VariantViewModel(
             path.directoryFiles()
                 .filter {
                     if (!ignored.contains(it.name)) {
+                        Log.debug(TAG, "File is not ignored: ${it.name}")
                         true
                     } else {
+                        Log.debug(TAG, "File is ignored: ${it.name}")
                         false
                     }
                 }
