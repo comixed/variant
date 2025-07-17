@@ -10,6 +10,7 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
+		6A1EDFD12E294F7D00429CEF /* Translations.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 6A1EDFD02E294F7D00429CEF /* Translations.xcstrings */; };
 		6A4D18062E14191D00FF9EA2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D18052E14191D00FF9EA2 /* Constants.swift */; };
 		6AA598492DE72E910078CC9F /* ServerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA598482DE72E910078CC9F /* ServerView.swift */; };
 		6AA5984C2DE72EF40078CC9F /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA5984B2DE72EF40078CC9F /* Fixtures.swift */; };
@@ -50,6 +51,7 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		6A1EDFD02E294F7D00429CEF /* Translations.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Translations.xcstrings; sourceTree = "<group>"; };
 		6A4D18052E14191D00FF9EA2 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		6AA598482DE72E910078CC9F /* ServerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerView.swift; sourceTree = "<group>"; };
 		6AA5984B2DE72EF40078CC9F /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 		7555FF72242A565900829871 = {
 			isa = PBXGroup;
 			children = (
+				6A1EDFD02E294F7D00429CEF /* Translations.xcstrings */,
 				7555FF7D242A565900829871 /* iosVariant */,
 				7555FF7C242A565900829871 /* Products */,
 				7555FFB0242A642200829871 /* Frameworks */,
@@ -256,9 +259,6 @@
 			knownRegions = (
 				en,
 				Base,
-				es,
-				fr,
-				"pt-BR",
 			);
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
@@ -279,6 +279,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A1EDFD12E294F7D00429CEF /* Translations.xcstrings in Resources */,
 				058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */,
 				058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */,
 			);
@@ -394,6 +395,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -448,6 +450,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};

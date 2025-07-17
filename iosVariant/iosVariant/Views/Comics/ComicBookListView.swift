@@ -30,6 +30,8 @@ struct ComicBookListView: View {
 
     var onClick: (ComicBook) -> Void
 
+    var comicBookCount: Int { return comicBookList.count }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -48,8 +50,8 @@ struct ComicBookListView: View {
             }
             .navigationTitle(
                 String(
-                    localized: "comic-book-list.title",
-                    defaultValue: "Comic List"
+                    localized: "\(comicBookCount) Comic Books",
+                    table: "Translations"
                 )
             )
         }

@@ -23,10 +23,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,6 +48,13 @@ fun ComicBookListView(
     modifier: Modifier = Modifier
 ) {
     Scaffold(
+        topBar = {
+            Text(
+                pluralStringResource(R.plurals.comicBookListTitle, comicBookList.size,
+                    comicBookList.size),
+                style = MaterialTheme.typography.headlineMedium
+            )
+        },
         content = { padding ->
             if (comicBookList.isEmpty()) {
                 Log.debug(

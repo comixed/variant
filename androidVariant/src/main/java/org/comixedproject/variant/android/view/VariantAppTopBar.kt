@@ -18,10 +18,6 @@
 
 package org.comixedproject.variant.android.view
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.R
@@ -49,21 +46,21 @@ fun VariantTopAppBar(
         actions = {
             IconButton(onClick = { onBrowseComics() }) {
                 Icon(
-                    imageVector = Icons.Rounded.Home,
+                    painterResource(R.drawable.ic_comic_library),
                     contentDescription = stringResource(R.string.browseServerDestinationLabel)
                 )
             }
 
             IconButton(onClick = { onBrowseServer() }) {
                 Icon(
-                    imageVector = Icons.Rounded.AccountCircle,
+                    painterResource(R.drawable.ic_browse_library),
                     contentDescription = stringResource(R.string.browseServerDestinationLabel)
                 )
             }
 
             IconButton(onClick = { onUpdateSettings() }) {
                 Icon(
-                    imageVector = Icons.Rounded.Settings,
+                    painterResource(R.drawable.ic_settings),
                     contentDescription = stringResource(R.string.settingsDestinationLabel)
                 )
             }

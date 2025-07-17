@@ -19,8 +19,6 @@
 package org.comixedproject.variant.android.view.comics
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -81,7 +79,7 @@ fun ComicBookView(
                             onDeleteComics()
                         }) {
                             Icon(
-                                Icons.Filled.Delete,
+                                painterResource(R.drawable.ic_delete_comics),
                                 contentDescription = stringResource(R.string.deleteSelectionsLabel)
                             )
                         }
