@@ -100,7 +100,7 @@ struct BrowseServerView: View {
                             )
                             onLoadDirectory(parentPath, false)
                         } label: {
-                            Image(systemName: "arrow.backward")
+                            Image("back")
                         }
                     }
                 }
@@ -112,9 +112,9 @@ struct BrowseServerView: View {
 #Preview("directories") {
     BrowseServerView(
         comicBookList: COMIC_BOOK_LIST,
-        path: "/reader/v1",
+        path: "/reader/v1/publishers",
         title: "",
-        parentPath: "",
+        parentPath: "/reader/v1",
         directoryContents: DIRECTORY_LIST.filter { $0.isDirectory },
         downloadingState: [],
         loading: false,

@@ -2,7 +2,6 @@
 android-gradle-plugin = "8.10.0"
 kotlin = "2.2.0"
 compose = "1.5.4"
-compose-material3 = "1.1.2"
 androidx-activity-compose = "1.8.0"
 koin-version = "3.5.6"
 sqldelight-plugin = "2.0.2"
@@ -16,7 +15,6 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" }
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version = "2.0.4" }
 kmp-viewmodel-core = { group = "com.rickclephas.kmp", name = "kmp-observableviewmodel-core", version = "1.0.0-BETA-12" }
 kermit-logging = { group = "co.touchlab", name = "kermit", version = "2.0.4" }
@@ -39,6 +37,7 @@ sqldelight-driver-native = { group = "app.cash.sqldelight", name = "native-drive
 # material
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "android-material3-version" }
 androidx-compose-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "android-material3-version" }
+androidx-compose-material3-navigation = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "android-material3-version" }
 
 # networking
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-version" }
@@ -71,6 +70,6 @@ native-coroutines = { id = "com.rickclephas.kmp.nativecoroutines", version = "1.
 plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.1.21" }
 
 [bundles]
-android-compose = ["koin-androidx-compose", "androidx-compose-material3", "androidx-compose-material3-android"]
+android-compose = ["koin-androidx-compose", "androidx-compose-material3", "androidx-compose-material3-android", "androidx-compose-material3-navigation"]
 ktor-common = ["ktor-client-core", "ktor-client-auth", "ktor-client-serialization", "ktor-client-serialization-json", "ktor-client-content-negotiation", "ktor-server-content-negotiation", "ktor-client-logging"]
 metadata = ["xml-util", "xml-util-serialization"]

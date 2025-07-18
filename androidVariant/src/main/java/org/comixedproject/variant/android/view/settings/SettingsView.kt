@@ -23,34 +23,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.android.view.server.EditServerView
-import org.comixedproject.variant.platform.Log
-import org.comixedproject.variant.viewmodel.VariantViewModel
-import org.koin.androidx.compose.koinViewModel
 
 private val TAG = "SettingsView"
 
 @Composable
 fun SettingsView(
-    onCloseSettings: () -> Unit,
+    address: String,
+    username: String,
+    password: String,
+    onSaveSettings: (String, String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val variantViewModel: VariantViewModel = koinViewModel()
-
     Column(modifier = modifier) {
         EditServerView(
-            variantViewModel.address,
-            variantViewModel.username,
-            variantViewModel.password,
+            address,
+            username,
+            password,
             onSave = { address, username, password ->
-                Log.debug(
-                    TAG,
-                    "Updating server settings: address=$address, username=$username, password=$password"
-                )
-                variantViewModel.address = address
-                variantViewModel.username = username
-                variantViewModel.password = password
-                onCloseSettings()
+                onSaveSettings(address, username, password)
             }
         )
     }
@@ -60,6 +50,10 @@ fun SettingsView(
 @Preview
 fun SettingsViewPreview() {
     VariantTheme {
-        SettingsView(onCloseSettings = { })
+        SettingsView(
+            "http://www.comixedproject.org:7171",
+            "reader@comixedproject.org",
+            "my!password",
+            onSaveSettings = { _, _, _ -> })
     }
 }

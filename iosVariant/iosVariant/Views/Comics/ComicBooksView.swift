@@ -57,7 +57,7 @@ struct ComicBooksView: View {
                             Button {
                                 onDeleteComics()
                             } label: {
-                                Image(systemName: "trash.fill")
+                                Image("delete_selections")
                             }
                             .disabled(selectionList.isEmpty)
                         } else {

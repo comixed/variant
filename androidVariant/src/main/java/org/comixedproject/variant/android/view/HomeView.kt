@@ -18,105 +18,161 @@
 
 package org.comixedproject.variant.android.view
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import org.comixedproject.variant.android.COMIC_BOOK_LIST
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.android.view.comics.ComicBookView
 import org.comixedproject.variant.android.view.reading.ReadingView
 import org.comixedproject.variant.android.view.server.ServerView
 import org.comixedproject.variant.android.view.settings.SettingsView
+import org.comixedproject.variant.model.library.ComicBook
 import org.comixedproject.variant.platform.Log
-import org.comixedproject.variant.viewmodel.VariantViewModel
-import org.koin.androidx.compose.koinViewModel
+import org.comixedproject.variant.viewmodel.BrowsingState
 
 private const val TAG = "HomeView"
 
 @Composable
-fun HomeView() {
-    val variantViewModel: VariantViewModel = koinViewModel()
+fun HomeView(
+    comicBook: ComicBook?,
+    comicBookList: List<ComicBook>,
+    browsingState: BrowsingState,
+    loading: Boolean,
+    selectionMode: Boolean,
+    selectionList: List<String>,
+    address: String, username: String, password: String,
+    onLoadDirectory: (String, Boolean) -> Unit,
+    onDownloadFile: (String, String) -> Unit,
+    onReadComicBook: (ComicBook?) -> Unit,
+    onSetSelectionMode: (Boolean) -> Unit,
+    onUpdateSelection: (ComicBook) -> Unit,
+    onDeleteSelections: () -> Unit,
+    onSaveSettings: (String, String, String) -> Unit
+) {
     var currentDestination by remember { mutableStateOf(AppDestination.COMICS) }
-    val coroutineScope = rememberCoroutineScope()
-    val comicBookList by variantViewModel.comicBookList.collectAsState()
-    val selectionMode by variantViewModel.selectionMode.collectAsState()
-    val selectionList by variantViewModel.selectionList.collectAsState()
-    val comicBook by variantViewModel.comicBook.collectAsState()
 
     Scaffold(
-        topBar = {
-            VariantTopAppBar(
-                onBrowseComics = { currentDestination = AppDestination.COMICS },
-                onBrowseServer = {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        variantViewModel.loadDirectory(
-                            variantViewModel.browsingState.value.currentPath,
-                            false
-                        )
-                    }
-                    currentDestination = AppDestination.BROWSE
-                },
-                onUpdateSettings = { currentDestination = AppDestination.SETTINGS })
-        },
+        topBar = { VariantTopAppBar() },
         content = { padding ->
-            when (currentDestination) {
-                AppDestination.COMICS ->
-                    if (comicBook != null) {
-                        ReadingView(
-                            comicBook!!,
-                            modifier = Modifier.padding(padding),
-                            onStopReading = { variantViewModel.readComicBook(null) }
-                        )
-                    } else {
-                        ComicBookView(
-                            comicBookList,
-                            selectionMode,
-                            selectionList,
-                            onSetSelectionMode = {
-                                Log.info(TAG, "Setting selection mode: ${it}")
-                                variantViewModel.setSelectMode(it)
+            NavigationSuiteScaffold(
+                navigationSuiteItems = {
+                    AppDestination.entries.forEach {
+                        item(
+                            icon = {
+                                Icon(
+                                    painterResource(it.icon),
+                                    contentDescription = stringResource(it.label)
+                                )
                             },
-                            onComicBookClicked = { comicBook ->
-                                if (selectionMode) {
-                                    Log.info(
-                                        TAG,
-                                        "Toggling comic book selection: ${comicBook.path}"
-                                    )
-                                    variantViewModel.updateSelectionList(comicBook.path)
-                                } else {
-                                    Log.info(TAG, "Reading comic book: ${comicBook.filename}")
-                                    variantViewModel.readComicBook(comicBook)
+                            label = { Text(stringResource(it.label)) },
+                            selected = it == currentDestination,
+                            onClick = {
+                                if (it == AppDestination.BROWSE
+                                ) {
+                                    onLoadDirectory(browsingState.currentPath, false)
                                 }
-                            },
-                            onDeleteComics = {
-                                coroutineScope.launch(Dispatchers.IO) {
-                                    variantViewModel.deleteSelections()
-                                }
-                            },
-                            modifier = Modifier.padding(padding)
+                                currentDestination = it
+                            }
                         )
                     }
+                },
+                modifier = Modifier.padding(padding)
+            ) {
+                when (currentDestination) {
+                    AppDestination.COMICS ->
+                        if (comicBook != null) {
+                            ReadingView(
+                                comicBook,
+                                onStopReading = { onReadComicBook(null) },
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            )
+                        } else {
+                            ComicBookView(
+                                comicBookList,
+                                selectionMode,
+                                selectionList,
+                                onSetSelectionMode = {
+                                    Log.info(TAG, "Setting selection mode: ${it}")
+                                    onSetSelectionMode(it)
+                                },
+                                onComicBookClicked = { comicBook ->
+                                    if (selectionMode) {
+                                        Log.info(
+                                            TAG,
+                                            "Toggling comic book selection: ${comicBook.path}"
+                                        )
+                                        onUpdateSelection(comicBook)
+                                    } else {
+                                        Log.info(TAG, "Reading comic book: ${comicBook.filename}")
+                                        onReadComicBook(comicBook)
+                                    }
+                                },
+                                onDeleteComics = { onDeleteSelections() },
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            )
+                        }
 
-                AppDestination.BROWSE -> ServerView(modifier = Modifier.padding(padding))
-                AppDestination.SETTINGS -> SettingsView(onCloseSettings = {
-                    currentDestination = AppDestination.COMICS
-                }, modifier = Modifier.padding(padding))
+                    AppDestination.BROWSE -> ServerView(
+                        browsingState, comicBookList, loading,
+                        onLoadDirectory = { path, reload -> onLoadDirectory(path, reload) },
+                        onDownloadFile = { path, filename -> onDownloadFile(path, filename) },
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+
+                    AppDestination.SETTINGS -> SettingsView(
+                        address, username, password,
+                        onSaveSettings = { address, username, password ->
+                            Log.info(
+                                TAG,
+                                "Updating server settings: address=${address} username=${username} password=${
+                                    password.first()
+                                }*****"
+                            )
+                            onSaveSettings(address, username, password)
+                            currentDestination = AppDestination.COMICS
+                        },
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                }
             }
-        }
-    )
+        })
 }
 
 @Composable
 @Preview
 fun HomeViewPreview() {
-    VariantTheme { HomeView() }
+    VariantTheme {
+        HomeView(
+            COMIC_BOOK_LIST.get(0),
+            COMIC_BOOK_LIST,
+            BrowsingState("", "", "", listOf(), listOf()),
+            false,
+            false,
+            listOf(),
+            "http://www.comixedproject.org:7171", "reader@comixedproject.org", "my!password",
+            onLoadDirectory = { _, _ -> },
+            onDownloadFile = { _, _ -> },
+            onReadComicBook = { _ -> },
+            onSetSelectionMode = { _ -> },
+            onUpdateSelection = { _ -> },
+            onDeleteSelections = { }, onSaveSettings = { _, _, _ -> }
+        )
+    }
 }

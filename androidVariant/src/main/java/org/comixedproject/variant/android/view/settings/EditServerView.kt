@@ -16,15 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.android.view.server
+package org.comixedproject.variant.android.view.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -35,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.R
@@ -94,7 +92,7 @@ fun EditServerView(
                 onSave(addressValue, usernameValue, passwordValue)
             }, enabled = validForm) {
                 Icon(
-                    imageVector = Icons.Default.Done,
+                    painterResource(R.drawable.ic_save),
                     contentDescription = stringResource(R.string.saveButton)
                 )
             }
@@ -105,7 +103,7 @@ fun EditServerView(
                 passwordValue = password
             }, enabled = validForm) {
                 Icon(
-                    imageVector = Icons.Default.Clear,
+                    painterResource(R.drawable.ic_cancel),
                     contentDescription = stringResource(R.string.cancelButton)
                 )
             }

@@ -18,8 +18,10 @@
 
 package org.comixedproject.variant.android.view
 
-enum class AppDestination {
-    COMICS,
-    BROWSE,
-    SETTINGS
+import org.comixedproject.variant.android.R
+
+enum class AppDestination(val icon: Int, val label: Int) {
+    COMICS(R.drawable.ic_comic_library, R.string.comicsDestinationLabel),
+    BROWSE(R.drawable.ic_browse_library, R.string.browseServerDestinationLabel),
+    SETTINGS(R.drawable.ic_settings, R.string.settingsDestinationLabel)
 }

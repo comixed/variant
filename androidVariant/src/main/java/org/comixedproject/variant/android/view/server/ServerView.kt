@@ -19,29 +19,24 @@
 package org.comixedproject.variant.android.view.server
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import org.comixedproject.variant.android.COMIC_BOOK_LIST
 import org.comixedproject.variant.android.VariantTheme
-import org.comixedproject.variant.platform.Log
-import org.comixedproject.variant.viewmodel.VariantViewModel
-import org.koin.androidx.compose.koinViewModel
+import org.comixedproject.variant.model.library.ComicBook
+import org.comixedproject.variant.viewmodel.BrowsingState
 
 private const val TAG = "ServerView"
 
 @Composable
-fun ServerView(modifier: Modifier = Modifier) {
-    val variantViewModel: VariantViewModel = koinViewModel()
-    val browsingState by variantViewModel.browsingState.collectAsState()
-    val comicBookList by variantViewModel.comicBookList.collectAsState()
-    val loading by variantViewModel.loading.collectAsState()
-
-    val coroutineScope = rememberCoroutineScope()
-
+fun ServerView(
+    browsingState: BrowsingState,
+    comicBookList: List<ComicBook>,
+    loading: Boolean,
+    onLoadDirectory: (String, Boolean) -> Unit,
+    onDownloadFile: (String, String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     BrowseServerView(
         browsingState.currentPath,
         browsingState.title,
@@ -51,21 +46,21 @@ fun ServerView(modifier: Modifier = Modifier) {
         browsingState.downloadingState,
         loading,
         modifier = modifier,
-        onLoadDirectory = { path, reload ->
-            coroutineScope.launch(Dispatchers.IO) {
-                Log.debug(TAG, "Loading directory: ${path} reload=${reload}")
-                variantViewModel.loadDirectory(path, reload)
-            }
-        },
-        onDownloadFile = { path, filename ->
-            Log.debug(TAG, "Downloading file: ${path} -> ${filename}")
-            variantViewModel.downloadFile(path, filename)
-        },
+        onLoadDirectory = { path, reload -> onLoadDirectory(path, reload) },
+        onDownloadFile = { path, filename -> onDownloadFile(path, filename) },
     )
 }
 
 @Composable
 @Preview
 fun ServerViewPreview() {
-    VariantTheme { ServerView() }
+    VariantTheme {
+        ServerView(
+            BrowsingState("", "", "", listOf(), listOf()),
+            COMIC_BOOK_LIST,
+            false,
+            onLoadDirectory = { _, _ -> },
+            onDownloadFile = { _, _ -> }
+        )
+    }
 }

@@ -104,7 +104,7 @@ struct EditServerView: View {
                 Button {
                     onSaveChanges(addressValue, usernameValue, passwordValue)
                 } label: {
-                    Image(systemName: "checkmark.circle.fill")
+                    Image("save")
                 }
             }
         }.navigationViewStyle(StackNavigationViewStyle())
