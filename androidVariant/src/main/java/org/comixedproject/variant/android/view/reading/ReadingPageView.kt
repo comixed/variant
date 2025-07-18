@@ -25,9 +25,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -103,7 +101,7 @@ fun ReadingPageView(
                     }
                 ) {
                     Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
+                        painterResource(R.drawable.ic_close),
                         contentDescription = stringResource(R.string.stopReadingLabel)
                     )
                 }
@@ -125,7 +123,7 @@ fun ReadingPageView(
                         onChangePage(currentPage - 1)
                     }, enabled = (currentPage > 0)) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            painterResource(R.drawable.ic_previous_page),
                             contentDescription = stringResource(R.string.previousPageLabel)
                         )
                     }
@@ -146,7 +144,7 @@ fun ReadingPageView(
                         onChangePage(currentPage + 1)
                     }, enabled = (currentPage < (totalPages - 1))) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            painterResource(R.drawable.ic_next_page),
                             contentDescription = stringResource(R.string.nextPageLabel)
                         )
                     }

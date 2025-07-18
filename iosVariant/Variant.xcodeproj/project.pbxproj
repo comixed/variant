@@ -171,7 +171,7 @@
 				B68FF2E72E08348A0010853B /* Comics */,
 				6AF012912E1DDF5B001A6A19 /* Reading */,
 				B6AEB7982E102915003FB705 /* Settings */,
-				B6B20B9A2DE508A9008598A7 /* Servers */,
+				B6B20B9A2DE508A9008598A7 /* Server */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -204,7 +204,7 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
-		B6B20B9A2DE508A9008598A7 /* Servers */ = {
+		B6B20B9A2DE508A9008598A7 /* Server */ = {
 			isa = PBXGroup;
 			children = (
 				6AA598482DE72E910078CC9F /* ServerView.swift */,
@@ -212,7 +212,7 @@
 				B68922522DFDC29400BDC032 /* DirectoryItemView.swift */,
 				B68922542DFDC34E00BDC032 /* FileItemView.swift */,
 			);
-			path = Servers;
+			path = Server;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

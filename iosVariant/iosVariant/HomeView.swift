@@ -77,7 +77,7 @@ struct HomeView: View {
                         localized: "destination.comics.label",
                         defaultValue: "Comics"
                     ),
-                    systemImage: "book.fill"
+                    image: "comic_library"
                 )
             }
 
@@ -121,7 +121,7 @@ struct HomeView: View {
                         localized: "destination.browse-server.label",
                         defaultValue: "Browse"
                     ),
-                    systemImage: "person.crop.circle.fill"
+                    image: "browse_library"
                 )
             }
 
@@ -147,7 +147,7 @@ struct HomeView: View {
                         localized: "destination.settings.label",
                         defaultValue: "Settings"
                     ),
-                    systemImage: "gearshape.fill"
+                    image: "settings"
                 )
             }
         }

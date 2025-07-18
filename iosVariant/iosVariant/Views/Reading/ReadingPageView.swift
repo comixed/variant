@@ -79,7 +79,7 @@ struct ReadingPageView: View {
                             )
                             self.pageNumber = self.pageNumber - 1
                         } label: {
-                            Image(systemName: "arrowshape.left.fill")
+                            Image("previous_page")
                         }
                         .disabled(pageNumber == 0)
 
@@ -101,7 +101,7 @@ struct ReadingPageView: View {
                             Log().info(tag: TAG, message: "Going to next page")
                             self.pageNumber = self.pageNumber + 1
                         } label: {
-                            Image(systemName: "arrowshape.right.fill")
+                            Image("next_page")
                         }
                         .disabled(pageNumber == (totalPages - 1))
                     }

@@ -50,8 +50,10 @@ fun ComicBookListView(
     Scaffold(
         topBar = {
             Text(
-                pluralStringResource(R.plurals.comicBookListTitle, comicBookList.size,
-                    comicBookList.size),
+                pluralStringResource(
+                    R.plurals.comicBookListTitle, comicBookList.size,
+                    comicBookList.size
+                ),
                 style = MaterialTheme.typography.headlineMedium
             )
         },
