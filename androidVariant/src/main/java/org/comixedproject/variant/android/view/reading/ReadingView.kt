@@ -19,33 +19,22 @@
 package org.comixedproject.variant.android.view.reading
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.COMIC_BOOK_LIST
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.model.library.ComicBook
-import org.comixedproject.variant.platform.Log
 
 private const val TAG = "ReadingView"
 
 @Composable
-fun ReadingView(comicBook: ComicBook, onStopReading: () -> Unit, modifier: Modifier = Modifier) {
-    var currentPage by remember { mutableIntStateOf(0) }
-
-    ReadingPageView(
-        comicBook.path,
-        comicBook.pages.get(currentPage).filename,
-        comicBook.pages.get(currentPage).filename,
-        currentPage,
-        comicBook.pages.size,
-        onChangePage = {
-            Log.debug(TAG, "Going to page ${it}")
-            currentPage = it
-        },
+fun ReadingView(
+    comicBook: ComicBook,
+    onStopReading: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    PageNavigationView(
+        comicBook,
         onStopReading = onStopReading,
         modifier = modifier
     )
