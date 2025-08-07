@@ -21,6 +21,7 @@ package org.comixedproject.variant.android.view.reading
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -33,20 +34,31 @@ import org.comixedproject.variant.platform.Log
 private const val TAG = "ReadingView"
 
 @Composable
-fun ReadingView(comicBook: ComicBook, onStopReading: () -> Unit, modifier: Modifier = Modifier) {
+fun ReadingView(
+    comicBook: ComicBook,
+    onStopReading: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var currentPage by remember { mutableIntStateOf(0) }
+    var showPageOverlay by remember { mutableStateOf(false) }
 
-    ReadingPageView(
+    PageNavigationView(
         comicBook.path,
+        comicBook.filename,
         comicBook.pages.get(currentPage).filename,
         comicBook.pages.get(currentPage).filename,
         currentPage,
         comicBook.pages.size,
+        showPageOverlay,
         onChangePage = {
             Log.debug(TAG, "Going to page ${it}")
             currentPage = it
         },
         onStopReading = onStopReading,
+        onToggleShowOverlay = {
+            Log.debug(TAG, "Toggling showing overlay")
+            showPageOverlay = !showPageOverlay
+        },
         modifier = modifier
     )
 }

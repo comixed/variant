@@ -20,16 +20,17 @@ package org.comixedproject.variant.android.view.reading
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomAppBar
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.adaptor.ArchiveAPI
@@ -51,42 +53,33 @@ import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.platform.Log
 
-private const val TAG = "ReadingPageView"
+private const val TAG = "PageNavigationView"
 
 @Composable
-fun ReadingPageView(
+fun PageNavigationView(
     comicFilename: String,
+    comicTitle: String,
     pageFilename: String,
     title: String,
     currentPage: Int,
     totalPages: Int,
+    showPageOverlay: Boolean,
     onChangePage: (Int) -> Unit,
     onStopReading: () -> Unit,
+    onToggleShowOverlay: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var currentPageContent by remember { mutableStateOf<ByteArray?>(null) }
 
-    Scaffold(
-        content = { padding ->
-            if (currentPageContent == null) {
-                LaunchedEffect(currentPageContent) {
-                    currentPageContent =
-                        ArchiveAPI.loadPage(comicFilename, pageFilename)
-                }
-            } else {
-                currentPageContent?.let { content ->
-                    Image(
-                        bitmap = BitmapFactory.decodeByteArray(content, 0, content.size)
-                            .asImageBitmap(),
-                        contentDescription = title,
-                        modifier = Modifier
-                            .padding(padding)
-                            .fillMaxHeight()
-                    )
-                }
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .clickable {
+                Log.debug(TAG, "Page tapped")
+                onToggleShowOverlay()
             }
-        },
-        topBar = {
+            .fillMaxSize()) {
+        if (showPageOverlay) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -107,69 +100,113 @@ fun ReadingPageView(
                 }
 
                 Text(
-                    title,
+                    text = comicTitle,
                     style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-        },
-        bottomBar = {
-            BottomAppBar {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    IconButton(onClick = {
-                        currentPageContent = null
-                        onChangePage(currentPage - 1)
-                    }, enabled = (currentPage > 0)) {
-                        Icon(
-                            painterResource(R.drawable.ic_previous_page),
-                            contentDescription = stringResource(R.string.previousPageLabel)
-                        )
-                    }
 
-                    Slider(
-                        value = currentPage.toFloat(),
-                        valueRange = 0f..(totalPages - 1).toFloat(),
-                        steps = totalPages,
-                        onValueChange = {
-                            currentPageContent = null
-                            onChangePage(it.toInt())
-                        },
-                        modifier = Modifier.weight(0.9f)
+            Text(
+                text = pageFilename,
+                style = MaterialTheme.typography.titleSmall,
+                textAlign = TextAlign.Center,
+                maxLines = 1, overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Row(modifier = Modifier.fillMaxWidth()) {
+                IconButton(onClick = {
+                    currentPageContent = null
+                    onChangePage(currentPage - 1)
+                }, enabled = (currentPage > 0)) {
+                    Icon(
+                        painterResource(R.drawable.ic_previous_page),
+                        contentDescription = stringResource(R.string.previousPageLabel)
                     )
+                }
 
-                    IconButton(onClick = {
+                Slider(
+                    value = currentPage.toFloat(),
+                    valueRange = 0f..(totalPages - 1).toFloat(),
+                    steps = totalPages,
+                    onValueChange = {
                         currentPageContent = null
-                        onChangePage(currentPage + 1)
-                    }, enabled = (currentPage < (totalPages - 1))) {
-                        Icon(
-                            painterResource(R.drawable.ic_next_page),
-                            contentDescription = stringResource(R.string.nextPageLabel)
-                        )
-                    }
+                        onChangePage(it.toInt())
+                    },
+                    modifier = Modifier.weight(0.9f)
+                )
+
+                IconButton(onClick = {
+                    currentPageContent = null
+                    onChangePage(currentPage + 1)
+                }, enabled = (currentPage < (totalPages - 1))) {
+                    Icon(
+                        painterResource(R.drawable.ic_next_page),
+                        contentDescription = stringResource(R.string.nextPageLabel)
+                    )
                 }
             }
-        },
-        modifier = modifier
-            .fillMaxSize()
-    )
+        }
+
+
+        if (currentPageContent == null) {
+            LaunchedEffect(currentPageContent) {
+                currentPageContent =
+                    ArchiveAPI.loadPage(comicFilename, pageFilename)
+            }
+        } else {
+            currentPageContent?.let { content ->
+                Image(
+                    bitmap = BitmapFactory.decodeByteArray(content, 0, content.size)
+                        .asImageBitmap(),
+                    contentDescription = title,
+                    modifier = modifier
+                        .fillMaxHeight()
+                )
+            }
+        }
+    }
 }
 
 
 @Composable
 @Preview
-fun ReadingPageViewPreview() {
+fun PageNavigationPreview() {
     val comic = COMIC_BOOK_LIST.get(0)
+
     VariantTheme {
-        ReadingPageView(
+        PageNavigationView(
+            comic.path,
             comic.filename,
             comic.pages.get(0).filename,
             "Page Title",
             5,
             10,
+            false,
             onChangePage = {},
-            onStopReading = {}
-        )
+            onStopReading = {},
+            onToggleShowOverlay = {})
+    }
+}
+
+@Composable
+@Preview
+fun PageNavigationPreviewWithOverlay() {
+    val comic = COMIC_BOOK_LIST.get(0)
+
+    VariantTheme {
+        PageNavigationView(
+            comic.path,
+            comic.metadata.title,
+            comic.pages.get(0).filename,
+            "Page Title",
+            5,
+            10,
+            true,
+            onChangePage = {},
+            onStopReading = {},
+            onToggleShowOverlay = {})
     }
 }

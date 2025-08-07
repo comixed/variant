@@ -24,6 +24,7 @@ private let TAG = "ReadingView"
 
 struct ReadingView: View {
     @State private var currentPage = 0.0
+    @State private var showPageOverlay = false
 
     let comicBook: ComicBook
 
@@ -31,6 +32,10 @@ struct ReadingView: View {
 
     var comicFilename: String {
         return comicBook.path
+    }
+
+    var comicTitle: String {
+        return comicBook.filename
     }
 
     var pageFilename: String {
@@ -42,13 +47,22 @@ struct ReadingView: View {
     }
 
     var body: some View {
-        ReadingPageView(
+        PageNavigationView(
             comicFilename: comicFilename,
+            comicTitle: comicTitle,
             pageFilename: pageFilename,
             title: title,
             pageNumber: $currentPage,
             totalPages: comicBook.pages.count,
-            onStopReading: { onStopReading() }
+            showPageOverlay: showPageOverlay,
+            onStopReading: { onStopReading() },
+            onToggleShowOverlay: { enable in
+                Log().debug(
+                    tag: TAG,
+                    message: "Setting show overlay to \(enable)"
+                )
+                showPageOverlay = enable
+            }
         )
     }
 }
