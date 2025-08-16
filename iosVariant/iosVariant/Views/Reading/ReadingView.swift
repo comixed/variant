@@ -23,31 +23,13 @@ import shared
 private let TAG = "ReadingView"
 
 struct ReadingView: View {
-    @State private var currentPage = 0.0
-
     let comicBook: ComicBook
 
     var onStopReading: () -> Void
 
-    var comicFilename: String {
-        return comicBook.path
-    }
-
-    var pageFilename: String {
-        return (comicBook.pages[Int(currentPage)] as! ComicPage).filename
-    }
-
-    var title: String {
-        return (comicBook.pages[Int(currentPage)] as! ComicPage).filename
-    }
-
     var body: some View {
-        ReadingPageView(
-            comicFilename: comicFilename,
-            pageFilename: pageFilename,
-            title: title,
-            pageNumber: $currentPage,
-            totalPages: comicBook.pages.count,
+        PageNavigationView(
+            comicBook: self.comicBook,
             onStopReading: { onStopReading() }
         )
     }

@@ -44,6 +44,11 @@ class ImageLoader: ObservableObject {
         doLoadPage()
     }
 
+    func loadPage(filename: String) {
+        self.pageFilename = filename
+        doLoadPage()
+    }
+
     private func doLoadCover() {
         Task {
             Log().debug(
