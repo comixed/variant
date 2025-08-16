@@ -50,6 +50,7 @@ import org.comixedproject.variant.reader.ReaderAPI
 private const val TAG = "VariantViewModel"
 
 private const val ADDRESS_SETTING = "server.address"
+private const val LAST_DIRECTORY_SETTING = "server.last-directory"
 private const val USERNAME_SETTING = "server.username"
 private const val PASSWORD_SETTING = "server.password"
 
@@ -124,7 +125,7 @@ open class VariantViewModel(
 
     private val _browsingState = MutableStateFlow<BrowsingState>(
         viewModelScope, BrowsingState(
-            READER_ROOT,
+            settings.getString(LAST_DIRECTORY_SETTING, READER_ROOT),
             "", "", emptyList<DirectoryEntry>(), emptyList<DownloadingState>()
         )
     )
@@ -192,6 +193,8 @@ open class VariantViewModel(
             }
 
             val directory = directoryRepository.findDirectory(path)
+            Log.debug(TAG, "Saving last visited directory: value=${path}")
+            settings.putString(LAST_DIRECTORY_SETTING, path)
             Log.debug(TAG, "Updating browsing state: currentPath=${path}")
             _browsingState.tryEmit(
                 BrowsingState(
