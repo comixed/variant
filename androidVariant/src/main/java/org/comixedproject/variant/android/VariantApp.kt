@@ -39,7 +39,7 @@ class VariantApp : Application() {
                     single<Context> { this@VariantApp }
 
                     single<SharedPreferences> {
-                        get<Context>().getSharedPreferences("VariantApp", Context.MODE_PRIVATE)
+                        get<Context>().getSharedPreferences("VariantApp", MODE_PRIVATE)
                     }
                 }
             ).koin

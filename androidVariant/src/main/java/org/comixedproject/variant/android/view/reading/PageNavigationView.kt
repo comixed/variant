@@ -79,16 +79,16 @@ fun PageNavigationView(
                     onPress = { location ->
                         var handled = false
                         val screenHeightMiddle = context.resources.displayMetrics.heightPixels / 2
-                        if (location.y > (screenHeightMiddle * 1.5)) {
+                        if (location.y > (screenHeightMiddle)) {
                             val screenWidthMiddle = context.resources.displayMetrics.widthPixels / 2
-                            if (location.x <= (screenWidthMiddle / 2)) {
+                            if (location.x <= screenWidthMiddle) {
                                 if (currentPage > 0) {
                                     Log.info(TAG, "Navigating back to page ${currentPage - 1}")
                                     currentPageContent = null
                                     currentPage = currentPage - 1
                                 }
                                 handled = true
-                            } else if (location.x >= (screenWidthMiddle * 3) / 2) {
+                            } else if (location.x > screenWidthMiddle) {
                                 if (currentPage < comicBook.pages.size - 1) {
                                     Log.info(
                                         TAG,
