@@ -1,0 +1,71 @@
+name: Build Variant artifacts
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: 17
+          distribution: zulu
+          cache: 'gradle'
+
+      - name: Check Spotless
+        run: ./gradlew spotlessCheck
+
+  build_android:
+    name: Build Android app
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+
+      - name: Build app
+        run: ./gradlew assembleDebug lintDebug
+
+  build_ios:
+    name: Build iOS app
+    runs-on: macos-latest
+
+    steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Build iOS app
+        uses: mxcl/xcodebuild@v3
+        with:
+          xcode: ^16
+          scheme: Variant
+          platform: iOS
+          action: build
+          working-directory: iosVariant

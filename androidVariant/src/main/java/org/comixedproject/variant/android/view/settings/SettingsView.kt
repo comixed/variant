@@ -28,32 +28,31 @@ private val TAG = "SettingsView"
 
 @Composable
 fun SettingsView(
-    address: String,
-    username: String,
-    password: String,
-    onSaveSettings: (String, String, String) -> Unit,
-    modifier: Modifier = Modifier
+  address: String,
+  username: String,
+  password: String,
+  onSaveSettings: (String, String, String) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        EditServerView(
-            address,
-            username,
-            password,
-            onSave = { address, username, password ->
-                onSaveSettings(address, username, password)
-            }
-        )
-    }
+  Column(modifier = modifier) {
+    EditServerView(
+      address,
+      username,
+      password,
+      onSave = { address, username, password -> onSaveSettings(address, username, password) },
+    )
+  }
 }
 
 @Composable
 @Preview
 fun SettingsViewPreview() {
-    VariantTheme {
-        SettingsView(
-            "http://www.comixedproject.org:7171",
-            "reader@comixedproject.org",
-            "my!password",
-            onSaveSettings = { _, _, _ -> })
-    }
+  VariantTheme {
+    SettingsView(
+      "http://www.comixedproject.org:7171",
+      "reader@comixedproject.org",
+      "my!password",
+      onSaveSettings = { _, _, _ -> },
+    )
+  }
 }

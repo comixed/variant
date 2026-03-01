@@ -18,6 +18,4 @@
 
 package org.comixedproject.variant.model.library
 
-data class ComicPage(
-    val filename: String
-)
+data class ComicPage(val filename: String)

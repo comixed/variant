@@ -38,83 +38,87 @@ private val TAG = "ComicBookView"
 
 @Composable
 fun ComicBookView(
-    comicBookList: List<ComicBook>,
-    selectionMode: Boolean,
-    selectionList: List<String>,
-    onSetSelectionMode: (Boolean) -> Unit,
-    onComicBookClicked: (ComicBook) -> Unit,
-    onDeleteComics: () -> Unit,
-    modifier: Modifier = Modifier
+  comicBookList: List<ComicBook>,
+  selectionMode: Boolean,
+  selectionList: List<String>,
+  onSetSelectionMode: (Boolean) -> Unit,
+  onComicBookClicked: (ComicBook) -> Unit,
+  onDeleteComics: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        content = { padding ->
-            ComicBookListView(
-                comicBookList,
-                selectionList,
-                onClick = { onComicBookClicked(it) },
-                modifier = modifier.padding(padding)
-            )
-        },
-        bottomBar = {
-            BottomAppBar(
-                actions = {
-                    if (selectionMode) {
-                        IconButton(onClick = { onSetSelectionMode(false) }) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_selection_mode_on),
-                                contentDescription = stringResource(R.string.markReadLabel)
-                            )
-                        }
-                    } else {
-                        IconButton(onClick = { onSetSelectionMode(true) }) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_selection_mode_off),
-                                contentDescription = stringResource(R.string.markReadLabel)
-                            )
-                        }
-                    }
-                    if (!selectionList.isEmpty()) {
-                        IconButton(enabled = !selectionList.isEmpty(), onClick = {
-                            Log.info(TAG, "Deleting ${selectionList.size} comic book(s)")
-                            onDeleteComics()
-                        }) {
-                            Icon(
-                                painterResource(R.drawable.ic_delete_comics),
-                                contentDescription = stringResource(R.string.deleteSelectionsLabel)
-                            )
-                        }
-                    }
-
-                }
-            )
+  Scaffold(
+    content = { padding ->
+      ComicBookListView(
+        comicBookList,
+        selectionList,
+        onClick = { onComicBookClicked(it) },
+        modifier = modifier.padding(padding),
+      )
+    },
+    bottomBar = {
+      BottomAppBar(
+        actions = {
+          if (selectionMode) {
+            IconButton(onClick = { onSetSelectionMode(false) }) {
+              Icon(
+                painterResource(id = R.drawable.ic_selection_mode_on),
+                contentDescription = stringResource(R.string.markReadLabel),
+              )
+            }
+          } else {
+            IconButton(onClick = { onSetSelectionMode(true) }) {
+              Icon(
+                painterResource(id = R.drawable.ic_selection_mode_off),
+                contentDescription = stringResource(R.string.markReadLabel),
+              )
+            }
+          }
+          if (!selectionList.isEmpty()) {
+            IconButton(
+              enabled = selectionList.isNotEmpty(),
+              onClick = {
+                Log.info(TAG, "Deleting ${selectionList.size} comic book(s)")
+                onDeleteComics()
+              },
+            ) {
+              Icon(
+                painterResource(R.drawable.ic_delete_comics),
+                contentDescription = stringResource(R.string.deleteSelectionsLabel),
+              )
+            }
+          }
         }
-    )
+      )
+    },
+  )
 }
 
 @Composable
 @Preview
 fun ComicBookViewPreview() {
-    VariantTheme {
-        ComicBookView(
-            COMIC_BOOK_LIST,
-            false,
-            emptyList(),
-            onSetSelectionMode = { _ -> },
-            onComicBookClicked = { _ -> },
-            onDeleteComics = { })
-    }
+  VariantTheme {
+    ComicBookView(
+      COMIC_BOOK_LIST,
+      false,
+      emptyList(),
+      onSetSelectionMode = { _ -> },
+      onComicBookClicked = { _ -> },
+      onDeleteComics = {},
+    )
+  }
 }
 
 @Composable
 @Preview
 fun ComicBookViewWithSelectionsPreview() {
-    VariantTheme {
-        ComicBookView(
-            COMIC_BOOK_LIST,
-            true,
-            listOf(COMIC_BOOK_LIST.get(0).path),
-            onSetSelectionMode = { _ -> },
-            onComicBookClicked = { _ -> },
-            onDeleteComics = { })
-    }
+  VariantTheme {
+    ComicBookView(
+      COMIC_BOOK_LIST,
+      true,
+      listOf(COMIC_BOOK_LIST.get(0).path),
+      onSetSelectionMode = { _ -> },
+      onComicBookClicked = { _ -> },
+      onDeleteComics = {},
+    )
+  }
 }

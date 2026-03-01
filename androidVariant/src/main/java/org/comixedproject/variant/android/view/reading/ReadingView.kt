@@ -28,20 +28,12 @@ import org.comixedproject.variant.model.library.ComicBook
 private const val TAG = "ReadingView"
 
 @Composable
-fun ReadingView(
-    comicBook: ComicBook,
-    onStopReading: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    PageNavigationView(
-        comicBook,
-        onStopReading = onStopReading,
-        modifier = modifier
-    )
+fun ReadingView(comicBook: ComicBook, onStopReading: () -> Unit, modifier: Modifier = Modifier) {
+  PageNavigationView(comicBook, onStopReading = onStopReading, modifier = modifier)
 }
 
 @Composable
 @Preview
 fun ReadingViewPreview() {
-    VariantTheme { ReadingView(COMIC_BOOK_LIST.get(0), onStopReading = {}) }
+  VariantTheme { ReadingView(COMIC_BOOK_LIST.get(0), onStopReading = {}) }
 }

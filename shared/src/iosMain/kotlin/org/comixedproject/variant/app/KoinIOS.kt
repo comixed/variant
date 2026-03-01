@@ -30,28 +30,18 @@ import org.koin.dsl.module
 import platform.Foundation.NSUserDefaults
 
 object KoinIOS {
-    fun initialize(userDefaults: NSUserDefaults): KoinApplication =
-        initKoin(
-            appModule = module {
-                single<Settings> {
-                    NSUserDefaultsSettings(userDefaults)
-                }
-            },
-        )
+  fun initialize(userDefaults: NSUserDefaults): KoinApplication =
+    initKoin(appModule = module { single<Settings> { NSUserDefaultsSettings(userDefaults) } })
 }
 
 @kotlinx.cinterop.BetaInteropApi
 fun Koin.get(objCClass: ObjCClass): Any {
-    val kClazz = getOriginalKotlinClass(objCClass)!!
-    return get(kClazz, null, null)
+  val kClazz = getOriginalKotlinClass(objCClass)!!
+  return get(kClazz, null, null)
 }
 
 @kotlinx.cinterop.BetaInteropApi
-fun Koin.get(
-    objCClass: ObjCClass,
-    qualifier: Qualifier?,
-    parameter: Any,
-): Any {
-    val kClazz = getOriginalKotlinClass(objCClass)!!
-    return get(kClazz, qualifier) { parametersOf(parameter) }
+fun Koin.get(objCClass: ObjCClass, qualifier: Qualifier?, parameter: Any): Any {
+  val kClazz = getOriginalKotlinClass(objCClass)!!
+  return get(kClazz, qualifier) { parametersOf(parameter) }
 }

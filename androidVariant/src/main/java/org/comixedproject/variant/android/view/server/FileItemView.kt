@@ -51,154 +51,123 @@ private const val TAG = "DirectoryDetailView"
 
 @Composable
 fun FileItemView(
-    fileEntry: DirectoryEntry,
-    comicBookFilenameList: List<String>,
-    downloadingState: List<DownloadingState>,
-    onDownloadFile: (String, String) -> Unit,
-    modifier: Modifier = Modifier
+  fileEntry: DirectoryEntry,
+  comicBookFilenameList: List<String>,
+  downloadingState: List<DownloadingState>,
+  onDownloadFile: (String, String) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    val downloading = downloadingState
-        .filter { it.path == fileEntry.path }
-        .firstOrNull()
+  val downloading = downloadingState.filter { it.path == fileEntry.path }.firstOrNull()
 
-
-    ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Column(
-            modifier = modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                if (downloading == null) {
-                    if (comicBookFilenameList.contains(fileEntry.filename)) {
-                        IconButton(
-                            onClick = { },
-                            enabled = downloadingState.size < 5
-                        ) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_downloaded_file),
-                                contentDescription = fileEntry.title
-                            )
-                        }
-                    } else {
-                        IconButton(
-                            onClick = {
-                                onDownloadFile(fileEntry.path, fileEntry.filename)
-                            },
-                            enabled = downloadingState.size < 5
-                        ) {
-                            Icon(
-                                painterResource(R.drawable.ic_download_file),
-                                contentDescription = fileEntry.title
-                            )
-                        }
-                    }
-                } else {
-                    IconButton(
-                        onClick = { },
-                        enabled = downloadingState.size < 5
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.ic_downloading_file),
-                            contentDescription = fileEntry.title
-                        )
-                    }
-                }
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "${fileEntry.title}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Left,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    if (downloading == null) {
-                        Text(
-                            text = "${fileEntry.filename}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Left,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    } else {
-                        val received = downloading.received
-                        val total = downloading.total
-                        val progress = when (received > 0) {
-                            true -> (received.toFloat() / total.toFloat())
-                            false -> 0.0
-                        }
-                        val fileSize = String.format("%.1f", fileEntry.fileSize / BYTES_PER_MB)
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("${fileSize} MB", style = MaterialTheme.typography.bodySmall)
-                            LinearProgressIndicator(
-                                progress = { progress.toFloat() },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(4.dp)
-                            )
-                        }
-                    }
-                }
+  ElevatedCard(
+    colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
+    modifier = modifier.fillMaxWidth(),
+  ) {
+    Column(modifier = modifier.padding(8.dp).fillMaxWidth()) {
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth(),
+      ) {
+        if (downloading == null) {
+          if (comicBookFilenameList.contains(fileEntry.filename)) {
+            IconButton(onClick = {}, enabled = downloadingState.size < 5) {
+              Icon(
+                painterResource(id = R.drawable.ic_downloaded_file),
+                contentDescription = fileEntry.title,
+              )
             }
+          } else {
+            IconButton(
+              onClick = { onDownloadFile(fileEntry.path, fileEntry.filename) },
+              enabled = downloadingState.size < 5,
+            ) {
+              Icon(
+                painterResource(R.drawable.ic_download_file),
+                contentDescription = fileEntry.title,
+              )
+            }
+          }
+        } else {
+          IconButton(onClick = {}, enabled = downloadingState.size < 5) {
+            Icon(
+              painterResource(R.drawable.ic_downloading_file),
+              contentDescription = fileEntry.title,
+            )
+          }
         }
+
+        Column(modifier = Modifier.weight(1f)) {
+          Text(
+            text = "${fileEntry.title}",
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Left,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+          )
+
+          if (downloading == null) {
+            Text(
+              text = "${fileEntry.filename}",
+              style = MaterialTheme.typography.bodySmall,
+              fontWeight = FontWeight.Bold,
+              textAlign = TextAlign.Left,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+            )
+          } else {
+            val received = downloading.received
+            val total = downloading.total
+            val progress =
+              when (received > 0) {
+                true -> (received.toFloat() / total.toFloat())
+                false -> 0.0
+              }
+            val fileSize = String.format("%.1f", fileEntry.fileSize / BYTES_PER_MB)
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              verticalAlignment = Alignment.CenterVertically,
+            ) {
+              Text("${fileSize} MB", style = MaterialTheme.typography.bodySmall)
+              LinearProgressIndicator(
+                progress = { progress.toFloat() },
+                modifier = Modifier.fillMaxWidth().padding(4.dp),
+              )
+            }
+          }
+        }
+      }
     }
+  }
 }
 
 @Composable
 @Preview
 fun FileItemViewPreview() {
-    val fileEntry = DIRECTORY_LIST.filter { !it.isDirectory }.first()
-    VariantTheme {
-        FileItemView(
-            fileEntry,
-            listOf(),
-            listOf(),
-            onDownloadFile = { _, _ -> })
-    }
+  val fileEntry = DIRECTORY_LIST.filter { !it.isDirectory }.first()
+  VariantTheme { FileItemView(fileEntry, listOf(), listOf(), onDownloadFile = { _, _ -> }) }
 }
 
 @Composable
 @Preview
 fun FileItemViewPreviewDownloaded() {
-    val fileEntry = DIRECTORY_LIST.filter { !it.isDirectory }.first()
-    VariantTheme {
-        FileItemView(
-            fileEntry,
-            listOf(fileEntry.filename),
-            listOf(),
-            onDownloadFile = { _, _ -> })
-    }
+  val fileEntry = DIRECTORY_LIST.filter { !it.isDirectory }.first()
+  VariantTheme {
+    FileItemView(fileEntry, listOf(fileEntry.filename), listOf(), onDownloadFile = { _, _ -> })
+  }
 }
 
 @Composable
 @Preview
 fun FileItemViewPreviewDownloading() {
-    val fileEntry = DIRECTORY_LIST.filter { !it.isDirectory }.first()
-    VariantTheme {
-        FileItemView(
-            fileEntry,
-            listOf(),
-            listOf(
-                DownloadingState(
-                    fileEntry.path, fileEntry.filename,
-                    50, 100
-                )
-            ),
-            onDownloadFile = { _, _ -> })
-    }
+  val fileEntry = DIRECTORY_LIST.filter { !it.isDirectory }.first()
+  VariantTheme {
+    FileItemView(
+      fileEntry,
+      listOf(),
+      listOf(DownloadingState(fileEntry.path, fileEntry.filename, 50, 100)),
+      onDownloadFile = { _, _ -> },
+    )
+  }
 }

@@ -30,30 +30,22 @@ actual object VariantAppContext
 
 @kotlinx.cinterop.BetaInteropApi
 fun ByteArray.toNSDataOrNull(): NSData? {
-    if (this.isEmpty()) return null
+  if (this.isEmpty()) return null
 
-    return try {
-        this.usePinned {
-            NSData.dataWithBytes(
-                bytes = it.addressOf(0),
-                length = this.size.convert()
-            )
-        }
-    } catch (e: Exception) {
-        null
-    }
+  return try {
+    this.usePinned { NSData.dataWithBytes(bytes = it.addressOf(0), length = this.size.convert()) }
+  } catch (e: Exception) {
+    null
+  }
 }
 
 @kotlinx.cinterop.BetaInteropApi
 fun ByteArray.toUIImage(scale: Double): UIImage? = memScoped {
-    var result: UIImage? = null
+  var result: UIImage? = null
 
-    toNSDataOrNull()?.let { nsData ->
-        result = UIImage.imageWithData(nsData, scale)
-    }
+  toNSDataOrNull()?.let { nsData -> result = UIImage.imageWithData(nsData, scale) }
 
-    result
+  result
 }
 
-@kotlinx.cinterop.BetaInteropApi
-fun ByteArray.toUIImage(): UIImage? = this.toUIImage(1.0)
+@kotlinx.cinterop.BetaInteropApi fun ByteArray.toUIImage(): UIImage? = this.toUIImage(1.0)

@@ -22,11 +22,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DirectoryFromRemote(
-    val directoryId: String,
-    val title: String,
-    val path: String,
-    val directory: Boolean,
-    val filename: String,
-    val fileSize: Long,
-    val coverUrl: String?
+  val directoryId: String,
+  val title: String,
+  val path: String,
+  val directory: Boolean,
+  val filename: String,
+  val fileSize: Long,
+  val coverUrl: String?,
 )

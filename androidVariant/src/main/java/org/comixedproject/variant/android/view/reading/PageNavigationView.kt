@@ -61,167 +61,153 @@ private const val TAG = "PageNavigationView"
 
 @Composable
 fun PageNavigationView(
-    comicBook: ComicBook,
-    onStopReading: () -> Unit,
-    modifier: Modifier = Modifier
+  comicBook: ComicBook,
+  onStopReading: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    var pageFilename by remember { mutableStateOf("") }
-    var currentPage by remember { mutableIntStateOf(0) }
-    var currentPageContent by remember { mutableStateOf<ByteArray?>(null) }
-    var showPageOverlay by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+  var pageFilename by remember { mutableStateOf("") }
+  var currentPage by remember { mutableIntStateOf(0) }
+  var currentPageContent by remember { mutableStateOf<ByteArray?>(null) }
+  var showPageOverlay by remember { mutableStateOf(false) }
+  val context = LocalContext.current
 
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = { location ->
-                        var handled = false
-                        val screenHeightMiddle = context.resources.displayMetrics.heightPixels / 2
-                        if (location.y > (screenHeightMiddle * 1.5)) {
-                            val screenWidthMiddle = context.resources.displayMetrics.widthPixels / 2
-                            if (location.x <= (screenWidthMiddle / 2)) {
-                                if (currentPage > 0) {
-                                    Log.info(TAG, "Navigating back to page ${currentPage - 1}")
-                                    currentPageContent = null
-                                    currentPage = currentPage - 1
-                                }
-                                handled = true
-                            } else if (location.x >= (screenWidthMiddle * 3) / 2) {
-                                if (currentPage < comicBook.pages.size - 1) {
-                                    Log.info(
-                                        TAG,
-                                        "Navigating forward to page ${currentPage + 1}"
-                                    )
-                                    currentPageContent = null
-                                    currentPage = currentPage + 1
-                                }
-                                handled = true
-                            }
-                        }
-                        if (!handled) {
-                            showPageOverlay = (showPageOverlay == false)
-                            Log.info(TAG, "Setting show overlay: ${showPageOverlay}")
-                        }
-                    }
-                )
-            }
-            .fillMaxSize()) {
-        if (showPageOverlay) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                IconButton(
-                    onClick = {
-                        Log.debug(
-                            TAG,
-                            "Closing comic book"
-                        )
-                        onStopReading()
-                    }
-                ) {
-                    Icon(
-                        painterResource(R.drawable.ic_close),
-                        contentDescription = stringResource(R.string.stopReadingLabel)
-                    )
-                }
-
-                Text(
-                    text = comicBook.filename,
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            Text(
-                text = pageFilename,
-                style = MaterialTheme.typography.titleSmall,
-                textAlign = TextAlign.Center,
-                maxLines = 1, overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Row(modifier = Modifier.fillMaxWidth()) {
-                IconButton(onClick = {
+  Column(
+    modifier =
+      modifier
+        .verticalScroll(rememberScrollState())
+        .pointerInput(Unit) {
+          detectTapGestures(
+            onPress = { location ->
+              var handled = false
+              val screenHeightMiddle = context.resources.displayMetrics.heightPixels / 2
+              if (location.y > (screenHeightMiddle * 1.5)) {
+                val screenWidthMiddle = context.resources.displayMetrics.widthPixels / 2
+                if (location.x <= (screenWidthMiddle / 2)) {
+                  if (currentPage > 0) {
+                    Log.info(TAG, "Navigating back to page ${currentPage - 1}")
                     currentPageContent = null
                     currentPage = currentPage - 1
-                }, enabled = (currentPage > 0)) {
-                    Icon(
-                        painterResource(R.drawable.ic_previous_page),
-                        contentDescription = stringResource(R.string.previousPageLabel)
-                    )
-                }
-
-                Slider(
-                    value = currentPage.toFloat(),
-                    valueRange = 0f..(comicBook.pages.size - 1).toFloat(),
-                    steps = comicBook.pages.size,
-                    onValueChange = {
-                        currentPageContent = null
-                        currentPage = it.toInt()
-                    },
-                    modifier = Modifier.weight(0.9f)
-                )
-
-                IconButton(onClick = {
+                  }
+                  handled = true
+                } else if (location.x >= (screenWidthMiddle * 3) / 2) {
+                  if (currentPage < comicBook.pages.size - 1) {
+                    Log.info(TAG, "Navigating forward to page ${currentPage + 1}")
                     currentPageContent = null
                     currentPage = currentPage + 1
-                }, enabled = (currentPage < (comicBook.pages.size - 1))) {
-                    Icon(
-                        painterResource(R.drawable.ic_next_page),
-                        contentDescription = stringResource(R.string.nextPageLabel)
-                    )
+                  }
+                  handled = true
                 }
+              }
+              if (!handled) {
+                showPageOverlay = (showPageOverlay == false)
+                Log.info(TAG, "Setting show overlay: ${showPageOverlay}")
+              }
             }
+          )
+        }
+        .fillMaxSize()
+  ) {
+    if (showPageOverlay) {
+      Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+        IconButton(
+          onClick = {
+            Log.debug(TAG, "Closing comic book")
+            onStopReading()
+          }
+        ) {
+          Icon(
+            painterResource(R.drawable.ic_close),
+            contentDescription = stringResource(R.string.stopReadingLabel),
+          )
         }
 
+        Text(
+          text = comicBook.filename,
+          style = MaterialTheme.typography.titleMedium,
+          textAlign = TextAlign.Center,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+          modifier = Modifier.fillMaxWidth(),
+        )
+      }
 
-        if (currentPageContent == null) {
-            LaunchedEffect(currentPageContent) {
-                pageFilename = comicBook.pages.get(currentPage).filename
-                currentPageContent =
-                    ArchiveAPI.loadPage(comicBook.path, pageFilename)
-
-            }
-        } else {
-            currentPageContent?.let { content ->
-                Image(
-                    bitmap = BitmapFactory.decodeByteArray(content, 0, content.size)
-                        .asImageBitmap(),
-                    contentDescription = comicBook.pages.get(currentPage).filename,
-                    modifier = modifier
-                        .fillMaxHeight()
-                )
-            }
+      Text(
+        text = pageFilename,
+        style = MaterialTheme.typography.titleSmall,
+        textAlign = TextAlign.Center,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.fillMaxWidth(),
+      )
+      Row(modifier = Modifier.fillMaxWidth()) {
+        IconButton(
+          onClick = {
+            currentPageContent = null
+            currentPage = currentPage - 1
+          },
+          enabled = (currentPage > 0),
+        ) {
+          Icon(
+            painterResource(R.drawable.ic_previous_page),
+            contentDescription = stringResource(R.string.previousPageLabel),
+          )
         }
+
+        Slider(
+          value = currentPage.toFloat(),
+          valueRange = 0f..(comicBook.pages.size - 1).toFloat(),
+          steps = comicBook.pages.size,
+          onValueChange = {
+            currentPageContent = null
+            currentPage = it.toInt()
+          },
+          modifier = Modifier.weight(0.9f),
+        )
+
+        IconButton(
+          onClick = {
+            currentPageContent = null
+            currentPage = currentPage + 1
+          },
+          enabled = (currentPage < (comicBook.pages.size - 1)),
+        ) {
+          Icon(
+            painterResource(R.drawable.ic_next_page),
+            contentDescription = stringResource(R.string.nextPageLabel),
+          )
+        }
+      }
     }
-}
 
+    if (currentPageContent == null) {
+      LaunchedEffect(currentPageContent) {
+        pageFilename = comicBook.pages.get(currentPage).filename
+        currentPageContent = ArchiveAPI.loadPage(comicBook.path, pageFilename)
+      }
+    } else {
+      currentPageContent?.let { content ->
+        Image(
+          bitmap = BitmapFactory.decodeByteArray(content, 0, content.size).asImageBitmap(),
+          contentDescription = comicBook.pages.get(currentPage).filename,
+          modifier = modifier.fillMaxHeight(),
+        )
+      }
+    }
+  }
+}
 
 @Composable
 @Preview
 fun PageNavigationPreview() {
-    val comic = COMIC_BOOK_LIST.get(0)
+  val comic = COMIC_BOOK_LIST.get(0)
 
-    VariantTheme {
-        PageNavigationView(
-            comic,
-            onStopReading = {})
-    }
+  VariantTheme { PageNavigationView(comic, onStopReading = {}) }
 }
 
 @Composable
 @Preview
 fun PageNavigationPreviewWithOverlay() {
-    val comic = COMIC_BOOK_LIST.get(0)
+  val comic = COMIC_BOOK_LIST.get(0)
 
-    VariantTheme {
-        PageNavigationView(
-            comic,
-            onStopReading = {})
-    }
+  VariantTheme { PageNavigationView(comic, onStopReading = {}) }
 }

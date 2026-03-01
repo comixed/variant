@@ -27,11 +27,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual val platformModule: Module = module {
-    single<SqlDriver> {
-        AndroidSqliteDriver(VariantDb.Schema, get(), "VariantDb")
-    }
+  single<SqlDriver> { AndroidSqliteDriver(VariantDb.Schema, get(), "VariantDb") }
 
-    single<Settings> {
-        SharedPreferencesSettings(get())
-    }
+  single<Settings> { SharedPreferencesSettings(get()) }
 }

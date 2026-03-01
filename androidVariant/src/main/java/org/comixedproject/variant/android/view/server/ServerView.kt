@@ -30,37 +30,37 @@ private const val TAG = "ServerView"
 
 @Composable
 fun ServerView(
-    browsingState: BrowsingState,
-    comicBookList: List<ComicBook>,
-    loading: Boolean,
-    onLoadDirectory: (String, Boolean) -> Unit,
-    onDownloadFile: (String, String) -> Unit,
-    modifier: Modifier = Modifier
+  browsingState: BrowsingState,
+  comicBookList: List<ComicBook>,
+  loading: Boolean,
+  onLoadDirectory: (String, Boolean) -> Unit,
+  onDownloadFile: (String, String) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    BrowseServerView(
-        browsingState.currentPath,
-        browsingState.title,
-        browsingState.parentPath,
-        browsingState.contents,
-        comicBookList,
-        browsingState.downloadingState,
-        loading,
-        modifier = modifier,
-        onLoadDirectory = { path, reload -> onLoadDirectory(path, reload) },
-        onDownloadFile = { path, filename -> onDownloadFile(path, filename) },
-    )
+  BrowseServerView(
+    browsingState.currentPath,
+    browsingState.title,
+    browsingState.parentPath,
+    browsingState.contents,
+    comicBookList,
+    browsingState.downloadingState,
+    loading,
+    modifier = modifier,
+    onLoadDirectory = { path, reload -> onLoadDirectory(path, reload) },
+    onDownloadFile = { path, filename -> onDownloadFile(path, filename) },
+  )
 }
 
 @Composable
 @Preview
 fun ServerViewPreview() {
-    VariantTheme {
-        ServerView(
-            BrowsingState("", "", "", listOf(), listOf()),
-            COMIC_BOOK_LIST,
-            false,
-            onLoadDirectory = { _, _ -> },
-            onDownloadFile = { _, _ -> }
-        )
-    }
+  VariantTheme {
+    ServerView(
+      BrowsingState("", "", "", listOf(), listOf()),
+      COMIC_BOOK_LIST,
+      false,
+      onLoadDirectory = { _, _ -> },
+      onDownloadFile = { _, _ -> },
+    )
+  }
 }
