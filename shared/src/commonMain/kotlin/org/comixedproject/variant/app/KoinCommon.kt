@@ -27,33 +27,20 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 object Modules {
-    val core = module {
-        factory { DatabaseHelper(get()) }
-    }
+  val core = module { factory { DatabaseHelper(get()) } }
 
-    val repositories = module {
-        factory { DirectoryRepository(get()) }
-    }
+  val repositories = module { factory { DirectoryRepository(get()) } }
 
-    val viewModels = module {
-        factory { VariantViewModel(get(), get()) }
-    }
+  val viewModels = module { factory { VariantViewModel(get(), get()) } }
 }
 
 expect val platformModule: Module
 
 fun initKoin(
-    appModule: Module = module { },
-    coreModule: Module = Modules.core,
-    repositoriesModule: Module = Modules.repositories,
-    viewModelsModule: Module = Modules.viewModels,
-): KoinApplication =
-    startKoin {
-        modules(
-            appModule,
-            coreModule,
-            repositoriesModule,
-            viewModelsModule,
-            platformModule,
-        )
-    }
+  appModule: Module = module {},
+  coreModule: Module = Modules.core,
+  repositoriesModule: Module = Modules.repositories,
+  viewModelsModule: Module = Modules.viewModels,
+): KoinApplication = startKoin {
+  modules(appModule, coreModule, repositoriesModule, viewModelsModule, platformModule)
+}

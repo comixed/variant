@@ -30,39 +30,37 @@ import org.comixedproject.variant.platform.Log
 private const val TAG = "MetadataAPI"
 
 public object MetadataAPI {
-    fun loadMetadata(metadata: ComicBookMetadata, content: String) {
-        Log.debug(TAG, "Processing metadata content: ${content}")
-        val xml = XML {
-            xmlVersion = XmlVersion.XML10
-            xmlDeclMode = XmlDeclMode.Auto
-            defaultPolicy {
-                unknownChildHandler = XmlConfig.IGNORING_UNKNOWN_CHILD_HANDLER
-            }
-        }
-        try {
-            val decoded = xml.decodeFromString(ComicInfo.serializer(), content)
-            Log.debug(TAG, "Copying metadata data")
-            metadata.publisher = decoded.publisher.value
-            metadata.series = decoded.series.value
-            metadata.volume = decoded.volume.value
-            metadata.issueNumber = decoded.issueNumber.value
-            metadata.title = decoded.title.value
-            metadata.notes = decoded.notes.value
-            metadata.summary = decoded.summary.value
-            metadata.year = decoded.year
-            metadata.month = decoded.month
-        } catch (error: Exception) {
-            Log.error(TAG, "Failed to extract metadata: ${error.message}")
-            error.printStackTrace()
-        }
+  fun loadMetadata(metadata: ComicBookMetadata, content: String) {
+    Log.debug(TAG, "Processing metadata content: ${content}")
+    val xml = XML {
+      xmlVersion = XmlVersion.XML10
+      xmlDeclMode = XmlDeclMode.Auto
+      defaultPolicy { unknownChildHandler = XmlConfig.IGNORING_UNKNOWN_CHILD_HANDLER }
+    }
+    try {
+      val decoded = xml.decodeFromString(ComicInfo.serializer(), content)
+      Log.debug(TAG, "Copying metadata data")
+      metadata.publisher = decoded.publisher.value
+      metadata.series = decoded.series.value
+      metadata.volume = decoded.volume.value
+      metadata.issueNumber = decoded.issueNumber.value
+      metadata.title = decoded.title.value
+      metadata.notes = decoded.notes.value
+      metadata.summary = decoded.summary.value
+      metadata.year = decoded.year
+      metadata.month = decoded.month
+    } catch (error: Exception) {
+      Log.error(TAG, "Failed to extract metadata: ${error.message}")
+      error.printStackTrace()
+    }
+  }
+
+  fun displayableTitle(comicBook: ComicBook): String {
+    val metadata = comicBook.metadata
+    if (metadata.series.isEmpty() || metadata.volume.isEmpty() || metadata.issueNumber.isEmpty()) {
+      return comicBook.filename
     }
 
-    fun displayableTitle(comicBook: ComicBook): String {
-        val metadata = comicBook.metadata
-        if (metadata.series.isEmpty() || metadata.volume.isEmpty() || metadata.issueNumber.isEmpty()) {
-            return comicBook.filename
-        }
-
-        return "${metadata.series} V${metadata.volume} #${metadata.issueNumber}"
-    }
+    return "${metadata.series} V${metadata.volume} #${metadata.issueNumber}"
+  }
 }

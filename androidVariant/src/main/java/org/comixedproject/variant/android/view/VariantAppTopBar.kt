@@ -28,21 +28,12 @@ import org.comixedproject.variant.android.VariantTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VariantTopAppBar(
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = {
-            Text("Variant")
-        },
-        modifier = modifier
-    )
+fun VariantTopAppBar(modifier: Modifier = Modifier) {
+  TopAppBar(title = { Text("Variant") }, modifier = modifier)
 }
 
 @Composable
 @Preview
 fun VariantTopAppBarPreview() {
-    VariantTheme {
-        VariantTopAppBar()
-    }
+  VariantTheme { VariantTopAppBar() }
 }

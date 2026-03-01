@@ -19,14 +19,14 @@
 package org.comixedproject.variant.model.library
 
 data class ComicBookMetadata(
-    var publisher: String = "",
-    var series: String = "",
-    var volume: String = "",
-    var issueNumber: String = "",
-    var coverDate: Long = 0,
-    var title: String = "",
-    var notes: String = "",
-    var summary: String = "",
-    var year: Int = 0,
-    var month: Int = 0
+  var publisher: String = "",
+  var series: String = "",
+  var volume: String = "",
+  var issueNumber: String = "",
+  var coverDate: Long = 0,
+  var title: String = "",
+  var notes: String = "",
+  var summary: String = "",
+  var year: Int = 0,
+  var month: Int = 0,
 )

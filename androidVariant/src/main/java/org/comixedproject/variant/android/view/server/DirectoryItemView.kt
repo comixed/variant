@@ -49,51 +49,46 @@ private const val TAG = "DirectoryDetailView"
 
 @Composable
 fun DirectoryItemView(
-    directoryEntry: DirectoryEntry,
-    onLoadDirectory: (String) -> Unit,
-    modifier: Modifier = Modifier
+  directoryEntry: DirectoryEntry,
+  onLoadDirectory: (String) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    ElevatedCard(
-        colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Column(
-            modifier = modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .clickable {
-                    Log.info(TAG, "Loading path: ${directoryEntry.path}")
-                    onLoadDirectory(directoryEntry.path)
-                }
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "${directoryEntry.title}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Left,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-
-                Icon(Icons.Default.MoreVert, contentDescription = directoryEntry.title)
-            }
+  ElevatedCard(
+    colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
+    modifier = modifier.fillMaxWidth(),
+  ) {
+    Column(
+      modifier =
+        modifier.padding(16.dp).fillMaxWidth().clickable {
+          Log.info(TAG, "Loading path: ${directoryEntry.path}")
+          onLoadDirectory(directoryEntry.path)
         }
+    ) {
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth(),
+      ) {
+        Text(
+          text = "${directoryEntry.title}",
+          style = MaterialTheme.typography.bodyLarge,
+          fontWeight = FontWeight.Bold,
+          textAlign = TextAlign.Left,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+          modifier = Modifier.weight(1f),
+        )
+
+        Icon(Icons.Default.MoreVert, contentDescription = directoryEntry.title)
+      }
     }
+  }
 }
 
 @Composable
 @Preview
 fun DirectoryItemViewPreview() {
-    VariantTheme {
-        DirectoryItemView(
-            DIRECTORY_LIST.filter { it.isDirectory }.first(),
-            onLoadDirectory = { _ -> })
-    }
+  VariantTheme {
+    DirectoryItemView(DIRECTORY_LIST.filter { it.isDirectory }.first(), onLoadDirectory = { _ -> })
+  }
 }

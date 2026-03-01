@@ -22,9 +22,9 @@ import org.comixedproject.variant.model.library.DirectoryEntry
 import org.comixedproject.variant.model.state.DownloadingState
 
 data class BrowsingState(
-    val currentPath: String,
-    val parentPath: String,
-    val title: String,
-    val contents: List<DirectoryEntry>,
-    val downloadingState: List<DownloadingState>,
+  val currentPath: String,
+  val parentPath: String,
+  val title: String,
+  val contents: List<DirectoryEntry>,
+  val downloadingState: List<DownloadingState>,
 )

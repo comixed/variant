@@ -24,104 +24,78 @@ import org.comixedproject.variant.model.library.ComicBookMetadata
 import org.comixedproject.variant.model.library.ComicPage
 import org.comixedproject.variant.model.library.DirectoryEntry
 
-val DIRECTORY_LIST = listOf(
+val DIRECTORY_LIST =
+  listOf(
+    DirectoryEntry(1, "1", "All Comics", "/api/v1/all", 0, "/api/v1/root", "", true, null),
     DirectoryEntry(
-        1,
-        "1",
-        "All Comics",
-        "/api/v1/all",
-        0,
-        "/api/v1/root",
-        "",
-        true,
-        null
+      2,
+      "2",
+      "Unread Comics",
+      "/api/v1/all?unread=true",
+      0,
+      "/api/v1/root",
+      "",
+      true,
+      null,
+    ),
+    DirectoryEntry(3, "3", "Collections", "/api/v1/collections", 0, "/api/v1/root", "", true, null),
+    DirectoryEntry(
+      4,
+      "4",
+      "Reading Lists",
+      "/api/v1/lists/reading",
+      0,
+      "/api/v1/root",
+      "",
+      true,
+      null,
+    ),
+    DirectoryEntry(5, "5", "Smart Lists", "/api/v1/lists/smart", 0, "/api/v1/root", "", true, null),
+    DirectoryEntry(
+      11,
+      "11",
+      "The Amazing Spider-Man V2018 #75 (unknown)",
+      "Amazing Spider-Man #75 (v2018) (No Cover Date).cbz",
+      (32 * BYTES_PER_MB).toLong(),
+      "/api/v1/lists/reading",
+      "/api/v1/root",
+      false,
+      "",
     ),
     DirectoryEntry(
-        2,
-        "2",
-        "Unread Comics",
-        "/api/v1/all?unread=true",
-        0,
-        "/api/v1/root",
-        "",
-        true,
-        null
+      12,
+      "12",
+      "The Amazing Spider-Man V2022 #75 (unknown)",
+      "Amazing Spider-Man #6 (v2022) (Sep 2022).cbz",
+      (32 * BYTES_PER_MB).toLong(),
+      "/api/v1/lists/smart",
+      "/api/v1/root",
+      false,
+      "",
     ),
     DirectoryEntry(
-        3,
-        "3",
-        "Collections",
-        "/api/v1/collections",
-        0,
-        "/api/v1/root",
-        "",
-        true,
-        null
+      13,
+      "13",
+      "[unknown] V???? #? (unknown)",
+      "Unknown VUnknown #Unknown (Unknown).cbz",
+      (32 * BYTES_PER_MB).toLong(),
+      "/api/v1/lists/smart",
+      "/api/v1/root",
+      false,
+      "",
     ),
-    DirectoryEntry(
-        4,
-        "4",
-        "Reading Lists",
-        "/api/v1/lists/reading",
-        0,
-        "/api/v1/root",
-        "",
-        true,
-        null
-    ),
-    DirectoryEntry(
-        5,
-        "5",
-        "Smart Lists",
-        "/api/v1/lists/smart",
-        0,
-        "/api/v1/root",
-        "",
-        true,
-        null
-    ),
-    DirectoryEntry(
-        11,
-        "11",
-        "The Amazing Spider-Man V2018 #75 (unknown)",
-        "Amazing Spider-Man #75 (v2018) (No Cover Date).cbz",
-        (32 * BYTES_PER_MB).toLong(),
-        "/api/v1/lists/reading",
-        "/api/v1/root",
-        false,
-        ""
-    ),
-    DirectoryEntry(
-        12,
-        "12",
-        "The Amazing Spider-Man V2022 #75 (unknown)",
-        "Amazing Spider-Man #6 (v2022) (Sep 2022).cbz",
-        (32 * BYTES_PER_MB).toLong(),
-        "/api/v1/lists/smart",
-        "/api/v1/root",
-        false,
-        ""
-    ),
-    DirectoryEntry(
-        13,
-        "13",
-        "[unknown] V???? #? (unknown)",
-        "Unknown VUnknown #Unknown (Unknown).cbz",
-        (32 * BYTES_PER_MB).toLong(),
-        "/api/v1/lists/smart",
-        "/api/v1/root",
-        false,
-        ""
-    )
-)
+  )
 
-val COMIC_BOOK_LIST = DIRECTORY_LIST.filter { !it.isDirectory }.map {
-    ComicBook(
+val COMIC_BOOK_LIST =
+  DIRECTORY_LIST.filter { !it.isDirectory }
+    .map {
+      ComicBook(
         it.path,
         it.filename,
         (it.filename.length * 1024).toLong(),
         System.currentTimeMillis(),
         ComicBookMetadata("Marvel", "The Amazing Spider-Man", "1963", "181"),
-        mutableListOf(ComicPage("page-0.jpg"))
-    )
-}.toList()
+        mutableListOf(ComicPage("page-0.jpg")),
+      )
+    }
+    .toList()

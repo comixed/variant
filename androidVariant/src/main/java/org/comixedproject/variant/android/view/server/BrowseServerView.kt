@@ -52,122 +52,132 @@ private const val TAG = "BrowseServerView"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrowseServerView(
-    path: String,
-    title: String,
-    parentPath: String,
-    contents: List<DirectoryEntry>,
-    comicBookList: List<ComicBook>,
-    downloadingState: List<DownloadingState>,
-    loading: Boolean,
-    onLoadDirectory: (String, Boolean) -> Unit,
-    onDownloadFile: (String, String) -> Unit,
-    modifier: Modifier = Modifier
+  path: String,
+  title: String,
+  parentPath: String,
+  contents: List<DirectoryEntry>,
+  comicBookList: List<ComicBook>,
+  downloadingState: List<DownloadingState>,
+  loading: Boolean,
+  onLoadDirectory: (String, Boolean) -> Unit,
+  onDownloadFile: (String, String) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    val pullToRefreshState = rememberPullToRefreshState()
+  val pullToRefreshState = rememberPullToRefreshState()
 
-    Scaffold(
-        topBar = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(
-                    onClick = {
-                        Log.debug(TAG, "Going back to parent: ${parentPath}")
-                        onLoadDirectory(parentPath, false)
-                    },
-                    enabled = !parentPath.isEmpty()
-                ) {
-                    Icon(painterResource(R.drawable.ic_back), contentDescription = parentPath)
-                }
+  Scaffold(
+    topBar = {
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        IconButton(
+          onClick = {
+            Log.debug(TAG, "Going back to parent: ${parentPath}")
+            onLoadDirectory(parentPath, false)
+          },
+          enabled = !parentPath.isEmpty(),
+        ) {
+          Icon(painterResource(R.drawable.ic_back), contentDescription = parentPath)
+        }
 
-                val displayedTitle = when (title.isEmpty()) {
-                    false -> title
-                    true -> stringResource(R.string.rootDirectoryTitle)
-                }
+        val displayedTitle =
+          when (title.isEmpty()) {
+            false -> title
+            true -> stringResource(R.string.rootDirectoryTitle)
+          }
 
-                Text(
-                    "${displayedTitle} [${downloadingState.size}]",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.headlineMedium, modifier = Modifier.weight(1f)
-                )
+        Text(
+          "${displayedTitle} [${downloadingState.size}]",
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+          style = MaterialTheme.typography.headlineMedium,
+          modifier = Modifier.weight(1f),
+        )
+      }
+    },
+    content = { padding ->
+      PullToRefreshBox(
+        isRefreshing = loading,
+        state = pullToRefreshState,
+        onRefresh = { onLoadDirectory(path, true) },
+        content = {
+          LazyColumn(modifier = Modifier.padding(padding).fillMaxWidth()) {
+            items(contents) { entry ->
+              when (entry.isDirectory) {
+                true ->
+                  DirectoryItemView(
+                    entry,
+                    onLoadDirectory = { path -> onLoadDirectory(path, false) },
+                  )
+
+                else ->
+                  FileItemView(
+                    entry,
+                    comicBookList.map { it.filename }.toList(),
+                    downloadingState,
+                    onDownloadFile = onDownloadFile,
+                  )
+              }
             }
+          }
         },
-        content = { padding ->
-            PullToRefreshBox(
-                isRefreshing = loading,
-                state = pullToRefreshState,
-                onRefresh = { onLoadDirectory(path, true) },
-                content = {
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(padding)
-                            .fillMaxWidth()
-                    ) {
-                        items(contents) { entry ->
-                            when (entry.isDirectory) {
-
-                                true -> DirectoryItemView(
-                                    entry,
-                                    onLoadDirectory = { path ->
-                                        onLoadDirectory(
-                                            path,
-                                            false
-                                        )
-                                    })
-
-                                else -> FileItemView(
-                                    entry,
-                                    comicBookList.map { it.filename }.toList(),
-                                    downloadingState,
-                                    onDownloadFile = onDownloadFile
-                                )
-                            }
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-            )
-        },
-        modifier = modifier.fillMaxSize()
-    )
+        modifier = Modifier.padding(padding).fillMaxSize(),
+      )
+    },
+    modifier = modifier.fillMaxSize(),
+  )
 }
 
 @Composable
 @Preview
 fun BrowseServerViewPreviewDirectories() {
-    VariantTheme {
-        BrowseServerView(
-            "http://www.comixedproject.org:7171",
-            "",
-            "",
-            DIRECTORY_LIST.filter { it.isDirectory }, emptyList(), emptyList(), false,
-            onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
-    }
+  VariantTheme {
+    BrowseServerView(
+      "http://www.comixedproject.org:7171",
+      "",
+      "",
+      DIRECTORY_LIST.filter { it.isDirectory },
+      emptyList(),
+      emptyList(),
+      false,
+      onLoadDirectory = { _, _ -> },
+      onDownloadFile = { _, _ -> },
+    )
+  }
 }
 
 @Composable
 @Preview
 fun BrowseServerViewPreviewFiles() {
-    val directory = DIRECTORY_LIST.get(0)
-    VariantTheme {
-        BrowseServerView(
-            "http://www.comixedproject.org:7171",
-            directory.title, directory.parent,
-            DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), emptyList(), false,
-            onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
-    }
+  val directory = DIRECTORY_LIST.get(0)
+  VariantTheme {
+    BrowseServerView(
+      "http://www.comixedproject.org:7171",
+      directory.title,
+      directory.parent,
+      DIRECTORY_LIST.filter { !it.isDirectory },
+      emptyList(),
+      emptyList(),
+      false,
+      onLoadDirectory = { _, _ -> },
+      onDownloadFile = { _, _ -> },
+    )
+  }
 }
 
 @Composable
 @Preview
 fun BrowseServerViewPreviewRefreshing() {
-    val directory = DIRECTORY_LIST.get(0)
-    VariantTheme {
-        BrowseServerView(
-            "http://www.comixedproject.org:7171",
-            directory.title, directory.parent,
-            DIRECTORY_LIST.filter { !it.isDirectory }, emptyList(), emptyList(), true,
-            onLoadDirectory = { _, _ -> }, onDownloadFile = { _, _ -> })
-    }
+  val directory = DIRECTORY_LIST.get(0)
+  VariantTheme {
+    BrowseServerView(
+      "http://www.comixedproject.org:7171",
+      directory.title,
+      directory.parent,
+      DIRECTORY_LIST.filter { !it.isDirectory },
+      emptyList(),
+      emptyList(),
+      true,
+      onLoadDirectory = { _, _ -> },
+      onDownloadFile = { _, _ -> },
+    )
+  }
 }

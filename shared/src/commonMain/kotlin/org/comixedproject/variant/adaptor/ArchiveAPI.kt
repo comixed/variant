@@ -30,116 +30,109 @@ private const val TAG = "ArchiveAPI"
 private const val UNKNOWN_METADATA = "Unknown"
 
 public object ArchiveAPI {
-    val coverCache = ConcurrentMutableMap<String, ByteArray?>()
-    var cachedComic = ""
-    val pageCache = ConcurrentMutableMap<String, ByteArray?>()
+  val coverCache = ConcurrentMutableMap<String, ByteArray?>()
+  var cachedComic = ""
+  val pageCache = ConcurrentMutableMap<String, ByteArray?>()
 
-    suspend fun loadComicBook(archive: File): ComicBook {
-        val pages = mutableListOf<ComicPage>()
-        var metadata = ComicBookMetadata()
+  suspend fun loadComicBook(archive: File): ComicBook {
+    val pages = mutableListOf<ComicPage>()
+    var metadata = ComicBookMetadata()
 
-        Log.debug(TAG, "Loading comic archive entries: ${archive.path}")
-        try {
-            ZipFile(archive).use { zip ->
-                zip.map
-                    .forEach { entry ->
-                        val filename = entry.key
-                        Log.debug(TAG, "Found entry: ${filename}")
-                        if (filename.endsWith("ComicInfo.xml")) {
-                            var content = ""
-                            zip.readTextEntry(filename) { text, last ->
-                                content += text
-                                if (last) {
-                                    MetadataAPI.loadMetadata(metadata, content)
-                                }
-                            }
-                        } else if (isImageFile(filename)) {
-                            pages.add(ComicPage(filename))
-                        }
-                    }
+    Log.debug(TAG, "Loading comic archive entries: ${archive.path}")
+    try {
+      ZipFile(archive).use { zip ->
+        zip.map.forEach { entry ->
+          val filename = entry.key
+          Log.debug(TAG, "Found entry: ${filename}")
+          if (filename.endsWith("ComicInfo.xml")) {
+            var content = ""
+            zip.readTextEntry(filename) { text, last ->
+              content += text
+              if (last) {
+                MetadataAPI.loadMetadata(metadata, content)
+              }
             }
-        } catch (error: Exception) {
-            Log.error(
-                TAG,
-                "Failed to load comic file entries for ${archive.name}: ${error.message}"
-            )
-            error.printStackTrace()
+          } else if (isImageFile(filename)) {
+            pages.add(ComicPage(filename))
+          }
         }
-        val result = ComicBook(
-            archive.fullPath,
-            archive.name,
-            archive.size.toLong(),
-            archive.lastModifiedEpoch,
-            metadata,
-            pages
-        )
-        return result
+      }
+    } catch (error: Exception) {
+      Log.error(TAG, "Failed to load comic file entries for ${archive.name}: ${error.message}")
+      error.printStackTrace()
+    }
+    val result =
+      ComicBook(
+        archive.fullPath,
+        archive.name,
+        archive.size.toLong(),
+        archive.lastModifiedEpoch,
+        metadata,
+        pages,
+      )
+    return result
+  }
+
+  suspend fun loadCover(comicFilename: String, pageFilename: String): ByteArray? {
+    val key = "${comicFilename}:${pageFilename}"
+
+    if (coverCache.contains(key)) {
+      Log.debug(TAG, "Retrieving cached cover for comic: ${comicFilename}")
+      return coverCache.get(key)
     }
 
-    suspend fun loadCover(comicFilename: String, pageFilename: String): ByteArray? {
-        val key = "${comicFilename}:${pageFilename}"
+    val image = loadImageFromFile(comicFilename, pageFilename)
+    Log.debug(TAG, "Caching cover image: ${key}")
+    coverCache.put(key, image)
+    Log.debug(TAG, "Returning ${image?.size} bytes for ${key}")
+    return image
+  }
 
-        if (coverCache.contains(key)) {
-            Log.debug(TAG, "Retrieving cached cover for comic: ${comicFilename}")
-            return coverCache.get(key)
-        }
-
-        val image = loadImageFromFile(comicFilename, pageFilename)
-        Log.debug(TAG, "Caching cover image: ${key}")
-        coverCache.put(key, image)
-        Log.debug(TAG, "Returning ${image?.size} bytes for ${key}")
-        return image
+  suspend fun loadPage(comicFilename: String, pageFilename: String): ByteArray? {
+    if (!cachedComic.equals(comicFilename)) {
+      Log.debug(TAG, "Resetting page caching for comic: ${comicFilename}")
+      pageCache.clear()
+      cachedComic = comicFilename
+    } else if (pageCache.contains(pageFilename)) {
+      Log.debug(TAG, "Retrieving cached page for comic: ${comicFilename}:${pageFilename}")
+      return pageCache.get(pageFilename)
     }
 
-    suspend fun loadPage(comicFilename: String, pageFilename: String): ByteArray? {
-        if (!cachedComic.equals(comicFilename)) {
-            Log.debug(TAG, "Resetting page caching for comic: ${comicFilename}")
-            pageCache.clear()
-            cachedComic = comicFilename
-        } else if (pageCache.contains(pageFilename)) {
-            Log.debug(TAG, "Retrieving cached page for comic: ${comicFilename}:${pageFilename}")
-            return pageCache.get(pageFilename)
-        }
+    val image = loadImageFromFile(comicFilename, pageFilename)
+    Log.debug(TAG, "Caching page for comic: ${pageFilename}")
+    pageCache.put(pageFilename, image)
+    return image
+  }
 
-        val image = loadImageFromFile(comicFilename, pageFilename)
-        Log.debug(TAG, "Caching page for comic: ${pageFilename}")
-        pageCache.put(pageFilename, image)
-        return image
-    }
-
-    private suspend fun loadImageFromFile(comicFilename: String, pageFilename: String): ByteArray? {
-        Log.debug(TAG, "Loading image from file: ${comicFilename}:${pageFilename}")
-        var result: ByteArray? = null
-        try {
-            ZipFile(File(comicFilename)).use { zip ->
-                zip.map
-                    .forEach { entry ->
-                        if (entry.key.equals(pageFilename)) {
-                            zip.readEntry(entry.value) { _, content, _, last ->
-                                if (result != null) {
-                                    result = result!! + content
-                                } else {
-                                    result = content
-                                }
-                            }
-                        }
-                    }
+  private suspend fun loadImageFromFile(comicFilename: String, pageFilename: String): ByteArray? {
+    Log.debug(TAG, "Loading image from file: ${comicFilename}:${pageFilename}")
+    var result: ByteArray? = null
+    try {
+      ZipFile(File(comicFilename)).use { zip ->
+        zip.map.forEach { entry ->
+          if (entry.key.equals(pageFilename)) {
+            zip.readEntry(entry.value) { _, content, _, last ->
+              if (result != null) {
+                result = result!! + content
+              } else {
+                result = content
+              }
             }
-        } catch (error: Exception) {
-            Log.error(
-                TAG,
-                "Failed to load comic file entries for ${comicFilename}: ${error.message}"
-            )
-            error.printStackTrace()
+          }
         }
-
-        return result
+      }
+    } catch (error: Exception) {
+      Log.error(TAG, "Failed to load comic file entries for ${comicFilename}: ${error.message}")
+      error.printStackTrace()
     }
 
-    private fun isImageFile(filename: String): Boolean {
-        return filename.endsWith(".jpg") ||
-                filename.endsWith(".jpeg") ||
-                filename.endsWith(".gif") ||
-                filename.endsWith(".png")
-    }
+    return result
+  }
+
+  private fun isImageFile(filename: String): Boolean {
+    return filename.endsWith(".jpg") ||
+      filename.endsWith(".jpeg") ||
+      filename.endsWith(".gif") ||
+      filename.endsWith(".png")
+  }
 }

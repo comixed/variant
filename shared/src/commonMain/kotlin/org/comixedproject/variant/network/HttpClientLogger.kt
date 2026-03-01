@@ -16,12 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.variant.model.net
+package org.comixedproject.variant.network
 
-import kotlinx.serialization.Serializable
+import io.ktor.client.plugins.logging.Logger
+import org.comixedproject.variant.platform.Log
 
-/** <code>LoadDirectoryResponse</code> represents the response to loading a directory's contents. */
-@Serializable
-data class LoadDirectoryResponse(
-  val contents: List<DirectoryFromRemote> = emptyList<DirectoryFromRemote>()
-)
+class HttpClientLogger(val tag: String) : Logger {
+  override fun log(message: String) {
+    Log.debug(tag, message)
+  }
+}

@@ -19,13 +19,13 @@
 package org.comixedproject.variant.model.library
 
 data class DirectoryEntry(
-    val id: Long?,
-    val directoryId: String,
-    val title: String,
-    val filename: String,
-    val fileSize: Long,
-    val path: String,
-    val parent: String,
-    val isDirectory: Boolean,
-    val coverUrl: String?
+  val id: Long?,
+  val directoryId: String,
+  val title: String,
+  val filename: String,
+  val fileSize: Long,
+  val path: String,
+  val parent: String,
+  val isDirectory: Boolean,
+  val coverUrl: String?,
 )

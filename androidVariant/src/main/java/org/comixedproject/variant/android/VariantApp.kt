@@ -29,19 +29,21 @@ import org.koin.dsl.module
 lateinit var koin: Koin
 
 class VariantApp : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        VariantAppContext.setUp(applicationContext)
+  override fun onCreate() {
+    super.onCreate()
+    VariantAppContext.setUp(applicationContext)
 
-        koin =
-            initKoin(
-                appModule = module {
-                    single<Context> { this@VariantApp }
+    koin =
+      initKoin(
+          appModule =
+            module {
+              single<Context> { this@VariantApp }
 
-                    single<SharedPreferences> {
-                        get<Context>().getSharedPreferences("VariantApp", Context.MODE_PRIVATE)
-                    }
-                }
-            ).koin
-    }
+              single<SharedPreferences> {
+                get<Context>().getSharedPreferences("VariantApp", Context.MODE_PRIVATE)
+              }
+            }
+        )
+        .koin
+  }
 }

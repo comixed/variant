@@ -21,19 +21,19 @@ package org.comixedproject.variant.platform
 import co.touchlab.kermit.Logger
 
 public object Log {
-    public fun info(tag: String, message: String) {
-        Logger.withTag(tag).i(message)
-    }
+  public fun info(tag: String, message: String) {
+    Logger.withTag(tag).i(message)
+  }
 
-    public fun debug(tag: String, message: String) {
-        Logger.withTag(tag).d(message)
-    }
+  public fun debug(tag: String, message: String) {
+    Logger.withTag(tag).d(message)
+  }
 
-    public fun warning(tag: String, message: String) {
-        Logger.withTag(tag).w(message)
-    }
+  public fun warning(tag: String, message: String) {
+    Logger.withTag(tag).w(message)
+  }
 
-    public fun error(tag: String, message: String) {
-        Logger.withTag(tag).e(message)
-    }
+  public fun error(tag: String, message: String) {
+    Logger.withTag(tag).e(message)
+  }
 }

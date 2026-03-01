@@ -42,53 +42,46 @@ private val TAG = "ComicBookListView"
 
 @Composable
 fun ComicBookListView(
-    comicBookList: List<ComicBook>,
-    selectionList: List<String>,
-    onClick: (ComicBook) -> Unit,
-    modifier: Modifier = Modifier
+  comicBookList: List<ComicBook>,
+  selectionList: List<String>,
+  onClick: (ComicBook) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        topBar = {
-            Text(
-                pluralStringResource(
-                    R.plurals.comicBookListTitle, comicBookList.size,
-                    comicBookList.size
-                ),
-                style = MaterialTheme.typography.headlineMedium
-            )
-        },
-        content = { padding ->
-            if (comicBookList.isEmpty()) {
-                Log.debug(
-                    TAG,
-                    "No comics to display"
-                )
-                Text(stringResource(R.string.emptyComicListText))
-            } else {
-                LazyVerticalStaggeredGrid(
-                    columns = StaggeredGridCells.Adaptive(minSize = 128.dp),
-                    verticalItemSpacing = 4.dp,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    content = {
-                        items(comicBookList) { comicBook ->
-                            ComicBookListItemView(
-                                comicBook,
-                                selectionList.contains(comicBook.path),
-                                onClick = { onClick(it) }
-                            )
-                        }
-                    },
-                    modifier = modifier.padding(padding)
-                )
+  Scaffold(
+    topBar = {
+      Text(
+        pluralStringResource(R.plurals.comicBookListTitle, comicBookList.size, comicBookList.size),
+        style = MaterialTheme.typography.headlineMedium,
+      )
+    },
+    content = { padding ->
+      if (comicBookList.isEmpty()) {
+        Log.debug(TAG, "No comics to display")
+        Text(stringResource(R.string.emptyComicListText))
+      } else {
+        LazyVerticalStaggeredGrid(
+          columns = StaggeredGridCells.Adaptive(minSize = 128.dp),
+          verticalItemSpacing = 4.dp,
+          horizontalArrangement = Arrangement.spacedBy(4.dp),
+          content = {
+            items(comicBookList) { comicBook ->
+              ComicBookListItemView(
+                comicBook,
+                selectionList.contains(comicBook.path),
+                onClick = { onClick(it) },
+              )
             }
-        }, modifier = modifier.padding(8.dp)
-    )
+          },
+          modifier = modifier.padding(padding),
+        )
+      }
+    },
+    modifier = modifier.padding(8.dp),
+  )
 }
 
 @Composable
 @Preview
 fun ComicBookListViewPreview() {
-    VariantTheme {
-        ComicBookListView(COMIC_BOOK_LIST, emptyList(), onClick = {})
-    }
+  VariantTheme { ComicBookListView(COMIC_BOOK_LIST, emptyList(), onClick = {}) }
 }

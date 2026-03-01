@@ -18,7 +18,6 @@
 
 package org.comixedproject.variant.reader
 
-
 import com.oldguy.common.io.ByteBuffer
 import com.oldguy.common.io.RawFile
 import io.ktor.client.HttpClient
@@ -42,12 +41,12 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.core.remaining
 import io.ktor.utils.io.readRemaining
+import kotlin.native.concurrent.ThreadLocal
 import kotlinx.io.readByteArray
 import kotlinx.serialization.json.Json
 import org.comixedproject.variant.model.net.LoadDirectoryResponse
 import org.comixedproject.variant.network.HttpClientLogger
 import org.comixedproject.variant.platform.Log
-import kotlin.native.concurrent.ThreadLocal
 
 private const val TAG = "ReaderAPI"
 
@@ -56,59 +55,62 @@ val READER_ROOT = "/reader/v1/root"
 @ThreadLocal
 public object ReaderAPI {
 
-    const val VARIANT_USER_AGENT = "CX-Variant"
+  const val VARIANT_USER_AGENT = "CX-Variant"
 
-    private fun client(url: Url, username: String, password: String): HttpClient = HttpClient {
-        install(ContentNegotiation) {
-            json(Json { isLenient = true; ignoreUnknownKeys = true })
+  private fun client(url: Url, username: String, password: String): HttpClient = HttpClient {
+    install(ContentNegotiation) {
+      json(
+        Json {
+          isLenient = true
+          ignoreUnknownKeys = true
         }
-
-        install(Logging) {
-            logger = HttpClientLogger(TAG)
-            level = LogLevel.ALL
-        }
-
-        install(Auth) {
-            basic {
-                sendWithoutRequest { true }
-                credentials {
-                    BasicAuthCredentials(username = username, password = password)
-                }
-            }
-        }
-
-        defaultRequest {
-            header(HttpHeaders.UserAgent, "$VARIANT_USER_AGENT")
-            url(url.toString())
-        }
+      )
     }
 
-    suspend fun loadDirectory(url: Url, username: String, password: String): LoadDirectoryResponse =
-        client(url, username, password).get {
-            accept(ContentType.Application.Json)
-        }.body()
-
-    suspend fun downloadComic(
-        url: Url, username: String, password: String,
-        output: RawFile,
-        onProgress: (Long, Long) -> Unit
-    ) {
-        client(url, username, password).prepareGet {
-            onDownload { received, total ->
-                onProgress(received, total ?: 0)
-            }
-            accept(ContentType.Application.Zip)
-            accept(ContentType.Application.OctetStream)
-        }.execute { httpResponse ->
-            val channel: ByteReadChannel = httpResponse.body()
-            while (!channel.isClosedForRead) {
-                val packet = channel.readRemaining((102400).toLong())
-                Log.debug(TAG, "Writing ${packet.remaining} bytes to output")
-                while (!packet.exhausted()) {
-                    val bytes = packet.readByteArray()
-                    output.write(ByteBuffer(bytes))
-                }
-            }
-        }
+    install(Logging) {
+      logger = HttpClientLogger(TAG)
+      level = LogLevel.ALL
     }
+
+    install(Auth) {
+      basic {
+        sendWithoutRequest { true }
+        credentials { BasicAuthCredentials(username = username, password = password) }
+      }
+    }
+
+    defaultRequest {
+      header(HttpHeaders.UserAgent, "$VARIANT_USER_AGENT")
+      url(url.toString())
+    }
+  }
+
+  suspend fun loadDirectory(url: Url, username: String, password: String): LoadDirectoryResponse =
+    client(url, username, password).get { accept(ContentType.Application.Json) }.body()
+
+  suspend fun downloadComic(
+    url: Url,
+    username: String,
+    password: String,
+    output: RawFile,
+    onProgress: (Long, Long) -> Unit,
+  ) {
+    client(url, username, password)
+      .prepareGet {
+        onDownload { received, total -> onProgress(received, total ?: 0) }
+        accept(ContentType.Application.Zip)
+        accept(ContentType.Application.OctetStream)
+      }
+      .execute { httpResponse ->
+        val channel: ByteReadChannel = httpResponse.body()
+        while (!channel.isClosedForRead) {
+          val packet = channel.readRemaining((102400).toLong())
+          Log.debug(TAG, "Writing ${packet.remaining} bytes to output")
+          while (!packet.exhausted()) {
+            val bytes = packet.readByteArray()
+            output.write(ByteBuffer(bytes))
+          }
+        }
+      }
+  }
 }

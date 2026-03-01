@@ -41,90 +41,98 @@ import org.comixedproject.variant.android.VariantTheme
 private const val TAG = "EditServerView"
 
 private fun validateForm(url: String): Boolean {
-    return !(url.isBlank())
+  return !(url.isBlank())
 }
 
 @Composable
 fun EditServerView(
-    address: String,
-    username: String,
-    password: String,
-    onSave: (String, String, String) -> Unit,
-    modifier: Modifier = Modifier
+  address: String,
+  username: String,
+  password: String,
+  onSave: (String, String, String) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    var addressValue by rememberSaveable { mutableStateOf(address) }
-    var usernameValue by rememberSaveable { mutableStateOf(username) }
-    var passwordValue by rememberSaveable { mutableStateOf(password) }
-    var validForm by rememberSaveable { mutableStateOf(validateForm(addressValue)) }
+  var addressValue by rememberSaveable { mutableStateOf(address) }
+  var usernameValue by rememberSaveable { mutableStateOf(username) }
+  var passwordValue by rememberSaveable { mutableStateOf(password) }
+  var validForm by rememberSaveable { mutableStateOf(validateForm(addressValue)) }
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        TextField(value = addressValue, onValueChange = {
-            addressValue = it
-            validForm = validateForm(addressValue)
-        }, label = {
-            Text(
-                stringResource(R.string.serverUrlLabel)
-            )
-        }, modifier = Modifier.fillMaxWidth())
+  Column(modifier = modifier.fillMaxWidth()) {
+    TextField(
+      value = addressValue,
+      onValueChange = {
+        addressValue = it
+        validForm = validateForm(addressValue)
+      },
+      label = { Text(stringResource(R.string.serverUrlLabel)) },
+      modifier = Modifier.fillMaxWidth(),
+    )
 
-        TextField(value = usernameValue, onValueChange = {
-            usernameValue = it
-            validForm = validateForm(addressValue)
-        }, label = {
-            Text(
-                stringResource(R.string.serverUsernameLabel)
-            )
-        }, modifier = Modifier.fillMaxWidth())
+    TextField(
+      value = usernameValue,
+      onValueChange = {
+        usernameValue = it
+        validForm = validateForm(addressValue)
+      },
+      label = { Text(stringResource(R.string.serverUsernameLabel)) },
+      modifier = Modifier.fillMaxWidth(),
+    )
 
-        TextField(value = passwordValue, onValueChange = {
-            passwordValue = it
-            validForm = validateForm(addressValue)
-        }, label = {
-            Text(
-                stringResource(R.string.serverPasswordLabel)
-            )
-        }, modifier = Modifier.fillMaxWidth())
+    TextField(
+      value = passwordValue,
+      onValueChange = {
+        passwordValue = it
+        validForm = validateForm(addressValue)
+      },
+      label = { Text(stringResource(R.string.serverPasswordLabel)) },
+      modifier = Modifier.fillMaxWidth(),
+    )
 
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Spacer(modifier = Modifier.weight(1f))
+    Row(modifier = Modifier.fillMaxWidth()) {
+      Spacer(modifier = Modifier.weight(1f))
 
-            Button(onClick = {
-                onSave(addressValue, usernameValue, passwordValue)
-            }, enabled = validForm) {
-                Icon(
-                    painterResource(R.drawable.ic_save),
-                    contentDescription = stringResource(R.string.saveButton)
-                )
-            }
+      Button(
+        onClick = { onSave(addressValue, usernameValue, passwordValue) },
+        enabled = validForm,
+      ) {
+        Icon(
+          painterResource(R.drawable.ic_save),
+          contentDescription = stringResource(R.string.saveButton),
+        )
+      }
 
-            Button(onClick = {
-                addressValue = address
-                usernameValue = username
-                passwordValue = password
-            }, enabled = validForm) {
-                Icon(
-                    painterResource(R.drawable.ic_cancel),
-                    contentDescription = stringResource(R.string.cancelButton)
-                )
-            }
-        }
+      Button(
+        onClick = {
+          addressValue = address
+          usernameValue = username
+          passwordValue = password
+        },
+        enabled = validForm,
+      ) {
+        Icon(
+          painterResource(R.drawable.ic_cancel),
+          contentDescription = stringResource(R.string.cancelButton),
+        )
+      }
     }
+  }
 }
 
 @Composable
 @Preview
 fun EditServerViewPreviewNew() {
-    VariantTheme { EditServerView("", "", "", onSave = { _, _, _ -> }) }
+  VariantTheme { EditServerView("", "", "", onSave = { _, _, _ -> }) }
 }
 
 @Composable
 @Preview
 fun EditServerViewPreviewExisting() {
-    VariantTheme {
-        EditServerView(
-            "hostname:7171",
-            "reader@comixproject.org",
-            "my!password",
-            onSave = { _, _, _ -> })
-    }
+  VariantTheme {
+    EditServerView(
+      "hostname:7171",
+      "reader@comixproject.org",
+      "my!password",
+      onSave = { _, _, _ -> },
+    )
+  }
 }

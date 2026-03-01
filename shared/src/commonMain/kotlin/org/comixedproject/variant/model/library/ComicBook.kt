@@ -19,10 +19,10 @@
 package org.comixedproject.variant.model.library
 
 data class ComicBook(
-    val path: String,
-    val filename: String,
-    val size: Long,
-    val lastModified: Long,
-    val metadata: ComicBookMetadata,
-    val pages: MutableList<ComicPage>
+  val path: String,
+  val filename: String,
+  val size: Long,
+  val lastModified: Long,
+  val metadata: ComicBookMetadata,
+  val pages: MutableList<ComicPage>,
 )

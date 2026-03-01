@@ -38,28 +38,20 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DismissBackground(dismissState: SwipeToDismissBoxState) {
-    val color = when (dismissState.dismissDirection) {
-        SwipeToDismissBoxValue.StartToEnd -> Color(0xFFFF1744)
-        SwipeToDismissBoxValue.EndToStart -> Color(0xFF1DE9B6)
-        SwipeToDismissBoxValue.Settled -> Color.Transparent
+  val color =
+    when (dismissState.dismissDirection) {
+      SwipeToDismissBoxValue.StartToEnd -> Color(0xFFFF1744)
+      SwipeToDismissBoxValue.EndToStart -> Color(0xFF1DE9B6)
+      SwipeToDismissBoxValue.Settled -> Color.Transparent
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color)
-            .padding(12.dp, 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Icon(
-            Icons.Default.Delete,
-            contentDescription = "delete"
-        )
-        Spacer(modifier = Modifier)
-        Icon(
-            imageVector = Icons.Default.Edit,
-            contentDescription = "Archive"
-        )
-    }
+  Row(
+    modifier = Modifier.fillMaxSize().background(color).padding(12.dp, 8.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween,
+  ) {
+    Icon(Icons.Default.Delete, contentDescription = "delete")
+    Spacer(modifier = Modifier)
+    Icon(imageVector = Icons.Default.Edit, contentDescription = "Archive")
+  }
 }

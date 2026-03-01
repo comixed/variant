@@ -24,56 +24,56 @@ import org.comixedproject.variant.model.library.DirectoryEntry
 private const val TAG = "ServerRepository"
 
 class DirectoryRepository(val databaseHelper: DatabaseHelper) {
-    fun loadDirectoryContents(directory: String): List<DirectoryEntry> {
-        val result = mutableListOf<DirectoryEntry>()
+  fun loadDirectoryContents(directory: String): List<DirectoryEntry> {
+    val result = mutableListOf<DirectoryEntry>()
 
-        databaseHelper.loadDirectoryContents(directory).forEach {
-            result.add(
-                DirectoryEntry(
-                    id = it.id,
-                    directoryId = it.directory_id,
-                    title = it.title,
-                    path = it.path,
-                    parent = it.parent,
-                    filename = it.filename,
-                    fileSize = it.file_size,
-                    isDirectory = when (it.is_directory) {
-                        1L -> true
-                        else -> false
-                    },
-                    coverUrl = it.cover_url
-                )
-            )
-        }
-
-        return result
+    databaseHelper.loadDirectoryContents(directory).forEach {
+      result.add(
+        DirectoryEntry(
+          id = it.id,
+          directoryId = it.directory_id,
+          title = it.title,
+          path = it.path,
+          parent = it.parent,
+          filename = it.filename,
+          fileSize = it.file_size,
+          isDirectory =
+            when (it.is_directory) {
+              1L -> true
+              else -> false
+            },
+          coverUrl = it.cover_url,
+        )
+      )
     }
 
-    fun saveDirectoryContents(directory: String, contents: List<DirectoryEntry>) {
-        databaseHelper.deleteDirectoryContents(directory)
-        contents.forEach {
-            databaseHelper.saveDirectoryContent(it)
-        }
+    return result
+  }
+
+  fun saveDirectoryContents(directory: String, contents: List<DirectoryEntry>) {
+    databaseHelper.deleteDirectoryContents(directory)
+    contents.forEach { databaseHelper.saveDirectoryContent(it) }
+  }
+
+  fun findDirectory(path: String): DirectoryEntry? {
+    databaseHelper.findDirectory(path)?.let { directory ->
+      return DirectoryEntry(
+        id = directory.id,
+        directoryId = directory.directory_id,
+        title = directory.title,
+        path = directory.path,
+        parent = directory.parent,
+        filename = directory.filename,
+        fileSize = directory.file_size,
+        isDirectory =
+          when (directory.is_directory) {
+            1L -> true
+            else -> false
+          },
+        coverUrl = directory.cover_url,
+      )
     }
 
-    fun findDirectory(path: String): DirectoryEntry? {
-        databaseHelper.findDirectory(path)?.let { directory ->
-            return DirectoryEntry(
-                id = directory.id,
-                directoryId = directory.directory_id,
-                title = directory.title,
-                path = directory.path,
-                parent = directory.parent,
-                filename = directory.filename,
-                fileSize = directory.file_size,
-                isDirectory = when (directory.is_directory) {
-                    1L -> true
-                    else -> false
-                },
-                coverUrl = directory.cover_url
-            )
-        }
-
-        return null
-    }
+    return null
+  }
 }

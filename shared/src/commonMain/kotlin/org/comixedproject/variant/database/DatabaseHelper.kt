@@ -22,28 +22,28 @@ import app.cash.sqldelight.db.SqlDriver
 import org.comixedproject.variant.model.library.DirectoryEntry
 
 class DatabaseHelper(sqlDriver: SqlDriver) {
-    private val database: VariantDb = VariantDb(sqlDriver)
+  private val database: VariantDb = VariantDb(sqlDriver)
 
-    fun loadDirectoryContents(directory: String) =
-        database.tableQueries.loadDirectoryContents(directory).executeAsList()
+  fun loadDirectoryContents(directory: String) =
+    database.tableQueries.loadDirectoryContents(directory).executeAsList()
 
-    fun saveDirectoryContent(directoryEntry: DirectoryEntry) =
-        database.tableQueries.saveDirectoryContent(
-            directoryEntry.directoryId,
-            directoryEntry.title,
-            directoryEntry.path,
-            directoryEntry.parent,
-            directoryEntry.filename,
-            directoryEntry.fileSize,
-            when (directoryEntry.isDirectory) {
-                false -> 0
-                else -> 1
-            },
-            directoryEntry.coverUrl
-        )
+  fun saveDirectoryContent(directoryEntry: DirectoryEntry) =
+    database.tableQueries.saveDirectoryContent(
+      directoryEntry.directoryId,
+      directoryEntry.title,
+      directoryEntry.path,
+      directoryEntry.parent,
+      directoryEntry.filename,
+      directoryEntry.fileSize,
+      when (directoryEntry.isDirectory) {
+        false -> 0
+        else -> 1
+      },
+      directoryEntry.coverUrl,
+    )
 
-    fun deleteDirectoryContents(directory: String) =
-        database.tableQueries.deleteDirectoryContents(directory)
+  fun deleteDirectoryContents(directory: String) =
+    database.tableQueries.deleteDirectoryContents(directory)
 
-    fun findDirectory(path: String) = database.tableQueries.findDirectory(path).executeAsOneOrNull()
+  fun findDirectory(path: String) = database.tableQueries.findDirectory(path).executeAsOneOrNull()
 }
