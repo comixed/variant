@@ -24,9 +24,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -34,7 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import org.comixedproject.variant.android.R
 
 @Composable
 fun DismissBackground(dismissState: SwipeToDismissBoxState) {
@@ -50,8 +49,8 @@ fun DismissBackground(dismissState: SwipeToDismissBoxState) {
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween,
   ) {
-    Icon(Icons.Default.Delete, contentDescription = "delete")
+    Icon(painterResource(R.drawable.ic_settings), contentDescription = "delete")
     Spacer(modifier = Modifier)
-    Icon(imageVector = Icons.Default.Edit, contentDescription = "Archive")
+    Icon(painterResource(R.drawable.ic_settings), contentDescription = "Archive")
   }
 }

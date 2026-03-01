@@ -1,15 +1,20 @@
 [versions]
-android-gradle-plugin = "8.10.0"
-kotlin = "2.2.0"
-compose = "1.5.4"
-androidx-activity-compose = "1.8.0"
-koin-version = "3.5.6"
-sqldelight-plugin = "2.0.2"
-android-material3-version = "1.3.2"
-ktor-version = "3.1.3"
+android-gradle-plugin = "8.13.2"
+kotlin = "2.2.21"
+ksp-version = "2.2.21-2.0.5"
+compose = "1.10.3"
+androidx-activity-compose = "1.12.4"
+koin-version = "4.1.1"
+sqldelight-plugin = "2.2.1"
+android-material3-version = "1.4.0"
+ktor-version = "3.4.0"
 xml-util-version = "0.91.0"
 spotless-version = "8.2.1"
 ktfmt = "0.61"
+desugar-jdk = "2.1.5"
+kmp-observableviewmodel-core = "1.0.2"
+kfs-watch = "1.4.0"
+stately-concurrent-collections-version = "2.1.0"
 
 [libraries]
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
@@ -17,14 +22,14 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version = "2.0.4" }
-kmp-viewmodel-core = { group = "com.rickclephas.kmp", name = "kmp-observableviewmodel-core", version = "1.0.0-BETA-12" }
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk" }
+kmp-viewmodel-core = { group = "com.rickclephas.kmp", name = "kmp-observableviewmodel-core", version.ref = "kmp-observableviewmodel-core" }
 kermit-logging = { group = "co.touchlab", name = "kermit", version = "2.0.4" }
 kmp-io = { group = "io.github.skolson", name = "kmp-io", version = "0.2.2" }
-kfs-watch = { group = "io.github.irgaly.kfswatch", name = "kfswatch", version = "1.3.0" }
+kfs-watch = { group = "io.github.irgaly.kfswatch", name = "kfswatch", version.ref = "kfs-watch" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.6.2" }
 multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version = "1.3.0" }
-stately-concurrent-collections = { group = "co.touchlab", name = "stately-concurrent-collections", version = "2.0.0" }
+stately-concurrent-collections = { group = "co.touchlab", name = "stately-concurrent-collections", version.ref = "stately-concurrent-collections-version" }
 
 # koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin-version" }
@@ -67,7 +72,7 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 sonarqube = { id = "org.sonarqube", version = "6.2.0.5505" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight-plugin" }
-ksp = { id = "com.google.devtools.ksp", version = "2.2.0-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp-version" }
 native-coroutines = { id = "com.rickclephas.kmp.nativecoroutines", version = "1.0.0-ALPHA-45" }
 plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.1.21" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-version" }

@@ -55,12 +55,12 @@ kotlin {
     }
   }
 
-  task("testClasses")
+  tasks { register("testClasses") }
 }
 
 android {
   namespace = "org.comixedproject.variant"
-  compileSdk = 34
+  compileSdk = 36
   defaultConfig {
     minSdk = 26
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
