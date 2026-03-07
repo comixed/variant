@@ -26,4 +26,4 @@ To achieve these goals, the project will:
 
 # Credits
 
-[Reshot](https://www.reshot.com/free-svg-icons/) - for toolbar icons.
+[UXWing](https://www.uxwing.com/) for icons used in the app.

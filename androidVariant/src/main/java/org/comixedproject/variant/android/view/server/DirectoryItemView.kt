@@ -24,23 +24,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.comixedproject.variant.android.DIRECTORY_LIST
+import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.model.library.DirectoryEntry
 import org.comixedproject.variant.platform.Log
@@ -69,6 +70,17 @@ fun DirectoryItemView(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth(),
       ) {
+        IconButton(
+          onClick = {
+            Log.info(TAG, "Loading path: ${directoryEntry.path}")
+            onLoadDirectory(directoryEntry.path)
+          }
+        ) {
+          Icon(
+            painterResource(R.drawable.ic_browse_directory),
+            contentDescription = directoryEntry.path,
+          )
+        }
         Text(
           text = "${directoryEntry.title}",
           style = MaterialTheme.typography.bodyLarge,
@@ -78,8 +90,6 @@ fun DirectoryItemView(
           overflow = TextOverflow.Ellipsis,
           modifier = Modifier.weight(1f),
         )
-
-        Icon(Icons.Default.MoreVert, contentDescription = directoryEntry.title)
       }
     }
   }

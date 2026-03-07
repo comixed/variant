@@ -73,7 +73,7 @@ fun FileItemView(
           if (comicBookFilenameList.contains(fileEntry.filename)) {
             IconButton(onClick = {}, enabled = downloadingState.size < 5) {
               Icon(
-                painterResource(id = R.drawable.ic_downloaded_file),
+                painterResource(id = R.drawable.ic_comic_downloaded),
                 contentDescription = fileEntry.title,
               )
             }
@@ -83,7 +83,7 @@ fun FileItemView(
               enabled = downloadingState.size < 5,
             ) {
               Icon(
-                painterResource(R.drawable.ic_download_file),
+                painterResource(R.drawable.ic_comic_download),
                 contentDescription = fileEntry.title,
               )
             }
@@ -91,7 +91,7 @@ fun FileItemView(
         } else {
           IconButton(onClick = {}, enabled = downloadingState.size < 5) {
             Icon(
-              painterResource(R.drawable.ic_downloading_file),
+              painterResource(R.drawable.ic_comic_downloading),
               contentDescription = fileEntry.title,
             )
           }
