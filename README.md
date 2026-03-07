@@ -16,16 +16,8 @@ hosted on any [ComiXed](http://www.comixedproject.org) server instance to which 
 To achieve these goals, the project will:
 
   * run on Android tablet and iPad devices,
-  * maintain a list of servers for retrieving comic books,
-  * track from which server a comic was retrieved,
-  * support various comic book encodings (CBZ, CBR, CB7),
-  * allow the reader to set the read state for comics and 
-  * sync that state to the originating server,
-  * for users who are admins on a server, they will be able to:
-    * change the metadata for a comic,
-    * set the deleted state for pages,
-    * block pages by hash, and
-    * mark comics for deletion.
+  * support various comic book encodings (CBZ, CBR, CB7), and
+  * allow the user to change the read state for comics.
 
 # Contributing
 
