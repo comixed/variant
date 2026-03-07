@@ -84,6 +84,8 @@ struct HomeView: View {
             ServerView(
                 comicBookList: self.variantViewModel.comicBookList,
                 currentPath: self.variantViewModel.browsingState.currentPath,
+                filtering: self.variantViewModel.browsingState.filtering,
+                filterText: self.variantViewModel.browsingState.filterText,
                 title: self.variantViewModel.browsingState.title,
                 parentPath: self.variantViewModel.browsingState.parentPath,
                 directoryContents: self.variantViewModel.browsingState.contents,
@@ -99,6 +101,14 @@ struct HomeView: View {
                         path: path,
                         reload: reload
                     )
+                },
+                onToggleFilter: { toggle in
+                    Log().debug(tag: TAG, message: "Toggling filter: \(toggle)")
+                    self.variantViewModel.toggleFiltering(toggle: toggle)
+                },
+                onUpdateFilterText: { filterText in
+                    Log().debug(tag: TAG, message: "Filter text: \(filterText)")
+                    self.variantViewModel.updateFilterText(text: filterText)
                 },
                 onDownloadFile: { path, filename in
                     Task {

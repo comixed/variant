@@ -93,6 +93,8 @@ class MainActivity : ComponentActivity() {
               variantViewModel.username = username
               variantViewModel.password = password
             },
+            onToggleFiltering = { toggle -> variantViewModel.toggleFiltering(toggle) },
+            onUpdateFilterText = { text -> variantViewModel.updateFilterText(text) },
           )
         }
       }

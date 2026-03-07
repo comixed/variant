@@ -57,6 +57,8 @@ fun HomeView(
   username: String,
   password: String,
   onLoadDirectory: (String, Boolean) -> Unit,
+  onToggleFiltering: (Boolean) -> Unit,
+  onUpdateFilterText: (String) -> Unit,
   onDownloadFile: (String, String) -> Unit,
   onReadComicBook: (ComicBook?) -> Unit,
   onSetSelectionMode: (Boolean) -> Unit,
@@ -128,6 +130,8 @@ fun HomeView(
               onLoadDirectory = { path, reload -> onLoadDirectory(path, reload) },
               onDownloadFile = { path, filename -> onDownloadFile(path, filename) },
               modifier = Modifier.fillMaxSize(),
+              onToggleFiltering = onToggleFiltering,
+              onUpdateFilterText = onUpdateFilterText,
             )
 
           AppDestination.SETTINGS ->
@@ -139,8 +143,8 @@ fun HomeView(
                 Log.info(
                   TAG,
                   "Updating server settings: address=${address} username=${username} password=${
-                                    password.first()
-                                }*****",
+                                        password.first()
+                                    }*****",
                 )
                 onSaveSettings(address, username, password)
                 currentDestination = AppDestination.COMICS
@@ -160,7 +164,7 @@ fun HomeViewPreview() {
     HomeView(
       COMIC_BOOK_LIST.get(0),
       COMIC_BOOK_LIST,
-      BrowsingState("", "", "", listOf(), listOf()),
+      BrowsingState("", "", false, "", "", listOf(), listOf()),
       false,
       false,
       listOf(),
@@ -168,6 +172,8 @@ fun HomeViewPreview() {
       "reader@comixedproject.org",
       "my!password",
       onLoadDirectory = { _, _ -> },
+      onToggleFiltering = {},
+      onUpdateFilterText = {},
       onDownloadFile = { _, _ -> },
       onReadComicBook = { _ -> },
       onSetSelectionMode = { _ -> },

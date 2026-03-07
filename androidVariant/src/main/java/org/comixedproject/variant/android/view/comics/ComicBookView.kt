@@ -110,7 +110,7 @@ fun ComicBookViewPreview() {
 
 @Composable
 @Preview
-fun ComicBookViewWithSelectionsPreview() {
+fun ComicBookViewPreviewWithSelections() {
   VariantTheme {
     ComicBookView(
       COMIC_BOOK_LIST,

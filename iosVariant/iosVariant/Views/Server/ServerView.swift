@@ -25,6 +25,8 @@ private let TAG = "ServerView"
 struct ServerView: View {
     let comicBookList: [ComicBook]
     let currentPath: String
+    let filtering: Bool
+    let filterText: String
     let title: String
     let parentPath: String
     let directoryContents: [DirectoryEntry]
@@ -32,18 +34,24 @@ struct ServerView: View {
     let loading: Bool
 
     let onLoadDirectory: (String, Bool) -> Void
+    let onToggleFilter: (Bool) -> Void
+    let onUpdateFilterText: (String) -> Void
     let onDownloadFile: (String, String) -> Void
 
     var body: some View {
         BrowseServerView(
             comicBookList: comicBookList,
             path: currentPath,
+            filtering: filtering,
+            filterText: filterText,
             title: title,
             parentPath: parentPath,
             directoryContents: directoryContents,
             downloadingState: downloadingState,
             loading: loading,
             onLoadDirectory: onLoadDirectory,
+            onToggleFilter: onToggleFilter,
+            onUpdateFilterText: onUpdateFilterText,
             onDownloadFile: onDownloadFile
         )
     }
@@ -53,12 +61,16 @@ struct ServerView: View {
     ServerView(
         comicBookList: COMIC_BOOK_LIST,
         currentPath: "The current path",
+        filtering: false,
+        filterText: "",
         title: "The Title",
         parentPath: "The parent path",
         directoryContents: DIRECTORY_LIST,
         downloadingState: [],
         loading: false,
         onLoadDirectory: { _, _ in },
+        onToggleFilter: { _ in },
+        onUpdateFilterText: { _ in },
         onDownloadFile: { _, _ in }
     )
 }
