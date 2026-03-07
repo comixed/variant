@@ -37,6 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import org.comixedproject.variant.adaptor.ArchiveAPI
 import org.comixedproject.variant.database.repository.DirectoryRepository
@@ -129,6 +130,8 @@ open class VariantViewModel(val settings: Settings, val directoryRepository: Dir
       BrowsingState(
         settings.getString(LAST_DIRECTORY_SETTING, READER_ROOT),
         "",
+        false,
+        "",
         "",
         emptyList<DirectoryEntry>(),
         emptyList<DownloadingState>(),
@@ -193,12 +196,46 @@ open class VariantViewModel(val settings: Settings, val directoryRepository: Dir
         BrowsingState(
           path,
           directory?.parent ?: "",
+          _browsingState.value.filtering,
+          _browsingState.value.filterText,
           directory?.title ?: "",
           contents,
           _browsingState.value.downloadingState,
         )
       )
       _loading.tryEmit(false)
+    }
+  }
+
+  fun toggleFiltering(toggle: Boolean) {
+    viewModelScope.launch(Dispatchers.Main) {
+      _browsingState.tryEmit(
+        BrowsingState(
+          _browsingState.value.currentPath,
+          _browsingState.value.parentPath,
+          toggle,
+          "",
+          _browsingState.value.title,
+          _browsingState.value.contents,
+          _browsingState.value.downloadingState,
+        )
+      )
+    }
+  }
+
+  fun updateFilterText(text: String) {
+    viewModelScope.launch(Dispatchers.Main) {
+      _browsingState.tryEmit(
+        BrowsingState(
+          _browsingState.value.currentPath,
+          _browsingState.value.parentPath,
+          _browsingState.value.filtering,
+          text,
+          _browsingState.value.title,
+          _browsingState.value.contents,
+          _browsingState.value.downloadingState,
+        )
+      )
     }
   }
 
@@ -354,6 +391,8 @@ open class VariantViewModel(val settings: Settings, val directoryRepository: Dir
       BrowsingState(
         browsingState.currentPath,
         browsingState.parentPath,
+        browsingState.filtering,
+        browsingState.filterText,
         browsingState.title,
         browsingState.contents,
         state,

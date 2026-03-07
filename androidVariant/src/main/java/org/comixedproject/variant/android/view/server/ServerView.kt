@@ -35,12 +35,16 @@ fun ServerView(
   loading: Boolean,
   onLoadDirectory: (String, Boolean) -> Unit,
   onDownloadFile: (String, String) -> Unit,
+  onToggleFiltering: (Boolean) -> Unit,
+  onUpdateFilterText: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   BrowseServerView(
     browsingState.currentPath,
     browsingState.title,
     browsingState.parentPath,
+    browsingState.filtering,
+    browsingState.filterText,
     browsingState.contents,
     comicBookList,
     browsingState.downloadingState,
@@ -48,6 +52,8 @@ fun ServerView(
     modifier = modifier,
     onLoadDirectory = { path, reload -> onLoadDirectory(path, reload) },
     onDownloadFile = { path, filename -> onDownloadFile(path, filename) },
+    onToggleFiltering = onToggleFiltering,
+    onUpdateFilterText = onUpdateFilterText,
   )
 }
 
@@ -56,11 +62,13 @@ fun ServerView(
 fun ServerViewPreview() {
   VariantTheme {
     ServerView(
-      BrowsingState("", "", "", listOf(), listOf()),
+      BrowsingState("", "", false, "", "", listOf(), listOf()),
       COMIC_BOOK_LIST,
       false,
       onLoadDirectory = { _, _ -> },
       onDownloadFile = { _, _ -> },
+      onToggleFiltering = {},
+      onUpdateFilterText = {},
     )
   }
 }

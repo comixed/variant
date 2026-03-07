@@ -30,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -37,7 +38,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import org.comixedproject.variant.android.DIRECTORY_LIST
 import org.comixedproject.variant.android.R
@@ -49,18 +52,27 @@ import org.comixedproject.variant.platform.Log
 
 private const val TAG = "BrowseServerView"
 
+fun checkFiltering(filterText: String, entry: DirectoryEntry): Boolean {
+  return entry.title.toLowerCase(Locale.current).contains(filterText) ||
+    entry.filename.toLowerCase(Locale.current).contains(filterText)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrowseServerView(
   path: String,
   title: String,
   parentPath: String,
+  filtering: Boolean,
+  filterText: String,
   contents: List<DirectoryEntry>,
   comicBookList: List<ComicBook>,
   downloadingState: List<DownloadingState>,
   loading: Boolean,
   onLoadDirectory: (String, Boolean) -> Unit,
   onDownloadFile: (String, String) -> Unit,
+  onToggleFiltering: (Boolean) -> Unit,
+  onUpdateFilterText: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val pullToRefreshState = rememberPullToRefreshState()
@@ -78,19 +90,45 @@ fun BrowseServerView(
           Icon(painterResource(R.drawable.ic_back), contentDescription = parentPath)
         }
 
-        val displayedTitle =
-          when (title.isEmpty()) {
-            false -> title
-            true -> stringResource(R.string.rootDirectoryTitle)
-          }
+        if (filtering) {
+          TextField(
+            value = filterText,
+            placeholder = { Text(stringResource(R.string.filter_list_placeholder)) },
+            maxLines = 1,
+            onValueChange = { text ->
+              Log.debug(TAG, "Filter text=${text}")
+              onUpdateFilterText(text)
+            },
+            modifier = Modifier.weight(1f),
+          )
+        } else {
+          val displayedTitle =
+            when (title.isEmpty()) {
+              false -> title
+              true -> stringResource(R.string.rootDirectoryTitle)
+            }
 
-        Text(
-          "${displayedTitle} [${downloadingState.size}]",
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-          style = MaterialTheme.typography.headlineMedium,
-          modifier = Modifier.weight(1f),
-        )
+          Text(
+            displayedTitle,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.weight(1f),
+          )
+        }
+
+        IconButton(
+          onClick = {
+            Log.debug(TAG, "Toggle filtering")
+            onToggleFiltering(!filtering)
+          },
+          enabled = !parentPath.isEmpty(),
+        ) {
+          Icon(
+            painterResource(R.drawable.ic_filter_text),
+            contentDescription = stringResource(R.string.filter_list),
+          )
+        }
       }
     },
     content = { padding ->
@@ -100,7 +138,11 @@ fun BrowseServerView(
         onRefresh = { onLoadDirectory(path, true) },
         content = {
           LazyColumn(modifier = Modifier.padding(padding).fillMaxWidth()) {
-            items(contents) { entry ->
+            items(
+              contents.filter {
+                !filtering || checkFiltering(filterText.toLowerCase(Locale.current), it)
+              }
+            ) { entry ->
               when (entry.isDirectory) {
                 true ->
                   DirectoryItemView(
@@ -128,11 +170,36 @@ fun BrowseServerView(
 
 @Composable
 @Preview
-fun BrowseServerViewPreviewDirectories() {
+fun BrowseServerViewPreviewWithFiles() {
+  var directory = DIRECTORY_LIST.filter { it.isDirectory }.first()
+  VariantTheme {
+    BrowseServerView(
+      "http://www.comixedproject.org:7171",
+      directory.title,
+      directory.parent,
+      false,
+      "",
+      DIRECTORY_LIST.filter { !it.isDirectory },
+      emptyList(),
+      emptyList(),
+      false,
+      onLoadDirectory = { _, _ -> },
+      onDownloadFile = { _, _ -> },
+      onToggleFiltering = {},
+      onUpdateFilterText = {},
+    )
+  }
+}
+
+@Composable
+@Preview
+fun BrowseServerViewPreviewWithDirectories() {
   VariantTheme {
     BrowseServerView(
       "http://www.comixedproject.org:7171",
       "",
+      "",
+      false,
       "",
       DIRECTORY_LIST.filter { it.isDirectory },
       emptyList(),
@@ -140,25 +207,8 @@ fun BrowseServerViewPreviewDirectories() {
       false,
       onLoadDirectory = { _, _ -> },
       onDownloadFile = { _, _ -> },
-    )
-  }
-}
-
-@Composable
-@Preview
-fun BrowseServerViewPreviewFiles() {
-  val directory = DIRECTORY_LIST.get(0)
-  VariantTheme {
-    BrowseServerView(
-      "http://www.comixedproject.org:7171",
-      directory.title,
-      directory.parent,
-      DIRECTORY_LIST.filter { !it.isDirectory },
-      emptyList(),
-      emptyList(),
-      false,
-      onLoadDirectory = { _, _ -> },
-      onDownloadFile = { _, _ -> },
+      onToggleFiltering = {},
+      onUpdateFilterText = {},
     )
   }
 }
@@ -172,12 +222,40 @@ fun BrowseServerViewPreviewRefreshing() {
       "http://www.comixedproject.org:7171",
       directory.title,
       directory.parent,
+      false,
+      "",
       DIRECTORY_LIST.filter { !it.isDirectory },
       emptyList(),
       emptyList(),
       true,
       onLoadDirectory = { _, _ -> },
       onDownloadFile = { _, _ -> },
+      onToggleFiltering = {},
+      onUpdateFilterText = {},
+    )
+  }
+}
+
+@Composable
+@Preview
+fun BrowseServerViewPreviewFiltering() {
+  val directory = DIRECTORY_LIST.get(0)
+  val filterText = directory.title.substring(0, 3)
+  VariantTheme {
+    BrowseServerView(
+      "http://www.comixedproject.org:7171",
+      directory.title,
+      directory.parent,
+      true,
+      filterText,
+      DIRECTORY_LIST,
+      emptyList(),
+      emptyList(),
+      true,
+      onLoadDirectory = { _, _ -> },
+      onDownloadFile = { _, _ -> },
+      onToggleFiltering = {},
+      onUpdateFilterText = {},
     )
   }
 }

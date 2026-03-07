@@ -29,14 +29,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.comixedproject.variant.android.COMIC_BOOK_LIST
 import org.comixedproject.variant.android.R
 import org.comixedproject.variant.android.VariantTheme
 import org.comixedproject.variant.model.library.ComicBook
-import org.comixedproject.variant.platform.Log
 
 private val TAG = "ComicBookListView"
 
@@ -55,26 +53,21 @@ fun ComicBookListView(
       )
     },
     content = { padding ->
-      if (comicBookList.isEmpty()) {
-        Log.debug(TAG, "No comics to display")
-        Text(stringResource(R.string.emptyComicListText))
-      } else {
-        LazyVerticalStaggeredGrid(
-          columns = StaggeredGridCells.Adaptive(minSize = 128.dp),
-          verticalItemSpacing = 4.dp,
-          horizontalArrangement = Arrangement.spacedBy(4.dp),
-          content = {
-            items(comicBookList) { comicBook ->
-              ComicBookListItemView(
-                comicBook,
-                selectionList.contains(comicBook.path),
-                onClick = { onClick(it) },
-              )
-            }
-          },
-          modifier = modifier.padding(padding),
-        )
-      }
+      LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Adaptive(minSize = 128.dp),
+        verticalItemSpacing = 4.dp,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        content = {
+          items(comicBookList) { comicBook ->
+            ComicBookListItemView(
+              comicBook,
+              selectionList.contains(comicBook.path),
+              onClick = { onClick(it) },
+            )
+          }
+        },
+        modifier = modifier.padding(padding),
+      )
     },
     modifier = modifier.padding(8.dp),
   )
@@ -84,4 +77,10 @@ fun ComicBookListView(
 @Preview
 fun ComicBookListViewPreview() {
   VariantTheme { ComicBookListView(COMIC_BOOK_LIST, emptyList(), onClick = {}) }
+}
+
+@Composable
+@Preview
+fun ComicBookListViewPreviewWithOneComics() {
+  VariantTheme { ComicBookListView(listOf(COMIC_BOOK_LIST[0]), emptyList(), onClick = {}) }
 }

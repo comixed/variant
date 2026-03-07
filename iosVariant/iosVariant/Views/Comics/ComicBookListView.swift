@@ -50,8 +50,8 @@ struct ComicBookListView: View {
             }
             .navigationTitle(
                 String(
-                    localized: "\(comicBookCount) Comic Books",
-                    table: "Translations"
+                    localized: "comic-book-list-view.label.navigation-title",
+                    defaultValue: "\(comicBookCount) Comic Books", table: "Translations"
                 )
             )
         }

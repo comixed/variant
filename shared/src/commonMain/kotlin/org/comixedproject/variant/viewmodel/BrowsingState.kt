@@ -24,6 +24,8 @@ import org.comixedproject.variant.model.state.DownloadingState
 data class BrowsingState(
   val currentPath: String,
   val parentPath: String,
+  val filtering: Boolean,
+  val filterText: String,
   val title: String,
   val contents: List<DirectoryEntry>,
   val downloadingState: List<DownloadingState>,
