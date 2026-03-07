@@ -116,7 +116,7 @@ fun PageNavigationView(
           }
         ) {
           Icon(
-            painterResource(R.drawable.ic_close),
+            painterResource(R.drawable.ic_close_comic),
             contentDescription = stringResource(R.string.stopReadingLabel),
           )
         }
