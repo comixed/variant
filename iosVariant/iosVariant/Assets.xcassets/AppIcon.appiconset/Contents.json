@@ -31,6 +31,7 @@
       "size" : "40x40"
     },
     {
+      "filename" : "appicon-120x120.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
@@ -71,6 +72,7 @@
       "size" : "40x40"
     },
     {
+      "filename" : "appicon-76x76.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "76x76"
@@ -86,6 +88,7 @@
       "size" : "83.5x83.5"
     },
     {
+      "filename" : "appicon.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
